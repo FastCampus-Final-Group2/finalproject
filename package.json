@@ -9,18 +9,35 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@next/eslint-plugin-next": "^14.2.5",
+    "@rushstack/eslint-config": "^3.7.1",
+    "@rushstack/eslint-patch": "^1.10.4",
+    "@tanstack/eslint-plugin-query": "^5.51.15",
+    "@tanstack/react-query": "^5.51.21",
+    "axios": "^1.7.3",
+    "dayjs": "^1.11.12",
+    "eslint-plugin-cypress": "^3.4.0",
+    "eslint-plugin-jsx-a11y": "^6.9.0",
+    "eslint-plugin-no-relative-import-paths": "^1.5.5",
+    "eslint-plugin-react": "^7.35.0",
+    "eslint-plugin-react-hooks": "^4.6.2",
+    "eslint-plugin-react-refresh": "^0.4.9",
+    "eslint-plugin-storybook": "^0.8.0",
+    "eslint-plugin-testing-library": "^6.2.2",
+    "next": "14.2.5",
+    "prettier-plugin-tailwindcss": "^0.6.5",
     "react": "^18",
     "react-dom": "^18",
-    "next": "14.2.5"
+    "react-hook-form": "^7.52.2"
   },
   "devDependencies": {
-    "typescript": "^5",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
+    "eslint": "^8",
+    "eslint-config-next": "14.2.5",
     "postcss": "^8",
     "tailwindcss": "^3.4.1",
-    "eslint": "^8",
-    "eslint-config-next": "14.2.5"
+    "typescript": "^5"
   }
 }

@@ -1,3 +1,116 @@
 {
-  "extends": "next/core-web-vitals"
+  "extends": [
+    "next/core-web-vitals",
+    "@rushstack/eslint-config/profile/web-app",
+    "plugin:react/recommended",
+    "plugin:react-hooks/recommended",
+    "plugin:react/jsx-runtime",
+    "plugin:@tanstack/eslint-plugin-query/recommended",
+    "plugin:@next/next/recommended"
+  ],
+  "plugins": ["no-relative-import-paths", "react", "react-refresh", "jsx-a11y"],
+  "ignorePatterns": ["node_modules/", "dist/", ".eslintrc.js", "*.cjs", "**/*.config.[jt]s", "**/*.css"],
+  // "globals": {
+  //   "JSX": true,
+  //   "React": true
+  // },
+  "rules": {
+    "@rushstack/typedef-var": "off",
+    "@typescript-eslint/typedef": "off",
+    "@rushstack/no-new-null": "off",
+    "eqeqeq": [
+      "error",
+      "always",
+      {
+        "null": "ignore"
+      }
+    ],
+    "@typescript-eslint/explicit-function-return-type": "off",
+    "@typescript-eslint/naming-convention": [
+      "warn",
+      {
+        "selector": "variable",
+        "format": ["camelCase", "PascalCase", "UPPER_CASE"]
+      },
+      {
+        "selector": "function",
+        "format": ["camelCase", "PascalCase"]
+      },
+      {
+        "selector": "typeLike",
+        "format": ["PascalCase"]
+      },
+      {
+        "selector": "interface",
+        "format": ["PascalCase"],
+        "custom": {
+          "regex": "^I[A-Z]",
+          "match": false
+        }
+      },
+      {
+        "selector": "typeAlias",
+        "format": ["PascalCase"],
+        "custom": {
+          "regex": "^T[A-Z]",
+          "match": false
+        }
+      },
+      {
+        "selector": "typeParameter",
+        "format": ["PascalCase"],
+        "custom": {
+          "regex": "^T[A-Z]",
+          "match": false
+        }
+      }
+    ],
+
+    "jsx-a11y/alt-text": [
+      "warn",
+      {
+        "elements": ["img"]
+      }
+    ],
+    "jsx-a11y/aria-props": "warn",
+    "jsx-a11y/aria-proptypes": "warn",
+    "jsx-a11y/aria-unsupported-elements": "warn",
+    "jsx-a11y/role-has-required-aria-props": "warn",
+    "jsx-a11y/role-supports-aria-props": "warn",
+    "jsx-a11y/no-static-element-interactions": "warn",
+
+    "react/prop-types": "off",
+    "react/no-unknown-property": "off",
+    "import/no-default-export": "off",
+    "unicorn/filename-case": "off",
+    "eslint-comments/require-description": "off",
+    "@typescript-eslint/restrict-template-expressions": ["error", { "allowNumber": true, "allowBoolean": true }],
+    "react-refresh/only-export-components": [
+      "warn",
+      {
+        "allowConstantExport": true,
+        "allowExportNames": ["metadata", "viewport", "dynamic", "generateMetadata", "generateStaticParams"]
+      }
+    ],
+    "no-relative-import-paths/no-relative-import-paths": [
+      "warn",
+      { "allowSameFolder": true, "rootDir": "src", "prefix": "@" }
+    ]
+  },
+
+  "settings": {
+    "react": {
+      "version": "detect"
+    }
+  }
+
+  // "overrides": [
+  //   {
+  //     "files": ["**/__tests__/**/*.[jt]s?(x)", "**/?(*.)+(spec|test).[jt]s?(x)"],
+  //     "extends": ["plugin:testing-library/react"],
+  //     "rules": {
+  //       "react-refresh/only-export-components": "off"
+  //     }
+  //   }
+  // ],
 }
