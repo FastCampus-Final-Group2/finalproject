@@ -1,37 +1,39 @@
 "use client";
 
-import React, { useCallback, useReducer } from "react";
+import React, { ChangeEvent, useCallback, useReducer } from "react";
 import Icon from "@/components/core/Icon";
 
 interface CheckBoxProps extends React.ComponentPropsWithoutRef<"input"> {
   initialState?: boolean;
   label?: string;
-  handleChange?: () => void;
 }
 
 const CheckBox = React.forwardRef<HTMLInputElement, CheckBoxProps>(function RefCheckBox(
-  { initialState, label, handleChange, ...props },
+  { initialState, label, onChange, ...props },
   ref,
 ) {
   const [isChecked, toggleCheckBox] = useReducer((v) => !v, initialState || false);
 
-  const handleCheckboxChange = useCallback(() => {
-    toggleCheckBox();
-    if (handleChange) handleChange();
-  }, [handleChange]);
+  const handleCheckboxChange = useCallback(
+    (event: ChangeEvent<HTMLInputElement>) => {
+      toggleCheckBox();
+      if (onChange) onChange(event);
+    },
+    [onChange],
+  );
 
   return (
-    <label className="flex cursor-pointer gap-1">
+    <label className="flex w-fit cursor-pointer gap-1">
       <input
         type="checkbox"
         checked={isChecked}
-        className="appearance-none"
+        className="hidden"
         onChange={handleCheckboxChange}
         ref={ref}
         {...props}
       />
-      <Icon id={isChecked ? "checkBoxFill" : "checkBox"} size={20} />
-      {label && <span className="text-T-16-M">{label}</span>}
+      <Icon id={isChecked ? "checkBoxFill" : "checkBox"} size={20} className="text-gray-500" />
+      {label && <span className="text-gray-700 text-T-16-M">{label}</span>}
     </label>
   );
 });
