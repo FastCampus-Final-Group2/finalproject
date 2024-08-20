@@ -4,12 +4,16 @@ const inputVariants = cva(
   "rounded-4 border-2 border-gray-200 p-3 text-gray-800 text-T-16-M focus:border-gray-800 [&:not(:placeholder-shown)]:border-gray-800",
   {
     variants: {
-      size: {
-        landing: "h-[43px] w-[404px]",
+      width: {
+        full: "w-full",
+      },
+      height: {
+        landing: "h-[43px]",
       },
     },
     defaultVariants: {
-      size: "landing",
+      width: "full",
+      height: "landing",
     },
   },
 );
