@@ -1,5 +1,7 @@
 const config = {
   plugins: ["prettier-plugin-tailwindcss"],
+  tailwindConfig: "./tailwind.config.ts",
+  tailwindFunctions: ["clsx", "cva", "tw", "cn"],
   printWidth: 120,
   trailingComma: "all",
   tabWidth: 2,
