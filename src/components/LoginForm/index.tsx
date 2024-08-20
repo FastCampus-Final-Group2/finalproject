@@ -1,5 +1,6 @@
 import Input from "@/components/core/Input";
 import Button from "@/components/core/Button";
+import CheckBox from "@/components/core/CheckBox";
 
 const LoginForm = () => {
   return (
@@ -11,6 +12,7 @@ const LoginForm = () => {
       <form className="flex flex-col gap-4">
         <Input placeholder="아이디를 입력해주세요." />
         <Input placeholder="비밀번호를 입력해주세요." />
+        <CheckBox label="아이디 저장" initialState={false} />
         <Button className="h-[42px]">로그인</Button>
       </form>
     </div>
