@@ -1,4 +1,5 @@
 import Input from "@/components/core/Input";
+import Button from "@/components/core/Button";
 
 const LoginForm = () => {
   return (
@@ -10,7 +11,7 @@ const LoginForm = () => {
       <form className="flex flex-col gap-4">
         <Input placeholder="아이디를 입력해주세요." />
         <Input placeholder="비밀번호를 입력해주세요." />
-        <button>로그인</button>
+        <Button className="h-[42px]">로그인</Button>
       </form>
     </div>
   );
