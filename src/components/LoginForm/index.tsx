@@ -85,7 +85,7 @@ const LoginForm = () => {
           return createInputComponent(form, errors[form.id]?.message);
         })}
         <CheckBox label="아이디 저장" initialState={false} />
-        <Button className="h-[43px]" type="submit">
+        <Button className="h-[43px] p-3" type="submit">
           로그인
         </Button>
       </form>
