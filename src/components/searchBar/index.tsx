@@ -1,6 +1,6 @@
-import SearchDate from "./searchBar/SearchDate";
-import SearchCategory from "./searchBar/SearchCategory";
-import SearchTextInput from "./searchBar/SearchTextInput";
+import SearchDate from "./SearchDate";
+import SearchCategory from "./SearchCategory";
+import SearchTextInput from "./SearchTextInput";
 
 const SearchBars = () => {
   // todo: 체크박스는 령태님 걸로 끌어다 사용하기

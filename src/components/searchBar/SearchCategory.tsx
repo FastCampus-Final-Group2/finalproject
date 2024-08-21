@@ -41,9 +41,13 @@ const SearchCategory = () => {
         {selectedCategory} <Icon id="arrowDown" />
       </p>
       {isOpen && (
-        <ul className="absolute left-[-12px] mt-[20px] flex w-[156px] flex-col gap-[7px] rounded-[8px] border border-gray-200 bg-white px-[16px] py-[10px]">
+        <ul className="absolute left-[-12px] z-20 mt-[20px] flex w-[156px] flex-col gap-[7px] rounded-[8px] border border-gray-200 bg-white px-[16px] py-[10px]">
           {searchKeyword.map((keyword) => (
-            <li key={keyword.id} className="flex cursor-pointer" onClick={() => handleCategorySelect(keyword.name)}>
+            <li
+              key={keyword.id}
+              className="cursor-pointer p-[4px] hover:bg-blue-100"
+              onClick={() => handleCategorySelect(keyword.name)}
+            >
               {keyword.name}
             </li>
           ))}
