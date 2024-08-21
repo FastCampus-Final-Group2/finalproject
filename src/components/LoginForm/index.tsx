@@ -4,7 +4,7 @@ import Input from "@/components/core/Input";
 import Button from "@/components/core/Button";
 import CheckBox from "@/components/core/CheckBox";
 import { useForm } from "react-hook-form";
-import type { SubmitHandler } from "react-hook-form";
+import type { SubmitErrorHandler, SubmitHandler } from "react-hook-form";
 import { useCallback } from "react";
 import { useRouter } from "next/navigation";
 
@@ -41,6 +41,7 @@ const LoginForm = () => {
     register,
     handleSubmit,
     formState: { errors },
+    resetField,
   } = useForm({ defaultValues: initialState });
 
   const onSubmit: SubmitHandler<typeof initialState> = async (formData) => {
@@ -49,12 +50,20 @@ const LoginForm = () => {
     router.push("/dispatch");
   };
 
+  const onError: SubmitErrorHandler<typeof initialState> = (errors) => {
+    const ids = Object.keys(errors) as (keyof typeof initialState)[];
+    ids.forEach((id) => {
+      if (errors[id]) resetField(id, { keepError: true });
+    });
+  };
+
   const createInputComponent = useCallback(
     (form: (typeof LOGIN_FORMS)[number], errorMessage?: string) => {
       return (
         <Input
           key={form.id}
           placeholder={errorMessage ? errorMessage : form.placeholder}
+          state={errorMessage ? "error" : "default"}
           {...register(form.id, {
             required: form.required,
             pattern: form.pattern,
@@ -71,7 +80,7 @@ const LoginForm = () => {
         <h2 className="text-gray-900 text-H-28-B">배송관리시스템</h2>
         <span className="text-gray-700 text-T-20-M">GLT Korea TMS서비스에 오신 것을 환영합니다.</span>
       </header>
-      <form className="flex flex-col gap-4" onSubmit={handleSubmit(onSubmit)}>
+      <form className="flex flex-col gap-4" onSubmit={handleSubmit(onSubmit, onError)}>
         {LOGIN_FORMS.map((form) => {
           return createInputComponent(form, errors[form.id]?.message);
         })}

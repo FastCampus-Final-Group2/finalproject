@@ -8,10 +8,10 @@ interface InputProps
     VariantProps<typeof inputVariants> {}
 
 const Input = React.forwardRef<HTMLInputElement, InputProps>(function RefInput(
-  { width, height, className, ...props },
+  { width, height, state, className, ...props },
   ref,
 ) {
-  return <input className={cn(inputVariants({ width, height }), className)} ref={ref} {...props} />;
+  return <input className={cn(inputVariants({ width, height, state }), className)} ref={ref} {...props} />;
 });
 
 export default Input;
