@@ -4,7 +4,7 @@ import Input from "@/components/core/Input";
 import Button from "@/components/core/Button";
 import CheckBox from "@/components/core/CheckBox";
 import { useForm } from "react-hook-form";
-import type { SubmitErrorHandler, SubmitHandler } from "react-hook-form";
+import type { FieldError, SubmitErrorHandler, SubmitHandler } from "react-hook-form";
 import { useCallback } from "react";
 import { useRouter } from "next/navigation";
 
@@ -60,14 +60,14 @@ const LoginForm = () => {
   };
 
   const createInputComponent = useCallback(
-    (form: (typeof LOGIN_FORMS)[number], errorMessage?: string) => {
+    (form: (typeof LOGIN_FORMS)[number], error?: FieldError) => {
       return (
         <Input
           key={form.id}
           type={form.type}
-          placeholder={errorMessage ? errorMessage : form.placeholder}
+          placeholder={error?.type === "required" ? error.message : form.placeholder}
           autoComplete="off"
-          state={errorMessage ? "error" : "default"}
+          state={error ? "error" : "default"}
           {...register(form.id, {
             required: form.required,
             pattern: form.pattern,
@@ -86,12 +86,15 @@ const LoginForm = () => {
       </header>
       <form className="flex flex-col gap-4" onSubmit={handleSubmit(onSubmit, onError)}>
         {LOGIN_FORMS.map((form) => {
-          return createInputComponent(form, errors[form.id]?.message);
+          return createInputComponent(form, errors[form.id]);
         })}
         <CheckBox label="아이디 저장" initialState={false} />
         <Button className="h-[43px] p-3" type="submit">
           로그인
         </Button>
+        {(errors.username?.type === "pattern" || errors.password?.type === "pattern") && (
+          <p className="text-center text-red-500 text-T-16-M">{errors.username?.message || errors.password?.message}</p>
+        )}
       </form>
     </div>
   );
