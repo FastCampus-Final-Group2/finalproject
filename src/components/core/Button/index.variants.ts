@@ -1,10 +1,10 @@
 import { cva } from "class-variance-authority";
 
-const buttonVariants = cva("text-s flex cursor-pointer items-center justify-center rounded-4 text-SB-14-B", {
+const buttonVariants = cva("flex cursor-pointer items-center justify-center rounded-4 text-SB-14-B", {
   variants: {
     height: {
-      lg: "h-10 py-3 pl-[11px] pr-3",
-      sm: "h-8 px-2 pb-2 pt-[7px]",
+      lg: "h-10 gap-2 py-3 pl-[11px] pr-3",
+      sm: "h-8 gap-[6px] px-2 pb-2 pt-[7px]",
     },
     state: {
       filled: "bg-blue-500 text-white",
