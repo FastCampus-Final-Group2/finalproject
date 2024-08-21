@@ -10,7 +10,8 @@ const buttonVariants = cva("text-s flex cursor-pointer items-center justify-cent
       filled: "bg-blue-500 text-white",
       lined: "border-blue-500 text-blue-500",
       text: "border-none text-gray-900 hover:bg-gray-200",
-      enabled: "cursor-default bg-gray-600 text-gray-300",
+      enabledDark: "cursor-default bg-gray-600 text-gray-300",
+      enabledLight: "cursor-default bg-gray-200 text-white",
     },
   },
   defaultVariants: {
