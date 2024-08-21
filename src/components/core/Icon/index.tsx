@@ -77,7 +77,8 @@ export type IconId =
   | "wing_8T"
   | "wing_11T"
   | "flagFilled"
-  | "flagOutlined";
+  | "flagOutlined"
+  | "logout";
 
 type IconSize = 14 | 16 | 18 | 20 | 24 | 28 | 32 | 40;
 
