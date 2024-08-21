@@ -11,6 +11,7 @@ import { useRouter } from "next/navigation";
 const LOGIN_FORMS = [
   {
     id: "username",
+    type: "text",
     placeholder: "아이디를 입력해주세요.",
     required: "아이디를 입력하세요.",
     pattern: {
@@ -20,6 +21,7 @@ const LOGIN_FORMS = [
   },
   {
     id: "password",
+    type: "password",
     placeholder: "비밀번호를 입력해주세요.",
     required: "비밀번호를 입력하세요.",
     pattern: {
@@ -62,6 +64,7 @@ const LoginForm = () => {
       return (
         <Input
           key={form.id}
+          type={form.type}
           placeholder={errorMessage ? errorMessage : form.placeholder}
           autoComplete="off"
           state={errorMessage ? "error" : "default"}
