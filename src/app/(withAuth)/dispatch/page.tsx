@@ -1,5 +1,7 @@
+import DispatchSelector from "@/components/DispatchSelector";
+
 const Dispatch = () => {
-  return <div>Dispatch</div>;
+  return <DispatchSelector />;
 };
 
 export default Dispatch;
