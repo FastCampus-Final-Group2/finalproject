@@ -21,13 +21,13 @@ export const SIDE_NAV_BAR_LINKS = [
   {
     iconId: "truck",
     name: "배차관리",
-    href: "dispatch",
+    href: "/dispatch",
     isOpenable: false,
   },
   {
     iconId: "monitor",
     name: "차량관리",
-    href: "control",
+    href: "/control",
     isOpenable: false,
   },
   {

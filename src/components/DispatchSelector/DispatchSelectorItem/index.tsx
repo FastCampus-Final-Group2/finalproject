@@ -14,12 +14,12 @@ const DispatchSelectorItem = ({
 }: DispatchSelectorItemProps) => {
   return (
     <div className="group flex cursor-pointer flex-col gap-5 rounded-2xl bg-white px-[52px] pb-5 pt-10 hover:bg-blue-500">
-      <p className="flex items-center gap-2">
+      <div className="flex items-center gap-2">
         <h3 className="text-blue-500 text-T-20-B group-hover:text-white">{title}</h3>
         <div className="rounded-full bg-blue-500 px-2 py-[6px] text-white text-B-14-B group-hover:bg-white group-hover:text-blue-500">
           {tag}
         </div>
-      </p>
+      </div>
       <p className="text-gray-900 text-B-14-M group-hover:text-white">{description}</p>
       <div className="h-[0.5px] bg-gray-400 group-hover:bg-white" />
       <div className="flex flex-col gap-1">
