@@ -1,7 +1,7 @@
 import LoginForm from "@/components/LoginForm";
 import Image from "next/image";
 
-export default function Home() {
+const Home = () => {
   return (
     <div className="flex">
       <div className="flex h-screen w-1/2 items-center justify-center bg-gray-900">
@@ -12,4 +12,6 @@ export default function Home() {
       </div>
     </div>
   );
-}
+};
+
+export default Home;
