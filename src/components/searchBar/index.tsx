@@ -1,10 +1,9 @@
 import SearchDate from "./SearchDate";
 import SearchCategory from "./SearchCategory";
 import SearchTextInput from "./SearchTextInput";
+import CheckBox from "@/components/core/CheckBox";
 
 const SearchBars = () => {
-  // todo: 체크박스는 령태님 걸로 끌어다 사용하기
-
   return (
     <div className="relative flex items-center gap-[14px]">
       <SearchDate />
@@ -12,9 +11,8 @@ const SearchBars = () => {
         <SearchCategory />
         <SearchTextInput />
       </div>
-
       <div className="flex gap-[12px] p-[16px] text-SB-14-M">
-        <input type="checkbox" />
+        <CheckBox />
         <span className="text-SB-14-M">내 담당 주문만 보기</span>
       </div>
     </div>

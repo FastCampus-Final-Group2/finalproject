@@ -1,7 +1,7 @@
 {
-  "inProgress": 5,
-  "waiting": 6,
-  "completed": 20,
+  "inProgress": 33,
+  "waiting": 5,
+  "completed": 8,
   "results": [
     {
       "progress": 100,
@@ -13,7 +13,7 @@
       "manager": "김도희"
     },
     {
-      "progress": 90,
+      "progress": 0,
       "diapatchCode": "240808C001#2",
       "dispatchName": "인플루언서A 긴급건",
       "startDateTime": "2021-08-08 14:00",
@@ -67,7 +67,7 @@
       "manager": "김도희"
     },
     {
-      "progress": 30,
+      "progress": 100,
       "diapatchCode": "240808C001#8",
       "dispatchName": "인플루언서A 긴급건",
       "startDateTime": "2021-08-08 14:00",
@@ -103,7 +103,7 @@
       "manager": "김도희"
     },
     {
-      "progress": 60,
+      "progress": 0,
       "diapatchCode": "240808C001#5",
       "dispatchName": "인플루언서A 긴급건",
       "startDateTime": "2021-08-08 14:00",
@@ -121,7 +121,7 @@
       "manager": "김도희"
     },
     {
-      "progress": 40,
+      "progress": 100,
       "diapatchCode": "240808C001#7",
       "dispatchName": "인플루언서A 긴급건",
       "startDateTime": "2021-08-08 14:00",
@@ -175,7 +175,7 @@
       "manager": "김도희"
     },
     {
-      "progress": 50,
+      "progress": 0,
       "diapatchCode": "240808C001#6",
       "dispatchName": "인플루언서A 긴급건",
       "startDateTime": "2021-08-08 14:00",
@@ -184,7 +184,7 @@
       "manager": "김도희"
     },
     {
-      "progress": 40,
+      "progress": 100,
       "diapatchCode": "240808C001#7",
       "dispatchName": "인플루언서A 긴급건",
       "startDateTime": "2021-08-08 14:00",
@@ -220,7 +220,7 @@
       "manager": "김도희"
     },
     {
-      "progress": 70,
+      "progress": 100,
       "diapatchCode": "240808C001#4",
       "dispatchName": "인플루언서A 긴급건",
       "startDateTime": "2021-08-08 14:00",
@@ -229,7 +229,7 @@
       "manager": "김도희"
     },
     {
-      "progress": 60,
+      "progress": 0,
       "diapatchCode": "240808C001#5",
       "dispatchName": "인플루언서A 긴급건",
       "startDateTime": "2021-08-08 14:00",
@@ -283,7 +283,7 @@
       "manager": "김도희"
     },
     {
-      "progress": 70,
+      "progress": 100,
       "diapatchCode": "240808C001#4",
       "dispatchName": "인플루언서A 긴급건",
       "startDateTime": "2021-08-08 14:00",
@@ -328,7 +328,7 @@
       "manager": "김도희"
     },
     {
-      "progress": 20,
+      "progress": 0,
       "diapatchCode": "240808C001#9",
       "dispatchName": "인플루언서A 긴급건",
       "startDateTime": "2021-08-08 14:00",
@@ -364,7 +364,7 @@
       "manager": "김도희"
     },
     {
-      "progress": 50,
+      "progress": 100,
       "diapatchCode": "240808C001#6",
       "dispatchName": "인플루언서A 긴급건",
       "startDateTime": "2021-08-08 14:00",
@@ -391,7 +391,7 @@
       "manager": "김도희"
     },
     {
-      "progress": 20,
+      "progress": 100,
       "diapatchCode": "240808C001#9",
       "dispatchName": "인플루언서A 긴급건",
       "startDateTime": "2021-08-08 14:00",

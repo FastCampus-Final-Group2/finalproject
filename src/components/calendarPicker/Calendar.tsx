@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import dayjs from "dayjs";
 import Header from "./Header";
 import Month from "./DaysMonth";

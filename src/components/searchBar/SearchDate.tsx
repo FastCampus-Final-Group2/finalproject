@@ -2,7 +2,7 @@
 
 import Icon from "@/components/core/Icon";
 import { useState } from "react";
-import SearchDatePanel from "./SearchDatePanel";
+import CalendarPicker from "@/components/calendarPicker";
 
 const SearchDate = () => {
   const [startDate, setStartDate] = useState<string>("연-월-일 --:-- 시작");
@@ -29,7 +29,7 @@ const SearchDate = () => {
       {/* isCalendarOpen이 true일 때 SearchDate 컴포넌트 표시 */}
       {isCalendarOpen && (
         <div className="absolute top-16 z-50">
-          <SearchDatePanel onSelectDate={handleDateConfirm} />
+          <CalendarPicker onSelectDate={handleDateConfirm} />
         </div>
       )}
     </>

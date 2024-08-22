@@ -2,14 +2,15 @@
 
 import { useState } from "react";
 import dayjs from "dayjs";
-import Calendar from "@/components/calendar/Calendar";
-import TimePicker from "@/components/calendar/TimePicker";
+import Calendar from "@/components/calendarPicker/Calendar";
+import TimePicker from "@/components/calendarPicker/TimePicker";
+import Button from "@/components/core/Button";
 
 interface SearchDateProps {
   onSelectDate: (date: string) => void;
 }
 
-const SearchDatePanel = ({ onSelectDate }: SearchDateProps) => {
+const CalendarPicker = ({ onSelectDate }: SearchDateProps) => {
   const [startDate, setStartDate] = useState<dayjs.Dayjs | null>(null);
   const [selectedHour, setSelectedHour] = useState<number | null>(null);
   const [selectedMinute, setSelectedMinute] = useState<number | null>(null);
@@ -47,9 +48,9 @@ const SearchDatePanel = ({ onSelectDate }: SearchDateProps) => {
           />
         </div>
       </div>
-      <button onClick={handleConfirmClick}>확인</button>
+      <Button onClick={handleConfirmClick}>확인</Button>
     </div>
   );
 };
 
-export default SearchDatePanel;
+export default CalendarPicker;
