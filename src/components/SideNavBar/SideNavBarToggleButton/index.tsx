@@ -4,7 +4,7 @@ import Icon from "@/components/core/Icon";
 import { useReducer } from "react";
 
 const SideNavBarToggleButton = () => {
-  const [isOpened, toggleSideNavBar] = useReducer((v) => !v, false);
+  const [isOpened, toggleSideNavBar] = useReducer((v) => !v, true);
 
   return (
     <button
