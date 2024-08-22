@@ -80,7 +80,8 @@ export type IconId =
   | "flagOutlined"
   | "logout"
   | "arrowFront"
-  | "arrowBack";
+  | "arrowBack"
+  | "place";
 
 type IconSize = 14 | 16 | 18 | 20 | 24 | 28 | 32 | 40;
 

@@ -13,7 +13,7 @@ const SideNavBar = () => {
     <nav
       className={`relative z-nav flex flex-col gap-5 bg-gray-900 pb-[60px] transition-[width] duration-500 ${isSNBOpened ? "w-snb-open" : "w-snb-close"}`}
     >
-      <div className={`${isSNBOpened ? "px-10 py-9" : "px-5 py-[44px]"}`}>
+      <div className={`h-[120px] ${isSNBOpened ? "px-10 py-9" : "px-5 py-[44px]"}`}>
         <Link href="/dispatch" className="flex items-center justify-center">
           {isSNBOpened ? (
             <Image src="/logo_snb_open.png" alt="GLT Korea Logo" width={144} height={48} />

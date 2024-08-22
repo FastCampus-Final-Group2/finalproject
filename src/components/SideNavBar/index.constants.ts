@@ -12,8 +12,7 @@ export const SIDE_NAV_BAR_LINKS = [
     isOpenable: true,
   },
   {
-    // TODO
-    iconId: "truck",
+    iconId: "place",
     name: "운송관리",
     href: "#",
     isOpenable: true,
