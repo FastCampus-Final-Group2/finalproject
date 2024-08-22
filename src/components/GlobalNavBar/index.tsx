@@ -1,9 +1,10 @@
+import GlobalNavBarTabList from "./GlobalNavBarTabList";
 import ProfileBadge from "./ProfileBadge";
 
 const GlobalNavBar = () => {
   return (
-    <nav className="flex h-gnb justify-between bg-gray-900 p-10">
-      <div>페이지 탭</div>
+    <nav className="flex h-gnb items-center justify-between bg-gray-900 pr-10">
+      <GlobalNavBarTabList />
       <ProfileBadge />
     </nav>
   );
