@@ -14,7 +14,6 @@ const page = () => {
         <button>액셀 다운로드 버튼</button>
       </div>
       <DispatchLists />
-      <p>페이지네이션 버튼</p>
     </>
   );
 };

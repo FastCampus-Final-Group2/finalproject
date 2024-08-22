@@ -2,8 +2,8 @@
 
 import { useState } from "react";
 import dayjs from "dayjs";
-import Calendar from "@/components/Calendar/Calendar";
-import TimePicker from "@/components/Calendar/TimePicker";
+import Calendar from "@/components/calendar/Calendar";
+import TimePicker from "@/components/calendar/TimePicker";
 
 interface SearchDateProps {
   onSelectDate: (date: string) => void;

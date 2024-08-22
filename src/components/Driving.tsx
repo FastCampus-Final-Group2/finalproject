@@ -1,6 +1,6 @@
 "use client";
 
-import TabForList from "./TabForList";
+import TabForList from "@/components/TabForList";
 
 const Driving = () => {
   const drivingStates = ["주행중", "주행대기", "주행완료"];

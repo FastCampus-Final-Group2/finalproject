@@ -1,45 +1,46 @@
-import React from "react";
 import Icon from "@/components/core/Icon";
 import mockdata from "./mockdata.json";
+import { dispatchListClass } from "./index.varients";
+import { cn } from "@/utils/cn";
 
 interface ListItemProps {
   item: {
-    percentage: number;
+    progress: number;
     diapatchCode: string;
     dispatchName: string;
-    dispatchDate: string;
-    everyOrder: string;
-    numberOfDrivers: string;
+    startDateTime: string;
+    totalOrder: number;
+    smNum: number;
     manager: string;
   };
 }
 
 const ListItem = ({ item }: ListItemProps) => (
-  <li className="flex items-center gap-[16px] border-b border-gray-200">
-    <p className="w-[60px]">
+  <li className={cn(dispatchListClass({ borderBottom: "please", hover: "please" }))}>
+    <p className={cn(dispatchListClass({ width: "small" }))}>
       <Icon id="checkBox" />
     </p>
-    <p className="w-[180px] px-[12px] py-[8px]">{item.percentage}%</p>
-    <p className="flex w-[348px] justify-between px-[12px] py-[8px]">
+    <p className={cn(dispatchListClass({ width: "medium" }))}>{item.progress}%</p>
+    <p className={cn(dispatchListClass({ width: "extraLarge" }))}>
       <span className="w-1/2">{item.diapatchCode}</span>
       <span className="w-1/2">{item.dispatchName}</span>
     </p>
-    <p className="w-[260px] px-[12px] py-[8px]">{item.dispatchDate}</p>
-    <p className="w-[200px] px-[12px] py-[8px]">{item.everyOrder}</p>
-    <p className="w-[200px] px-[12px] py-[8px]">{item.numberOfDrivers}</p>
-    <p className="w-[200px] px-[12px] py-[8px]">{item.manager}</p>
+    <p className={cn(dispatchListClass({ width: "large" }))}>{item.startDateTime}</p>
+    <p className={cn(dispatchListClass({ width: "medium" }))}>{item.totalOrder}</p>
+    <p className={cn(dispatchListClass({ width: "medium" }))}>{item.smNum}</p>
+    <p className={cn(dispatchListClass({ width: "medium" }))}>{item.manager}</p>
   </li>
 );
 
 const Lists = () => {
   return (
-    <div className="px-[24px] py-[16px] text-gray-900 text-B-14-M">
+    <>
       <ul>
-        {mockdata.map((item) => (
-          <ListItem key={item.diapatchCode + item.dispatchDate} item={item} />
+        {mockdata.results.map((item) => (
+          <ListItem key={item.diapatchCode + item.startDateTime} item={item} />
         ))}
       </ul>
-    </div>
+    </>
   );
 };
 
