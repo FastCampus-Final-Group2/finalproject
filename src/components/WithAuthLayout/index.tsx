@@ -11,7 +11,7 @@ const WithAuthLayout = ({ children }: WithAuthLayoutProps) => {
       <SideNavBar />
       <div className="flex-1">
         <GlobalNavBar />
-        <main>{children}</main>
+        <main className="h-[calc(100vh-104px)]">{children}</main>
       </div>
     </div>
   );
