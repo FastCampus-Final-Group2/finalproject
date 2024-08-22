@@ -15,8 +15,13 @@ const borderRadius = {
   4: "4px",
 };
 
+const zIndex = {
+  nav: "9999",
+};
+
 export const layout = {
   width,
   height,
   borderRadius,
+  zIndex,
 };
