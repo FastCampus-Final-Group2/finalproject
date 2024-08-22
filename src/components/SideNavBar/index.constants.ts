@@ -42,4 +42,10 @@ export const SIDE_NAV_BAR_LINKS = [
     href: "#",
     isOpenable: true,
   },
+  {
+    iconId: "speaker",
+    name: "공지사항",
+    href: "#",
+    isOpenable: false,
+  },
 ] as const;
