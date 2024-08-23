@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import SideNavBarList from "./SideNavBarList";
 import SideNavBarToggleButton from "./SideNavBarToggleButton";
 import { useSNBStateContext } from "@/contexts/SNBStateContext";
