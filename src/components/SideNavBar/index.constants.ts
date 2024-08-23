@@ -2,19 +2,19 @@ export const SIDE_NAV_BAR_LINKS = [
   {
     iconId: "tool",
     name: "기준정보",
-    href: "#",
+    href: "#info",
     isOpenable: true,
   },
   {
     iconId: "order",
     name: "주문관리",
-    href: "#",
+    href: "#order",
     isOpenable: true,
   },
   {
     iconId: "place",
     name: "운송관리",
-    href: "#",
+    href: "#place",
     isOpenable: true,
   },
   {
@@ -32,19 +32,19 @@ export const SIDE_NAV_BAR_LINKS = [
   {
     iconId: "wallet",
     name: "운임정산",
-    href: "#",
+    href: "#wallet",
     isOpenable: true,
   },
   {
     iconId: "chart",
     name: "레포트센터",
-    href: "#",
+    href: "#chart",
     isOpenable: true,
   },
   {
     iconId: "speaker",
     name: "공지사항",
-    href: "#",
+    href: "#speaker",
     isOpenable: false,
   },
 ] as const;

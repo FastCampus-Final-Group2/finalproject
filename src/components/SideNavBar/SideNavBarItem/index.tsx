@@ -6,6 +6,7 @@ import { useSNBStateContext } from "@/contexts/SNBStateContext";
 import { cn } from "@/utils/cn";
 import { usePathname, useRouter } from "next/navigation";
 import { buttonVariants, containerVariants, iconVariants } from "./index.variants";
+import { useTabStateContext } from "@/contexts/TabStateContext";
 
 interface SideNavBarItemProps {
   SideNavBarInfo: (typeof SIDE_NAV_BAR_LINKS)[number];
@@ -14,6 +15,7 @@ interface SideNavBarItemProps {
 const SideNavBarItem = ({ SideNavBarInfo: { iconId, name, href, isOpenable } }: SideNavBarItemProps) => {
   const router = useRouter();
   const { isSNBOpened } = useSNBStateContext();
+  const { addTab } = useTabStateContext();
   const pathname = usePathname();
   const isPageOpened = pathname === href;
 
@@ -29,7 +31,10 @@ const SideNavBarItem = ({ SideNavBarInfo: { iconId, name, href, isOpenable } }: 
         type="button"
         // className={`group flex items-center gap-2 rounded-full hover:bg-white ${isSNBOpened ? "py-[7px] pl-[15px] pr-5" : "p-2"} ${isPageOpened && "bg-white"}`}
         className={cn(buttonVariants({ snb: variants.snb, page: variants.page }))}
-        onClick={() => router.push(href)}
+        onClick={() => {
+          addTab(href, name);
+          router.push(href);
+        }}
       >
         <Icon
           id={iconId}
