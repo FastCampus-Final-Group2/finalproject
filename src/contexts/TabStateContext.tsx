@@ -1,12 +1,12 @@
 "use client";
 
-import { SIDE_NAV_BAR_LINKS } from "@/components/SideNavBar/index.constants";
+import { SideNavBarLink } from "@/components/SideNavBar/index.constants";
 import { createContext, useCallback, useContext, useEffect, useState } from "react";
 
 const TabStateKey = "GLT_TAB_STATE";
 
-type HrefType = (typeof SIDE_NAV_BAR_LINKS)[number]["href"];
-type NameType = (typeof SIDE_NAV_BAR_LINKS)[number]["name"];
+type HrefType = SideNavBarLink["href"];
+type NameType = SideNavBarLink["name"];
 
 interface TabInfo {
   href: HrefType;
@@ -16,7 +16,7 @@ interface TabInfo {
 interface TabStateContextProps {
   tabStates: TabInfo[];
   addTab: (href: HrefType, name: NameType) => void;
-  removeTab: (href: HrefType) => void;
+  removeTab: (name: NameType) => void;
 }
 
 const TabStateContext = createContext<TabStateContextProps | null>(null);
@@ -50,9 +50,9 @@ export const TabStateContextProvider = ({ children }: { children: React.ReactNod
   );
 
   const removeTab = useCallback(
-    (href: string) => {
+    (name: NameType) => {
       if (tabStates.length <= 1) return;
-      const index = tabStates.findIndex((tabState) => tabState.href === href);
+      const index = tabStates.findIndex((tabState) => tabState.name === name);
 
       try {
         sessionStorage.setItem(

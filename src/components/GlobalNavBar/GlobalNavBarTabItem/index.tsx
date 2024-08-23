@@ -1,23 +1,28 @@
 import Icon from "@/components/core/Icon";
+import type { SideNavBarLink } from "@/components/SideNavBar/index.constants";
 import { SIDE_NAV_BAR_LINKS } from "@/components/SideNavBar/index.constants";
 import { useTabStateContext } from "@/contexts/TabStateContext";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
 interface GlobalNavBarTabItem {
   tabName: (typeof SIDE_NAV_BAR_LINKS)[number]["name"];
-  href: (typeof SIDE_NAV_BAR_LINKS)[number]["href"];
+  href: SideNavBarLink["href"];
   isMyMenu?: boolean;
 }
 
 const GlobalNavBarTabItem = ({ isMyMenu = false, href, tabName }: GlobalNavBarTabItem) => {
   const { removeTab } = useTabStateContext();
+  const router = useRouter();
   const pathname = usePathname();
   const isPageOpened = pathname === href;
 
   return (
-    <Link
-      href={href}
+    <button
+      type="button"
+      onClick={() => {
+        if (!href) return;
+        router.push(href);
+      }}
       className={`group flex cursor-pointer items-center gap-5 rounded-t-lg border border-gray-700 py-[15px] pl-[17px] pr-4 ${isPageOpened ? "border-white bg-white" : "hover:border-white hover:bg-white"}`}
     >
       <div
@@ -34,7 +39,7 @@ const GlobalNavBarTabItem = ({ isMyMenu = false, href, tabName }: GlobalNavBarTa
           <Icon
             id="star"
             size={18}
-            className={`text-gray-700 group-hover:text-blue-100 ${isPageOpened ? "text-blue-100" : "text-gray-700"}`}
+            className={`group-hover:text-blue-100 ${isPageOpened ? "text-blue-100" : "text-gray-700"}`}
           />
         )}
       </div>
@@ -43,12 +48,12 @@ const GlobalNavBarTabItem = ({ isMyMenu = false, href, tabName }: GlobalNavBarTa
         className="py-[1px]"
         onClick={(event) => {
           event.stopPropagation();
-          removeTab(href);
+          removeTab(tabName);
         }}
       >
         <Icon id="x" size={20} className="text-gray-700" />
       </button>
-    </Link>
+    </button>
   );
 };
 
