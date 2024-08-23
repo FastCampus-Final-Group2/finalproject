@@ -1,10 +1,9 @@
-import Icon from "@/components/core/Icon";
-import mockdata from "./mockdata.json";
-import { dispatchListClass } from "./index.varients";
+import { dispatchListClass } from "./index.variants";
 import { cn } from "@/utils/cn";
+import CheckBox from "@/components/core/CheckBox";
 
-interface ListItemProps {
-  item: {
+interface ListsProps {
+  results: {
     progress: number;
     diapatchCode: string;
     dispatchName: string;
@@ -12,35 +11,29 @@ interface ListItemProps {
     totalOrder: number;
     smNum: number;
     manager: string;
-  };
+  }[];
 }
 
-const ListItem = ({ item }: ListItemProps) => (
-  <li className={cn(dispatchListClass({ borderBottom: "please", hover: "please" }))}>
-    <p className={cn(dispatchListClass({ width: "small" }))}>
-      <Icon id="checkBox" />
-    </p>
-    <p className={cn(dispatchListClass({ width: "medium" }))}>{item.progress}%</p>
-    <p className={cn(dispatchListClass({ width: "extraLarge" }))}>
-      <span className="w-1/2">{item.diapatchCode}</span>
-      <span className="w-1/2">{item.dispatchName}</span>
-    </p>
-    <p className={cn(dispatchListClass({ width: "large" }))}>{item.startDateTime}</p>
-    <p className={cn(dispatchListClass({ width: "medium" }))}>{item.totalOrder}</p>
-    <p className={cn(dispatchListClass({ width: "medium" }))}>{item.smNum}</p>
-    <p className={cn(dispatchListClass({ width: "medium" }))}>{item.manager}</p>
-  </li>
-);
-
-const Lists = () => {
+const Lists = ({ results }: ListsProps) => {
   return (
-    <>
-      <ul>
-        {mockdata.results.map((item) => (
-          <ListItem key={item.diapatchCode + item.startDateTime} item={item} />
-        ))}
-      </ul>
-    </>
+    <ul>
+      {results.map((data) => (
+        <li key={data.diapatchCode} className={cn(dispatchListClass({ borderBottom: "please", hover: "please" }))}>
+          <p className={cn(dispatchListClass({ width: "extraSmall" }))}>
+            <CheckBox />
+          </p>
+          <p className={cn(dispatchListClass({ width: "small" }))}>{data.progress}%</p>
+          <p className={cn(dispatchListClass({ width: "extraLarge" }))}>
+            <span className="w-1/2">{data.diapatchCode}</span>
+            <span className="w-1/2">{data.dispatchName}</span>
+          </p>
+          <p className={cn(dispatchListClass({ width: "large" }))}>{data.startDateTime}</p>
+          <p className={cn(dispatchListClass({ width: "medium" }))}>{data.totalOrder}</p>
+          <p className={cn(dispatchListClass({ width: "medium" }))}>{data.smNum}</p>
+          <p className={cn(dispatchListClass({ width: "medium" }))}>{data.manager}</p>
+        </li>
+      ))}
+    </ul>
   );
 };
 

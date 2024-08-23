@@ -1,26 +1,85 @@
+"use client";
+import { useEffect, useState } from "react";
 import DispatchLists from "@/components/dispatchLists";
 import TabForList from "@/components/TabForList";
 import SearchBars from "@/components/searchBar";
-import Button from "@/components/core/Button";
+import PaginationButtons from "@/components/core/pagination";
+import mockdata from "@/components/dispatchLists/mockdata.json";
+import ListSelection from "@/components/listSelection";
 
-const page = () => {
+interface DispatchItem {
+  progress: number;
+  diapatchCode: string;
+  dispatchName: string;
+  startDateTime: string;
+  totalOrder: number;
+  smNum: number;
+  manager: string;
+}
+
+const ControlPage = () => {
+  const [selectedState, setSelectedState] = useState("주행중");
+  const [filteredResults, setFilteredResults] = useState<DispatchItem[]>([]);
+  const [page, setPage] = useState(1);
+  const [currentPageGroup, setCurrentPageGroup] = useState(1);
+
+  const itemsPerPage = 10;
+
+  useEffect(() => {
+    const filterResults = (): DispatchItem[] => {
+      switch (selectedState) {
+        case "주행중":
+          return mockdata.results.filter((item) => item.progress > 0 && item.progress < 100);
+        case "주행대기":
+          return mockdata.results.filter((item) => item.progress === 0);
+        case "주행완료":
+          return mockdata.results.filter((item) => item.progress === 100);
+        default:
+          return [];
+      }
+    };
+
+    const results = filterResults();
+    setFilteredResults(results);
+    setPage(1); // 탭을 변경할 때 페이지를 초기화
+    setCurrentPageGroup(1); // 탭을 변경할 때 페이지 그룹도 초기화
+  }, [selectedState]);
+
+  const paginatedResults = filteredResults.slice((page - 1) * itemsPerPage, page * itemsPerPage);
+
   return (
     <>
       <h1 className="text-H-28-B">차량 관제</h1>
-      <SearchBars />
-      <TabForList />
-      <div className="flex">
-        <p>총 00건 | 선택 00건</p>
-        <Button size="s" type="submit">
-          배차 강제 종료
-        </Button>
-        <Button size="s" shape="text" className="">
-          액셀 다운로드
-        </Button>
+      <div className="flex flex-col gap-[28px] pl-[10px]">
+        <SearchBars data={mockdata} />
+        <TabForList
+          data={{
+            inProgress: mockdata.results.filter((item) => item.progress > 0 && item.progress < 100).length,
+            waiting: mockdata.results.filter((item) => item.progress === 0).length,
+            completed: mockdata.results.filter((item) => item.progress === 100).length,
+          }}
+          onStateChange={setSelectedState}
+        />
+        <ListSelection data={mockdata} />
+        <DispatchLists
+          data={{
+            inProgress: filteredResults.filter((item) => item.progress > 0 && item.progress < 100).length,
+            waiting: filteredResults.filter((item) => item.progress === 0).length,
+            completed: filteredResults.filter((item) => item.progress === 100).length,
+            results: paginatedResults,
+          }}
+        />
+        <PaginationButtons
+          page={page}
+          totalItems={filteredResults.length}
+          perPage={itemsPerPage}
+          onPageChange={setPage}
+          currentPageGroup={currentPageGroup}
+          setCurrentPageGroup={setCurrentPageGroup}
+        />
       </div>
-      <DispatchLists />
     </>
   );
 };
 
-export default page;
+export default ControlPage;

@@ -1,10 +1,8 @@
-"use client";
-
-import { useState } from "react";
-import { tabClass, numberClass } from "./index.varients";
+import { useState, useEffect } from "react";
+import { tabClass, numberClass } from "./index.variants";
 import { cn } from "@/utils/cn";
 
-interface TabForListProps {
+interface TabForListChangeProps {
   states?: string[];
   numbers?: number[];
   initialSelectedState?: string;
@@ -16,7 +14,7 @@ const TabForListChange = ({
   numbers = [],
   initialSelectedState,
   onStateChange = () => {},
-}: TabForListProps) => {
+}: TabForListChangeProps) => {
   const [selectedState, setSelectedState] = useState(initialSelectedState ?? states[0]);
 
   const handleStateClick = (state: string) => {
@@ -24,23 +22,25 @@ const TabForListChange = ({
     onStateChange(state);
   };
 
+  useEffect(() => {
+    console.log(`Selected state: ${selectedState}`);
+  }, [selectedState]);
+
   return (
     <div className="flex h-[48px] text-T-18-B">
       {states.map((state, index) => {
         const isSelected = selectedState === state;
-        const isError = state === "오류";
-        const isCompleteOrAll = ["전체", "완료"].includes(state);
 
         return (
           <div
             key={state}
-            className={cn(tabClass({ isSelected, isCompleteOrAll, isError }))}
+            className={cn(tabClass({ isSelected }))}
             onClick={() => handleStateClick(state)}
             role="tab"
             aria-selected={isSelected}
           >
             <span>{state}</span>
-            <span className={cn(numberClass({ isError, isCompleteOrAll, isSelected }))}>{numbers[index]}</span>
+            <span className={cn(numberClass({ isSelected }))}>{numbers[index]}</span>
             {isSelected && <div className="absolute bottom-0 left-0 right-0 h-[5px] bg-blue-500"></div>}
           </div>
         );

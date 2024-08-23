@@ -1,18 +1,23 @@
-"use client";
-
 import TabForListChange from "./TabForListChange";
-import mockdata from "@/components/dispatchLists/mockdata.json";
 
-const TabForList = () => {
-  const drivingStates = ["주행중", "주행대기", "주행완료"];
-  // const drivingStates = ["전체", "완료", "오류"];
-  const drivingStatesNumber = [10, 4, 12];
-
-  const handleStateChange = (newState: string) => {
-    console.log("Selected state:", newState);
+interface TabForListProps {
+  data: {
+    inProgress: number;
+    waiting: number;
+    completed: number;
   };
+  onStateChange: (state: string) => void;
+}
 
-  return <TabForListChange states={drivingStates} numbers={drivingStatesNumber} onStateChange={handleStateChange} />;
+const TabForList = ({ data, onStateChange }: TabForListProps) => {
+  const drivingStates = ["주행중", "주행대기", "주행완료"];
+  const numbersState = [data.inProgress, data.waiting, data.completed];
+
+  return (
+    <div className="box-border h-[48px] border-b border-gray-200">
+      <TabForListChange states={drivingStates} numbers={numbersState} onStateChange={onStateChange} />
+    </div>
+  );
 };
 
 export default TabForList;

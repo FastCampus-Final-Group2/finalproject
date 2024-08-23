@@ -1,65 +1,80 @@
-"use client";
-
-import { useState } from "react";
-import Icon from "@/components/core/Icon";
 import { cn } from "@/utils/cn";
-import paginationClass from "./index.varients";
+import React from "react";
+import paginationClass from "./index.variants";
+import Icon from "@/components/core/Icon";
 
-const Pagination = ({
-  totalPages = 5,
-  currentPage = 1,
+interface PaginationButtonsProps {
+  page: number;
+  totalItems: number;
+  perPage: number;
+  onPageChange: (page: number) => void;
+  currentPageGroup: number;
+  setCurrentPageGroup: (pageGroup: number) => void;
+}
+
+const PaginationButtons: React.FC<PaginationButtonsProps> = ({
+  page,
+  totalItems,
+  perPage,
   onPageChange,
-}: {
-  totalPages?: number;
-  currentPage?: number;
-  onPageChange?: (page: number) => void;
+  currentPageGroup,
+  setCurrentPageGroup,
 }) => {
-  const [activePage, setActivePage] = useState(currentPage);
+  const totalPages = Math.ceil(totalItems / perPage);
+  const pagesPerGroup = 5;
 
-  const handlePageClick = (page: number) => {
-    setActivePage(page);
-    if (onPageChange) onPageChange(page);
-  };
+  const startPage = (currentPageGroup - 1) * pagesPerGroup + 1;
+  const endPage = Math.min(startPage + pagesPerGroup - 1, totalPages);
 
-  const handlePrevClick = () => {
-    if (activePage > 1) {
-      handlePageClick(activePage - 1);
+  const handleClick = (newPage: number) => {
+    if (newPage >= 1 && newPage <= totalPages) {
+      onPageChange(newPage);
+      const newGroup = Math.ceil(newPage / pagesPerGroup);
+      if (newGroup !== currentPageGroup) {
+        setCurrentPageGroup(newGroup);
+      }
     }
-  };
-
-  const handleNextClick = () => {
-    if (activePage < totalPages) {
-      handlePageClick(activePage + 1);
-    }
-  };
-
-  const renderPageNumbers = () => {
-    const pages = [];
-    for (let i = 1; i <= totalPages; i++) {
-      pages.push(
-        <button
-          key={i}
-          className={cn("pagination-button", activePage === i && "active")}
-          onClick={() => handlePageClick(i)}
-        >
-          {i}
-        </button>,
-      );
-    }
-    return pages;
   };
 
   return (
     <div className={cn(paginationClass())}>
-      <button onClick={handlePrevClick} disabled={activePage === 1}>
-        <Icon id="arrowLeft" size={16} />
+      {currentPageGroup > 1 && (
+        <button onClick={() => handleClick(startPage - 1)} className={cn(paginationClass({ hover: "please" }))}>
+          <Icon id="arrowLargeDoubleLeft" size={14} />
+        </button>
+      )}
+      <button
+        onClick={() => handleClick(page - 1)}
+        disabled={page === 1}
+        className={cn(paginationClass({ hover: "please" }))}
+      >
+        <Icon id="arrowLeft" />
       </button>
-      <button>{renderPageNumbers()}</button>
-      <button onClick={handleNextClick} disabled={activePage === totalPages}>
-        <Icon id="arrowRight" size={16} />
+      {Array.from({ length: endPage - startPage + 1 }, (_, index) => startPage + index).map((pageNumber) => (
+        <button
+          key={pageNumber}
+          onClick={() => handleClick(pageNumber)}
+          className={cn(paginationClass({ hover: "please" }), {
+            active: pageNumber === page,
+          })}
+        >
+          {pageNumber}
+        </button>
+      ))}
+      <button
+        onClick={() => handleClick(page + 1)}
+        disabled={page === totalPages}
+        className={cn(paginationClass({ hover: "please" }))}
+      >
+        <Icon id="arrowRight" />
       </button>
+      {currentPageGroup < Math.ceil(totalPages / pagesPerGroup) && (
+        <button onClick={() => handleClick(endPage + 1)} className={cn(paginationClass({ hover: "please" }))}>
+          <Icon id="arrowLargeDoubleRight" size={14} />
+        </button>
+      )}
     </div>
   );
 };
 
-export default Pagination;
+export default PaginationButtons;

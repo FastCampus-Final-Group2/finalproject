@@ -1,9 +1,10 @@
 import Icon from "@/components/core/Icon";
-import { dispatchListClass } from "./index.varients";
+import { dispatchListClass } from "./index.variants";
 import { cn } from "@/utils/cn";
+import CheckBox from "@/components/core/CheckBox";
 
 const tableHeader = [
-  { text: "진행률", width: "medium" as const },
+  { text: "진행률", width: "small" as const },
   { text: "배차 코드", width: "extraLarge" as const },
   { text: "상하차 시작 일자", width: "large" as const },
   { text: "총 주문", width: "medium" as const },
@@ -14,8 +15,8 @@ const tableHeader = [
 const ListHeader = () => {
   return (
     <ul className={cn(dispatchListClass({ backgroundColor: "header" }))}>
-      <li className={cn(dispatchListClass({ width: "small" }))}>
-        <Icon id="checkBox" />
+      <li className={cn(dispatchListClass({ width: "extraSmall" }))}>
+        <CheckBox />
       </li>
       {tableHeader.map((header, index) => (
         <li key={index} className={cn(dispatchListClass({ width: header.width, text: "medium" }))}>
