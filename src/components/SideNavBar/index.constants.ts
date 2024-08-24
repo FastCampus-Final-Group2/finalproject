@@ -3,7 +3,7 @@ import { IconId } from "@/components/core/Icon";
 export interface SideNavBarLink {
   [key: string]: unknown;
   iconId: IconId;
-  name: string;
+  name: "기준정보" | "주문관리" | "운송관리" | "배차관리" | "차량관리" | "운임정산" | "레포트센터" | "공지사항";
   href?: string;
   subMenu?: { name: string }[];
 }
