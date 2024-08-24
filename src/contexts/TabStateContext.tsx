@@ -6,7 +6,7 @@ import { createContext, useCallback, useContext, useEffect, useState } from "rea
 const TabStateKey = "GLT_TAB_STATE";
 
 type HrefType = SideNavBarLink["href"];
-type NameType = SideNavBarLink["name"];
+type NameType = Exclude<SideNavBarLink["name"], "배차관리">;
 
 interface TabInfo {
   href: HrefType;
@@ -36,7 +36,7 @@ export const TabStateContextProvider = ({ children }: { children: React.ReactNod
 
   const addTab = useCallback(
     (href: HrefType, name: NameType) => {
-      if (tabStates.length >= 5) return;
+      if (tabStates.length >= 4) return;
       if (tabStates.some((tabState) => tabState.href === href)) return;
 
       try {

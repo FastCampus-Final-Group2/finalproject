@@ -1,11 +1,11 @@
 import Icon from "@/components/core/Icon";
 import type { SideNavBarLink } from "@/components/SideNavBar/index.constants";
-import { SIDE_NAV_BAR_LINKS } from "@/components/SideNavBar/index.constants";
 import { useTabStateContext } from "@/contexts/TabStateContext";
 import { usePathname, useRouter } from "next/navigation";
+import { DEFAULT_TAB } from "@/components/GlobalNavBar/index.constants";
 
 interface GlobalNavBarTabItem {
-  tabName: (typeof SIDE_NAV_BAR_LINKS)[number]["name"];
+  tabName: SideNavBarLink["name"];
   href: SideNavBarLink["href"];
   isMyMenu?: boolean;
 }
@@ -43,16 +43,18 @@ const GlobalNavBarTabItem = ({ isMyMenu = false, href, tabName }: GlobalNavBarTa
           />
         )}
       </div>
-      <button
-        type="button"
-        className="py-[1px]"
-        onClick={(event) => {
-          event.stopPropagation();
-          removeTab(tabName);
-        }}
-      >
-        <Icon id="x" size={20} className="text-gray-700" />
-      </button>
+      {tabName !== DEFAULT_TAB.name && (
+        <button
+          type="button"
+          className="py-[1px]"
+          onClick={(event) => {
+            event.stopPropagation();
+            removeTab(tabName);
+          }}
+        >
+          <Icon id="x" size={20} className="text-gray-700" />
+        </button>
+      )}
     </button>
   );
 };

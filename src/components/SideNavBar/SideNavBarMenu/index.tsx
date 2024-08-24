@@ -7,6 +7,7 @@ import { useTabStateContext } from "@/contexts/TabStateContext";
 import type { SideNavBarLink } from "@/components/SideNavBar/index.constants";
 import SideNavBarSubMenu from "@/components/SideNavBar/SideNavBarSubMenu";
 import { useCallback, useReducer } from "react";
+import { DEFAULT_TAB } from "@/components/GlobalNavBar/index.constants";
 
 interface SideNavBarMenuProps {
   SideNavBarInfo: SideNavBarLink;
@@ -33,8 +34,10 @@ const SideNavBarMenu = ({
     } else {
       if (!href) return;
       if (!isSNBOpened) return;
+      if (name !== DEFAULT_TAB.name) {
+        addTab(href, name);
+      }
 
-      addTab(href, name);
       router.push(href);
     }
   }, [addTab, href, isSNBOpened, name, router, setCurrentMenu, subMenu]);
