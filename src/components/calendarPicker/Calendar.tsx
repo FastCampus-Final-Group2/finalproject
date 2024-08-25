@@ -23,7 +23,7 @@ const Calendar = ({ startDate, onDateClick }: CalendarProps) => {
   };
 
   return (
-    <div className="flex h-80 flex-col">
+    <div className="flex flex-col border-r border-gray-100">
       <Header currentMonth={currentMonth} nextMonth={nextMonth} prevMonth={prevMonth} nextMonthFunc={nextMonthFunc} />
       <div className="flex justify-center gap-3">
         <Month month={currentMonth} startDate={startDate} onDateClick={onDateClick} />

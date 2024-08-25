@@ -5,7 +5,7 @@ import { useState } from "react";
 import CalendarPicker from "@/components/calendarPicker";
 
 const SearchDate = () => {
-  const [startDate, setStartDate] = useState<string>("연-월-일 --:-- 시작");
+  const [startDate, setStartDate] = useState<string>("YYYY-MM-DD --:--");
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
 
   // SearchDate에서 확인 버튼을 눌렀을 때 호출되는 함수
@@ -19,7 +19,7 @@ const SearchDate = () => {
   };
   return (
     <>
-      <div className="flex w-fit gap-[12px] rounded-[8px] border border-gray-200 p-[12px] text-T-16-B">
+      <div className="flex w-fit gap-[12px] rounded-[8px] p-[12px] text-T-16-B">
         <div>상하차시작일시</div>
         <p className="flex cursor-pointer items-center text-SB-14-M" onClick={toggleCalendar}>
           <Icon id="clock" />

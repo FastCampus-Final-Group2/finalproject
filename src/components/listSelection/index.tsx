@@ -11,7 +11,7 @@ interface ListSelectionProps {
 const ListSelection = ({ data }: ListSelectionProps) => {
   return (
     <div className="flex items-center justify-between">
-      <ul className="flex">
+      <ul className="flex text-T-16-M">
         <li>총 {data.inProgress + data.waiting + data.completed}건</li>
         <li>&nbsp;|&nbsp;</li>
         <li>선택 00건</li>

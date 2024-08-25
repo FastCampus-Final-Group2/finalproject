@@ -1,8 +1,6 @@
-import React from "react";
-
 const dayNames = ["일", "월", "화", "수", "목", "금", "토"];
 
-const DaysRow: React.FC = () => {
+const DaysRow = () => {
   return (
     <div className="text-lg font-bold flex w-full justify-between text-red-500">
       {dayNames.map((day, index) => (

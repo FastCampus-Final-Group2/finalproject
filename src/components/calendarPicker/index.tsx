@@ -29,12 +29,12 @@ const CalendarPicker = ({ onSelectDate }: SearchDateProps) => {
   };
 
   return (
-    <div>
-      <div className="relative z-50 flex flex-row items-center bg-white">
+    <div className="flex flex-col items-end rounded-[8px] bg-white p-[10px]">
+      <div className="relative mb-[10px] flex border-b border-gray-100">
         <Calendar startDate={startDate} onDateClick={handleDateClick} />
         <div>
-          <div className="flex justify-center">
-            <p className="text-B-14-B">
+          <div className="flex h-[34px] justify-center">
+            <p className="flex items-center text-B-14-B">
               {selectedHour !== null && selectedMinute !== null
                 ? `${selectedHour.toString().padStart(2, "0")}:${selectedMinute.toString().padStart(2, "0")}`
                 : ""}
@@ -48,7 +48,9 @@ const CalendarPicker = ({ onSelectDate }: SearchDateProps) => {
           />
         </div>
       </div>
-      <Button onClick={handleConfirmClick}>확인</Button>
+      <Button onClick={handleConfirmClick} shape="text" size="i" className="text-B-14-M">
+        확인
+      </Button>
     </div>
   );
 };

@@ -1,4 +1,3 @@
-import React from "react";
 import dayjs from "dayjs";
 import DaysRow from "./DaysRow";
 import Cell from "./DaysCell";
@@ -9,7 +8,7 @@ interface MonthProps {
   onDateClick: (date: dayjs.Dayjs) => void;
 }
 
-const Month: React.FC<MonthProps> = ({ month, startDate, onDateClick }) => {
+const Month = ({ month, startDate, onDateClick }: MonthProps) => {
   const renderCells = (month: dayjs.Dayjs) => {
     const monthStart = month.startOf("month");
     const monthEnd = month.endOf("month");
@@ -53,7 +52,7 @@ const Month: React.FC<MonthProps> = ({ month, startDate, onDateClick }) => {
   };
 
   return (
-    <div className="relative flex flex-col">
+    <div className="relative flex flex-col px-[15px] py-[10px]">
       <DaysRow />
       {renderCells(month)}
     </div>

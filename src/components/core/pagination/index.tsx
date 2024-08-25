@@ -1,9 +1,8 @@
 import { cn } from "@/utils/cn";
-import React from "react";
 import paginationClass from "./index.variants";
 import Icon from "@/components/core/Icon";
 
-interface PaginationButtonsProps {
+interface PaginationProps {
   page: number;
   totalItems: number;
   perPage: number;
@@ -12,14 +11,14 @@ interface PaginationButtonsProps {
   setCurrentPageGroup: (pageGroup: number) => void;
 }
 
-const PaginationButtons: React.FC<PaginationButtonsProps> = ({
+const PaginationButtons = ({
   page,
   totalItems,
   perPage,
   onPageChange,
   currentPageGroup,
   setCurrentPageGroup,
-}) => {
+}: PaginationProps) => {
   const totalPages = Math.ceil(totalItems / perPage);
   const pagesPerGroup = 5;
 
@@ -39,37 +38,34 @@ const PaginationButtons: React.FC<PaginationButtonsProps> = ({
   return (
     <div className={cn(paginationClass())}>
       {currentPageGroup > 1 && (
-        <button onClick={() => handleClick(startPage - 1)} className={cn(paginationClass({ hover: "please" }))}>
+        <button onClick={() => handleClick(startPage - 1)}>
           <Icon id="arrowLargeDoubleLeft" size={14} />
         </button>
       )}
-      <button
-        onClick={() => handleClick(page - 1)}
-        disabled={page === 1}
-        className={cn(paginationClass({ hover: "please" }))}
-      >
+      <button onClick={() => handleClick(page - 1)} disabled={page === 1}>
         <Icon id="arrowLeft" />
       </button>
       {Array.from({ length: endPage - startPage + 1 }, (_, index) => startPage + index).map((pageNumber) => (
         <button
           key={pageNumber}
           onClick={() => handleClick(pageNumber)}
-          className={cn(paginationClass({ hover: "please" }), {
-            active: pageNumber === page,
-          })}
+          className={cn(
+            paginationClass({
+              active: pageNumber === page ? "please" : "none",
+              hover: "please",
+            }),
+            "h-[28px] w-[24px]",
+          )}
         >
           {pageNumber}
+          {pageNumber === page && <span className="absolute bottom-0 left-0 h-[3px] w-full bg-blue-500" />}
         </button>
       ))}
-      <button
-        onClick={() => handleClick(page + 1)}
-        disabled={page === totalPages}
-        className={cn(paginationClass({ hover: "please" }))}
-      >
+      <button onClick={() => handleClick(page + 1)} disabled={page === totalPages}>
         <Icon id="arrowRight" />
       </button>
       {currentPageGroup < Math.ceil(totalPages / pagesPerGroup) && (
-        <button onClick={() => handleClick(endPage + 1)} className={cn(paginationClass({ hover: "please" }))}>
+        <button onClick={() => handleClick(endPage + 1)}>
           <Icon id="arrowLargeDoubleRight" size={14} />
         </button>
       )}

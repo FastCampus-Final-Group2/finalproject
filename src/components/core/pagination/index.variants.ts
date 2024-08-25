@@ -1,19 +1,19 @@
 import { cva } from "class-variance-authority";
 
-const paginationClass = cva("flex items-center justify-center text-gray-900 gap-[8px]", {
+const paginationClass = cva("flex items-center justify-center text-gray-900 gap-[8px] text-B-14-M ", {
   variants: {
-    text: {
-      bold: "text-B-14-B w-[24] h-[28px]",
-      medium: "text-B-14-M",
-    },
     hover: {
-      default: "",
-      please: "hover:text-blue-500", // hover 상태일 때 색상 변경
+      please: "hover:text-B-14-B",
+      none: "",
+    },
+    active: {
+      please: "relative !text-blue-500 text-B-14-B ",
+      none: "",
     },
   },
   defaultVariants: {
-    text: "medium",
-    hover: "please",
+    hover: "none",
+    active: "none",
   },
 });
 
