@@ -1,17 +1,14 @@
 "use client";
 
 import Icon from "@/components/core/Icon";
-import { useRouter } from "next/navigation";
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useRef } from "react";
 
 interface FileInputProps {
+  setExcelFile: React.Dispatch<React.SetStateAction<File | null>>;
   setIsError: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const FileInput = ({ setIsError }: FileInputProps) => {
-  const router = useRouter();
-  const [excelFile, setExcelFile] = useState<File | null>(null);
-  console.log(excelFile);
+const FileInput = ({ setIsError, setExcelFile }: FileInputProps) => {
   const validateAndSetFile = (uploadedFile: File | null) => {
     if (!uploadedFile) {
       setIsError(true);
@@ -39,18 +36,6 @@ const FileInput = ({ setIsError }: FileInputProps) => {
 
   const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
-  };
-
-  const handleSubmit = () => {
-    if (excelFile) {
-      const reader = new FileReader();
-      reader.onload = () => {
-        console.log("upload");
-      };
-      // reader.readAsDataURL(excelFile);
-    } else {
-      setIsError(true);
-    }
   };
 
   const fileRef = useRef<HTMLInputElement>(null);

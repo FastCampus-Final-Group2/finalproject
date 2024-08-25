@@ -2,6 +2,7 @@
 
 import Icon from "@/components/core/Icon";
 import FileInput from "./FileInput.tsx";
+import { useState } from "react";
 
 interface UploadModalProps {
   setModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -9,6 +10,20 @@ interface UploadModalProps {
 }
 
 const UploadModal = ({ setModalOpen, setIsError }: UploadModalProps) => {
+  const [excelFile, setExcelFile] = useState<File | null>(null);
+
+  // TODO
+  const handleUploadFile = () => {
+    if (excelFile) {
+      const reader = new FileReader();
+      reader.onload = () => {
+        console.log("upload");
+      };
+    } else {
+      setIsError(true);
+    }
+  };
+
   return (
     <div className="z-modal fixed left-0 top-0 flex h-screen w-screen items-center justify-center bg-black bg-opacity-40">
       <div className="flex flex-col gap-5 rounded-2xl bg-white p-8">
@@ -26,7 +41,7 @@ const UploadModal = ({ setModalOpen, setIsError }: UploadModalProps) => {
           </div>
           <div>수동배차를 진행할 주문목록을 업로드해 주세요.</div>
         </header>
-        <FileInput setIsError={setIsError} />
+        <FileInput setExcelFile={setExcelFile} setIsError={setIsError} />
       </div>
     </div>
   );
