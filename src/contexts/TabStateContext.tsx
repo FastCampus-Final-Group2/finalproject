@@ -51,7 +51,7 @@ export const TabStateContextProvider = ({ children }: { children: React.ReactNod
 
   const removeTab = useCallback(
     (name: NameType) => {
-      if (tabStates.length <= 1) return;
+      if (tabStates.length <= 0) return;
       const index = tabStates.findIndex((tabState) => tabState.name === name);
 
       try {

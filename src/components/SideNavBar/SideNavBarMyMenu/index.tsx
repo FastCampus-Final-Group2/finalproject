@@ -3,10 +3,13 @@
 import Icon from "@/components/core/Icon";
 import { useSNBStateContext } from "@/contexts/SNBStateContext";
 import { useReducer } from "react";
+import SideNavBarSubMenu from "@/components/SideNavBar/SideNavBarSubMenu";
+import { useMyMenus } from "@/hooks/useMyMenus";
 
 const SideNavBarMyMenu = () => {
-  const [isOpened, toggleMyMenu] = useReducer((v) => !v, false);
+  const [isMyMenuOpened, toggleMyMenu] = useReducer((v) => !v, false);
   const { isSNBOpened } = useSNBStateContext();
+  const { myMenus } = useMyMenus();
 
   return (
     <div className={isSNBOpened ? "py-[2px] pl-[25px] pr-4" : "flex justify-center"}>
@@ -19,10 +22,17 @@ const SideNavBarMyMenu = () => {
         {isSNBOpened && (
           <>
             <span className="flex w-[92px] text-white text-T-18-B group-hover:text-blue-500">My Menu</span>
-            <Icon id={isOpened ? "arrowUp" : "arrowDown"} size={20} className="text-white" />
+            <Icon id={isMyMenuOpened ? "arrowUp" : "arrowDown"} size={20} className="text-white" />
           </>
         )}
       </button>
+      {isSNBOpened && (
+        <div className={`overflow-hidden transition-[height] duration-[10000] ${isMyMenuOpened ? "h-max" : "h-0"}`}>
+          {myMenus?.map((name) => {
+            return <SideNavBarSubMenu key={name} subMenuName={name} />;
+          })}
+        </div>
+      )}
     </div>
   );
 };

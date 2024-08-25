@@ -34,7 +34,8 @@
     "react-dom": "^18",
     "react-hook-form": "^7.52.2",
     "tailwind-merge": "^2.5.2",
-    "tailwind-scrollbar-hide": "^1.1.7"
+    "tailwind-scrollbar-hide": "^1.1.7",
+    "recoil": "^0.7.7"
   },
   "devDependencies": {
     "@types/navermaps": "^3.7.5",

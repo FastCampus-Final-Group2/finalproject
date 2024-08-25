@@ -1,24 +1,39 @@
+"use client";
+
 import Icon from "@/components/core/Icon";
 import type { SideNavBarLink } from "@/components/SideNavBar/index.constants";
 import { useTabStateContext } from "@/contexts/TabStateContext";
 import { usePathname, useRouter } from "next/navigation";
 import { DEFAULT_TAB } from "@/components/GlobalNavBar/index.constants";
+import { useMyMenus } from "@/hooks/useMyMenus";
+import { useCallback } from "react";
+import type { MouseEventHandler } from "react";
 
 interface GlobalNavBarTabItem {
   tabName: SideNavBarLink["name"];
   href: SideNavBarLink["href"];
-  isMyMenu?: boolean;
+  isMyMenu: boolean;
 }
 
-const GlobalNavBarTabItem = ({ isMyMenu = false, href, tabName }: GlobalNavBarTabItem) => {
-  const { removeTab } = useTabStateContext();
+const GlobalNavBarTabItem = ({ isMyMenu, href, tabName }: GlobalNavBarTabItem) => {
+  const { tabStates, removeTab } = useTabStateContext();
   const router = useRouter();
   const pathname = usePathname();
   const isPageOpened = pathname === href;
+  const { addMyMenu, removeMyMenu } = useMyMenus();
+
+  const handleToggleMyMenuButton: MouseEventHandler<HTMLButtonElement> = useCallback(
+    (event) => {
+      event.stopPropagation();
+      if (isMyMenu) removeMyMenu(tabName);
+      else addMyMenu(tabName);
+    },
+    [addMyMenu, isMyMenu, removeMyMenu, tabName],
+  );
 
   return (
-    <button
-      type="button"
+    <div
+      role="button"
       onClick={() => {
         if (!href) return;
         router.push(href);
@@ -29,19 +44,21 @@ const GlobalNavBarTabItem = ({ isMyMenu = false, href, tabName }: GlobalNavBarTa
         className={`flex flex-1 items-center gap-1 text-T-18-B ${isPageOpened ? "text-blue-500" : "text-gray-700 group-hover:text-blue-500"}`}
       >
         {tabName}
-        {isMyMenu ? (
-          <Icon
-            id="starFill"
-            size={18}
-            className={`group-hover:text-blue-500 ${isPageOpened ? "text-blue-500" : "text-gray-700"}`}
-          />
-        ) : (
-          <Icon
-            id="star"
-            size={18}
-            className={`group-hover:text-blue-100 ${isPageOpened ? "text-blue-100" : "text-gray-700"}`}
-          />
-        )}
+        <button type="button" onClick={handleToggleMyMenuButton}>
+          {isMyMenu ? (
+            <Icon
+              id="starFill"
+              size={18}
+              className={`group-hover:text-blue-500 ${isPageOpened ? "text-blue-500" : "text-gray-700"}`}
+            />
+          ) : (
+            <Icon
+              id="star"
+              size={18}
+              className={`group-hover:text-blue-100 ${isPageOpened ? "text-blue-100" : "text-gray-700"}`}
+            />
+          )}
+        </button>
       </div>
       {tabName !== DEFAULT_TAB.name && (
         <button
@@ -50,12 +67,15 @@ const GlobalNavBarTabItem = ({ isMyMenu = false, href, tabName }: GlobalNavBarTa
           onClick={(event) => {
             event.stopPropagation();
             removeTab(tabName);
+
+            // TODO
+            if (tabStates.length === 1) router.push("/dispatch");
           }}
         >
           <Icon id="x" size={20} className="text-gray-700" />
         </button>
       )}
-    </button>
+    </div>
   );
 };
 
