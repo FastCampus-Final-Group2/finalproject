@@ -2,7 +2,7 @@
 
 import Icon from "@/components/core/Icon";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useCallback, useRef, useState } from "react";
 
 interface FileInputProps {
   setIsError: React.Dispatch<React.SetStateAction<boolean>>;
@@ -53,6 +53,12 @@ const FileInput = ({ setIsError }: FileInputProps) => {
     }
   };
 
+  const fileRef = useRef<HTMLInputElement>(null);
+
+  const handleUploadButton = useCallback(() => {
+    fileRef?.current?.click();
+  }, [fileRef]);
+
   return (
     <div
       role="input"
@@ -62,13 +68,22 @@ const FileInput = ({ setIsError }: FileInputProps) => {
     >
       <Icon id="upload" size={32} className="text-gray-600" />
       <p className="text-gray-600 text-B-14-R">여기로 파일을 끌어오세요.</p>
-      <button className="rounded border border-gray-600 bg-white px-2 py-1 text-gray-600 text-B-14-R">파일 선택</button>
-      <input
-        type="file"
-        accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-        className="hidden"
-        onChange={handleFileChange}
-      />
+      <label className="relative">
+        <button
+          className="rounded border border-gray-600 bg-white px-2 py-1 text-gray-600 text-B-14-R"
+          type="button"
+          onClick={handleUploadButton}
+        >
+          파일 선택
+        </button>
+        <input
+          ref={fileRef}
+          type="file"
+          accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+          className="hidden"
+          onChange={handleFileChange}
+        />
+      </label>
     </div>
   );
 };
