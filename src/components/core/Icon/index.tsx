@@ -21,6 +21,7 @@ type IconId =
   | "circleCheckFill"
   | "circleAlert"
   | "circleAlertFill"
+  | "download"
   | "triangleUp"
   | "triangleDown"
   | "warning"
