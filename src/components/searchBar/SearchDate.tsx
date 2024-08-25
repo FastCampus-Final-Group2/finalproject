@@ -1,32 +1,40 @@
 "use client";
 
-import Icon from "@/components/core/Icon";
 import { useState } from "react";
 import CalendarPicker from "@/components/calendarPicker";
 
 const SearchDate = () => {
   const [startDate, setStartDate] = useState<string>("YYYY-MM-DD --:--");
+  const [endDate, setEndDate] = useState<string>("YYYY-MM-DD --:--");
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
+  const [dateType, setDateType] = useState<"start" | "end">("start"); // Track which date to set
 
-  // SearchDate에서 확인 버튼을 눌렀을 때 호출되는 함수
   const handleDateConfirm = (date: string) => {
-    setStartDate(date);
-    setIsCalendarOpen(false); // 달력을 닫음
+    if (dateType === "start") {
+      setStartDate(date);
+    } else if (dateType === "end") {
+      setEndDate(date);
+    }
+    setIsCalendarOpen(false); // 버튼 눌러서 캘린더 닫기
   };
 
-  const toggleCalendar = () => {
+  const toggleCalendar = (type: "start" | "end") => {
+    setDateType(type);
     setIsCalendarOpen(!isCalendarOpen);
   };
+
   return (
     <>
       <div className="flex w-fit gap-[12px] rounded-[8px] p-[12px] text-T-16-B">
         <div>상하차시작일시</div>
-        <p className="flex cursor-pointer items-center text-SB-14-M" onClick={toggleCalendar}>
-          <Icon id="clock" />
-          <span>{startDate}</span> {/* 선택 날짜 표시 */}
+        <p className="flex cursor-pointer items-center text-SB-14-M" onClick={() => toggleCalendar("start")}>
+          <span>{startDate}</span> {/* 검색 시작일 설정 */}
+        </p>
+        <p>~</p>
+        <p className="flex cursor-pointer items-center text-SB-14-M" onClick={() => toggleCalendar("end")}>
+          <span>{endDate}</span> {/* 검색 종료일 설정 */}
         </p>
       </div>
-      {/* isCalendarOpen이 true일 때 SearchDate 컴포넌트 표시 */}
       {isCalendarOpen && (
         <div className="absolute top-16 z-50">
           <CalendarPicker onSelectDate={handleDateConfirm} />

@@ -26,6 +26,9 @@ const Month = ({ month, startDate, onDateClick }: MonthProps) => {
         const isPast = day.isBefore(dayjs(), "day");
         const isStartDate = startDate ? day.isSame(startDate, "day") : false;
         const isCurrentMonth = day.isSame(month, "month");
+        const isSunday = day.day() === 0;
+
+        const textColorClass = isPast ? "text-gray-400" : isSunday ? "text-red-500" : "text-B-14-M";
 
         days.push(
           <Cell
@@ -36,7 +39,7 @@ const Month = ({ month, startDate, onDateClick }: MonthProps) => {
             isCurrentMonth={isCurrentMonth}
             onClick={() => onDateClick(cloneDay)}
           >
-            <span>{formattedDate}</span>
+            <span className={textColorClass}>{formattedDate}</span>
           </Cell>,
         );
         day = day.add(1, "day");
