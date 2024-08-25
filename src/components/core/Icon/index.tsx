@@ -81,7 +81,9 @@ export type IconId =
   | "logout"
   | "arrowFront"
   | "arrowBack"
-  | "place";
+  | "place"
+  | "download"
+  | "upload";
 
 type IconSize = 14 | 16 | 18 | 20 | 24 | 28 | 32 | 40;
 

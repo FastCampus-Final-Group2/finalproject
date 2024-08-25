@@ -16,7 +16,8 @@ const borderRadius = {
 };
 
 const zIndex = {
-  nav: "9999",
+  nav: "9000",
+  modal: "9999",
 };
 
 export const layout = {
