@@ -1,9 +1,10 @@
 "use client";
 
-import { orderListState } from "@/atoms/orederList";
+import { excelDataState } from "@/atoms/excelData";
 import Icon from "@/components/core/Icon";
 import { EXCEL_HEADERS } from "@/constants/excel";
 import { ExcelData } from "@/types/order";
+import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useSetRecoilState } from "recoil";
 import * as XLSX from "xlsx";
@@ -13,8 +14,9 @@ interface FileInputProps {
 }
 
 const FileInput = ({ setIsError }: FileInputProps) => {
+  const router = useRouter();
   const [excelFile, setExcelFile] = useState<File | null>(null);
-  const setOrderList = useSetRecoilState(orderListState);
+  const setExcelData = useSetRecoilState(excelDataState);
 
   useEffect(() => {
     if (excelFile) {
@@ -54,7 +56,7 @@ const FileInput = ({ setIsError }: FileInputProps) => {
           return;
         }
 
-        setOrderList(
+        setExcelData(
           excelData.slice(4).map((row) => {
             return {
               deliveryType: row[0],
@@ -80,11 +82,13 @@ const FileInput = ({ setIsError }: FileInputProps) => {
             } as ExcelData;
           }),
         );
+
+        router.push("/dispatch");
       };
 
       reader.readAsArrayBuffer(excelFile);
     }
-  }, [excelFile, setIsError, setOrderList]);
+  }, [excelFile, router, setIsError, setExcelData]);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const uploadedFile = e.target.files?.[0] || null;

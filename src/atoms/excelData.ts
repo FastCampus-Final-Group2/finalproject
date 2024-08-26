@@ -1,14 +1,14 @@
-import { Order } from "@/types/order";
+import { ExcelData } from "@/types/order";
 import { atom } from "recoil";
 import { recoilPersist } from "recoil-persist";
 
 const { persistAtom } = recoilPersist({
-  key: "orderListState",
+  key: "excelDataState",
   storage: typeof window !== "undefined" ? sessionStorage : undefined,
 });
 
-export const orderListState = atom<Order[]>({
-  key: "orderListState",
+export const excelDataState = atom<ExcelData[]>({
+  key: "excelDataState",
   default: [],
   effects_UNSTABLE: [persistAtom],
 });
