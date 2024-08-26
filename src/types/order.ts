@@ -20,3 +20,26 @@ export interface Order {
   productCode?: string;
   productQuantity: number;
 }
+
+export interface ExcelData {
+  deliveryType?: string;
+  smName?: string;
+  shipmentNum?: string;
+  clientOrderKey?: string;
+  orderType?: string;
+  receivedDate?: string;
+  serviceRequestDate?: string;
+  serviceRequestTime?: string;
+  clientName?: string;
+  contact?: string;
+  address?: string;
+  detailAddress?: string;
+  zipcode?: string;
+  volume?: number;
+  weight?: number;
+  note?: string;
+  expectedServiceDuration?: number;
+  productName?: string;
+  productCode?: string;
+  productQuantity?: number;
+}

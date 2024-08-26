@@ -3,9 +3,9 @@
 import { orderListState } from "@/atoms/orederList";
 import Icon from "@/components/core/Icon";
 import { EXCEL_HEADERS } from "@/constants/excel";
-import { Order } from "@/types/order";
+import { ExcelData } from "@/types/order";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { useRecoilValue, useSetRecoilState } from "recoil";
+import { useSetRecoilState } from "recoil";
 import * as XLSX from "xlsx";
 
 interface FileInputProps {
@@ -15,9 +15,7 @@ interface FileInputProps {
 const FileInput = ({ setIsError }: FileInputProps) => {
   const [excelFile, setExcelFile] = useState<File | null>(null);
   const setOrderList = useSetRecoilState(orderListState);
-  const ol = useRecoilValue(orderListState);
-  console.log(ol);
-  // TODO
+
   useEffect(() => {
     if (excelFile) {
       if (!excelFile.type.includes("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")) {
@@ -36,7 +34,6 @@ const FileInput = ({ setIsError }: FileInputProps) => {
         const excelData = (XLSX.utils.sheet_to_json(worksheet, { header: 1 }) as unknown[][]).filter((row) =>
           row.some((cell) => cell !== undefined && cell !== ""),
         );
-        console.log(excelData);
 
         const isExcelHeaderCorrect = excelData[0].every((header, index) => {
           return header === EXCEL_HEADERS[index];
@@ -65,10 +62,9 @@ const FileInput = ({ setIsError }: FileInputProps) => {
               shipmentNum: row[2],
               clientOrderKey: row[3],
               orderType: row[4],
-              // TODO 날짜 수정
-              receivedDate: new Date(2024, 8, 25),
-              serviceRequestDate: new Date(2024, 9, 1),
-              serviceRequestTime: new Date(2024, 9, 1, 15, 30),
+              receivedDate: row[5],
+              serviceRequestDate: row[6],
+              serviceRequestTime: row[7],
               clientName: row[8],
               contact: row[9],
               address: row[10],
@@ -81,7 +77,7 @@ const FileInput = ({ setIsError }: FileInputProps) => {
               productName: row[17],
               productCode: row[18],
               productQuantity: Number(row[19]),
-            } as Partial<Order>;
+            } as ExcelData;
           }),
         );
       };
