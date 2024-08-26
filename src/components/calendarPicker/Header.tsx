@@ -9,7 +9,7 @@ interface HeaderProps {
 
 const Header = ({ currentMonth, prevMonth, nextMonthFunc }: HeaderProps) => {
   return (
-    <div className="text-lg relative mb-[5px] flex items-center border-b border-gray-100 py-[5px]">
+    <div className="relative mb-[5px] flex items-center border-b border-gray-100 py-[5px] text-B-14-B">
       <button onClick={prevMonth} className="absolute left-[10px] text-gray-500">
         &lt;
       </button>

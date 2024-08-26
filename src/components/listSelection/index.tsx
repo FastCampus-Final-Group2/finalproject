@@ -13,7 +13,7 @@ const ListSelection = ({ data }: ListSelectionProps) => {
     <div className="flex items-center justify-between">
       <ul className="flex text-T-16-M">
         <li>총 {data.inProgress + data.waiting + data.completed}건</li>
-        <li>&nbsp;|&nbsp;</li>
+        <li>&nbsp;&nbsp;|&nbsp;&nbsp;</li>
         <li>선택 00건</li>
       </ul>
       <div className="flex">

@@ -19,7 +19,7 @@ interface SearchBarsProps {
 
 const SearchBars = ({ data }: SearchBarsProps) => {
   return (
-    <div className="relative flex items-center gap-[14px]">
+    <div className="flex items-center gap-[14px]">
       <SearchDate />
       <div className="flex w-fit items-center gap-[12px] rounded-[8px] border border-gray-200 p-[12px] text-T-16-B">
         <SearchCategory />
