@@ -8,6 +8,14 @@ import type { SideNavBarLink } from "@/components/SideNavBar/index.constants";
 import SideNavBarSubMenu from "@/components/SideNavBar/SideNavBarSubMenu";
 import { useCallback, useReducer } from "react";
 import { DEFAULT_TAB } from "@/components/GlobalNavBar/index.constants";
+import { cn } from "@/utils/cn";
+import {
+  snbMenuContainerVariants,
+  snbMenuIconVariants,
+  snbMenuNameVariants,
+  snbMenuVariants,
+  snbSubMenuContainerVariants,
+} from "./index.variants";
 
 interface SideNavBarMenuProps {
   SideNavBarInfo: SideNavBarLink;
@@ -24,7 +32,7 @@ const SideNavBarMenu = ({
   const pathname = usePathname();
   const { addTab } = useTabStateContext();
   const { isSNBOpened } = useSNBStateContext();
-  const isPageOpened = href && pathname === href;
+  const isPageOpened = href && pathname === href ? true : false;
   const [isMenuOpened, toggleMenu] = useReducer((v) => !v, false);
 
   const handleMenuToggleButton = useCallback(() => {
@@ -43,24 +51,16 @@ const SideNavBarMenu = ({
   }, [addTab, href, isSNBOpened, name, router, setCurrentMenu, subMenu]);
 
   return (
-    <div className={isSNBOpened ? "py-[2px] pl-[25px] pr-4" : "flex justify-center"}>
+    <div className={cn(snbMenuContainerVariants({ isSNBOpened }))}>
       <button
         type="button"
-        className={`group flex items-center gap-2 rounded-full hover:bg-white ${isSNBOpened ? "py-[7px] pl-[15px] pr-5" : "justify-center p-2"} ${isPageOpened && "bg-white"}`}
+        className={cn(snbMenuVariants({ isSNBOpened, isPageOpened }))}
         onClick={handleMenuToggleButton}
       >
-        <Icon
-          id={iconId}
-          size={isSNBOpened ? 20 : 24}
-          className={`-translate-x-[1px] group-hover:text-blue-500 ${isPageOpened ? "text-blue-500" : "text-white"}`}
-        />
+        <Icon id={iconId} size={isSNBOpened ? 20 : 24} className={cn(snbMenuIconVariants({ isPageOpened }))} />
         {isSNBOpened && (
           <>
-            <span
-              className={`flex w-[92px] truncate text-T-18-B group-hover:text-blue-500 ${isPageOpened ? "text-blue-500" : "text-white"}`}
-            >
-              {name}
-            </span>
+            <span className={cn(snbMenuNameVariants({ isPageOpened }))}>{name}</span>
             {subMenu ? (
               <Icon id={isMenuOpened ? "arrowUp" : "arrowDown"} size={20} className="text-white" />
             ) : (
@@ -70,9 +70,7 @@ const SideNavBarMenu = ({
         )}
       </button>
       {isSNBOpened && currentMenu === name && (
-        <div
-          className={`overflow-hidden transition-[height] duration-[10000] ${isMenuOpened || isPageOpened ? "h-max" : "h-0"}`}
-        >
+        <div className={cn(snbSubMenuContainerVariants({ isMenuOpened }))}>
           {subMenu?.map(({ name }) => {
             return <SideNavBarSubMenu key={name} subMenuName={name} />;
           })}

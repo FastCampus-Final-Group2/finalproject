@@ -5,6 +5,8 @@ import { useSNBStateContext } from "@/contexts/SNBStateContext";
 import { useReducer } from "react";
 import SideNavBarSubMenu from "@/components/SideNavBar/SideNavBarSubMenu";
 import { useMyMenus } from "@/hooks/useMyMenus";
+import { cn } from "@/utils/cn";
+import { snbMyMenuContainerVariants, snbMyMenuVariants, snbMySubMenuContainerVariants } from "./index.variants";
 
 const SideNavBarMyMenu = () => {
   const [isMyMenuOpened, toggleMyMenu] = useReducer((v) => !v, false);
@@ -12,12 +14,8 @@ const SideNavBarMyMenu = () => {
   const { myMenus } = useMyMenus();
 
   return (
-    <div className={isSNBOpened ? "py-[2px] pl-[25px] pr-4" : "flex justify-center"}>
-      <button
-        className={`group flex items-center gap-2 rounded-full hover:bg-white ${isSNBOpened ? "py-[7px] pl-[15px] pr-5" : "justify-center p-2"}`}
-        type="button"
-        onClick={toggleMyMenu}
-      >
+    <div className={cn(snbMyMenuContainerVariants({ isSNBOpened }))}>
+      <button className={cn(snbMyMenuVariants({ isSNBOpened }))} type="button" onClick={toggleMyMenu}>
         <Icon id="starFill" size={isSNBOpened ? 20 : 24} className="text-white group-hover:text-blue-500" />
         {isSNBOpened && (
           <>
@@ -27,7 +25,7 @@ const SideNavBarMyMenu = () => {
         )}
       </button>
       {isSNBOpened && (
-        <div className={`overflow-hidden transition-[height] duration-[10000] ${isMyMenuOpened ? "h-max" : "h-0"}`}>
+        <div className={cn(snbMySubMenuContainerVariants({ isMyMenuOpened }))}>
           {myMenus?.map((name) => {
             return <SideNavBarSubMenu key={name} subMenuName={name} />;
           })}

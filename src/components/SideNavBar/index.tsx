@@ -1,18 +1,18 @@
 "use client";
 
+import Image from "next/image";
 import SideNavBarList from "./SideNavBarList";
 import SideNavBarToggleButton from "./SideNavBarToggleButton";
+import { cn } from "@/utils/cn";
 import { useSNBStateContext } from "@/contexts/SNBStateContext";
-import Image from "next/image";
+import { logoVariants, snbVariants } from "./index.variants";
 
 const SideNavBar = () => {
   const { isSNBOpened } = useSNBStateContext();
 
   return (
-    <nav
-      className={`relative z-nav flex flex-col gap-5 bg-gray-900 pb-[60px] transition-[width] duration-500 ${isSNBOpened ? "w-snb-open" : "w-snb-close"}`}
-    >
-      <div className={`h-[120px] ${isSNBOpened ? "px-10 py-9" : "px-5 py-[44px]"}`}>
+    <nav className={cn(snbVariants({ isSNBOpened }))}>
+      <div className={cn(logoVariants({ isSNBOpened }))}>
         <div className="flex items-center justify-center">
           {isSNBOpened ? (
             <Image src="/logo_snb_open.png" alt="GLT Korea Logo" width={144} height={48} />
