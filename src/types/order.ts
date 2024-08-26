@@ -22,6 +22,7 @@ export interface Order {
 }
 
 export interface ExcelData {
+  [key: string]: string | number | undefined;
   deliveryType?: string;
   smName?: string;
   shipmentNum?: string;

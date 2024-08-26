@@ -16,7 +16,7 @@ const WithAuthLayout = ({ children }: WithAuthLayoutProps) => {
         </SNBStateContextProvider>
         <div className="flex-1">
           <GlobalNavBar />
-          <main className="h-[calc(100vh-104px)] bg-blue-30">{children}</main>
+          <main className="h-[calc(100vh-104px)] bg-white">{children}</main>
         </div>
       </TabStateContextProvider>
     </div>
