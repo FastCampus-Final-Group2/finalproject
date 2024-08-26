@@ -2,19 +2,19 @@ import { useState, useEffect } from "react";
 import { tabClass, numberClass } from "./index.variants";
 import { cn } from "@/utils/cn";
 
-interface TabForListChangeProps {
+interface TabForDispatchedListChangeProps {
   states?: string[];
   numbers?: number[];
   initialSelectedState?: string;
   onStateChange?: (state: string) => void;
 }
 
-const TabForListChange = ({
+const TabForDispatchedListChange = ({
   states = [],
   numbers = [],
   initialSelectedState,
   onStateChange = () => {},
-}: TabForListChangeProps) => {
+}: TabForDispatchedListChangeProps) => {
   const [selectedState, setSelectedState] = useState(initialSelectedState ?? states[0]);
 
   const handleStateClick = (state: string) => {
@@ -49,4 +49,4 @@ const TabForListChange = ({
   );
 };
 
-export default TabForListChange;
+export default TabForDispatchedListChange;

@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import DispatchLists from "@/components/DispatchLists";
-import TabForList from "@/components/TabForDispatchedList";
+import TabForDispatchedList from "@/components/TabForDispatchedList";
 import SearchBars from "@/components/SearchBar";
 import PaginationButtons from "@/components/core/Pagination";
 import mockdata from "./mockdata.json";
@@ -52,7 +52,7 @@ const ControlPage = () => {
       <h1 className="text-H-28-B">차량 관제</h1>
       <div className="flex flex-col gap-[28px] pl-[10px]">
         <SearchBars data={mockdata} />
-        <TabForList
+        <TabForDispatchedList
           data={{
             inProgress: mockdata.results.filter((item) => item.progress > 0 && item.progress < 100).length,
             waiting: mockdata.results.filter((item) => item.progress === 0).length,
