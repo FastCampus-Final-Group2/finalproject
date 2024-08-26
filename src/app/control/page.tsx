@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
-import DispatchLists from "@/components/DispatchLists";
+import DispatchLists from "@/components/Dispatchlists";
 import TabForDispatchedList from "@/components/TabForDispatchedList";
 import SearchBars from "@/components/SearchBar";
 import PaginationButtons from "@/components/core/Pagination";
