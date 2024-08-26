@@ -1,10 +1,10 @@
 "use client";
 import { useEffect, useState } from "react";
 import DispatchLists from "@/components/dispatchLists";
-import TabForList from "@/components/TabForList";
+import TabForList from "@/components/TabForDispatchedList";
 import SearchBars from "@/components/searchBar";
 import PaginationButtons from "@/components/core/pagination";
-import mockdata from "@/components/dispatchLists/mockdata.json";
+import mockdata from "./mockdata.json";
 import ListSelection from "@/components/listSelection";
 
 interface DispatchItem {
