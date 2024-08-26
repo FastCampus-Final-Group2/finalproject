@@ -1,14 +1,39 @@
 "use client";
 
+import { orderListState } from "@/atoms/orederList";
 import Icon from "@/components/core/Icon";
-import { useCallback, useRef } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { useSetRecoilState } from "recoil";
+import * as XLSX from "xlsx";
 
 interface FileInputProps {
-  setExcelFile: React.Dispatch<React.SetStateAction<File | null>>;
   setIsError: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const FileInput = ({ setIsError, setExcelFile }: FileInputProps) => {
+const FileInput = ({ setIsError }: FileInputProps) => {
+  const [excelFile, setExcelFile] = useState<File | null>(null);
+  const setOrderList = useSetRecoilState(orderListState);
+
+  // TODO
+  useEffect(() => {
+    if (excelFile) {
+      const reader = new FileReader();
+
+      reader.onload = (event) => {
+        const arrayBuffer = event.target?.result as ArrayBuffer;
+        const workbook = XLSX.read(arrayBuffer, { type: "array" });
+
+        const sheetName = workbook.SheetNames[0];
+        const worksheet = workbook.Sheets[sheetName];
+        const data = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
+        console.log(data);
+        // setOrderList(data);
+      };
+
+      reader.readAsArrayBuffer(excelFile);
+    }
+  }, [excelFile, setIsError]);
+
   const validateAndSetFile = (uploadedFile: File | null) => {
     if (!uploadedFile) {
       setIsError(true);
@@ -52,7 +77,7 @@ const FileInput = ({ setIsError, setExcelFile }: FileInputProps) => {
       onDragOver={handleDragOver}
     >
       <Icon id="upload" size={32} className="text-gray-600" />
-      <p className="text-gray-600 text-B-14-R">여기로 파일을 끌어오세요.</p>
+      <p className="text-gray-600 text-B-14-R">{excelFile ? excelFile.name : "여기로 파일을 끌어오세요."}</p>
       <label className="relative">
         <button
           className="rounded border border-gray-600 bg-white px-2 py-1 text-gray-600 text-B-14-R"
