@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef } from "react";
-import CalendarPicker from "@/components/calendarPicker";
+import CalendarPicker from "@/components/CalendarPicker";
 
 const SearchDate = () => {
   const [startDate, setStartDate] = useState<string>("YYYY-MM-DD --:--");

@@ -1,11 +1,11 @@
 "use client";
 import { useEffect, useState } from "react";
-import DispatchLists from "@/components/dispatchLists";
+import DispatchLists from "@/components/DispatchLists";
 import TabForList from "@/components/TabForDispatchedList";
-import SearchBars from "@/components/searchBar";
-import PaginationButtons from "@/components/core/pagination";
+import SearchBars from "@/components/SearchBar";
+import PaginationButtons from "@/components/core/Pagination";
 import mockdata from "./mockdata.json";
-import ListSelection from "@/components/listSelection";
+import ListSelection from "@/components/ListSelection";
 
 interface DispatchItem {
   progress: number;

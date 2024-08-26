@@ -2,8 +2,8 @@
 
 import { useState } from "react";
 import dayjs from "dayjs";
-import Calendar from "@/components/calendarPicker/Calendar";
-import TimePicker from "@/components/calendarPicker/TimePicker";
+import Calendar from "@/components/CalendarPicker/Calendar";
+import TimePicker from "@/components/CalendarPicker/TimePicker";
 import Button from "@/components/core/Button";
 
 interface SearchDateProps {
