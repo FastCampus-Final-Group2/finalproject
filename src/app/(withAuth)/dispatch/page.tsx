@@ -2,6 +2,7 @@
 
 import { excelDataState } from "@/atoms/excelData";
 import { orderListState } from "@/atoms/orederList";
+import ConfirmModal from "@/components/ConfirmModal";
 import DispatchSelector from "@/components/DispatchSelector";
 import OrderValidation from "@/components/OrderValidation";
 import { useRouter } from "next/navigation";
@@ -11,7 +12,7 @@ const Dispatch = () => {
   const excelData = useRecoilValue(excelDataState);
   const orderList = useRecoilValue(orderListState);
   const router = useRouter();
-  return <OrderValidation />;
+
   if (excelData.length !== 0) {
     return <OrderValidation />;
   } else if (orderList.length !== 0) {

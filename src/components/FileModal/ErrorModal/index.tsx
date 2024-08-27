@@ -1,3 +1,4 @@
+import Dimmed from "@/components/core/Dimmed";
 import Icon from "@/components/core/Icon";
 
 interface ErrorModalProps {
@@ -6,7 +7,7 @@ interface ErrorModalProps {
 
 const ErrorModal = ({ setIsError }: ErrorModalProps) => {
   return (
-    <div className="z-modal fixed left-0 top-0 flex h-screen w-screen items-center justify-center bg-black bg-opacity-40">
+    <Dimmed>
       <div className="flex flex-col gap-4 rounded-2xl bg-white p-8">
         <p className="flex flex-col items-center gap-[13px]">
           <button type="button" onClick={() => setIsError(false)} className="self-end text-gray-900 text-B-14-M">
@@ -27,7 +28,7 @@ const ErrorModal = ({ setIsError }: ErrorModalProps) => {
           </ul>
         </div>
       </div>
-    </div>
+    </Dimmed>
   );
 };
 

@@ -2,6 +2,8 @@
 
 import Icon from "@/components/core/Icon";
 import FileInput from "./FileInput.tsx";
+import Dimmed from "@/components/core/Dimmed";
+
 interface UploadModalProps {
   setModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
   setIsError: React.Dispatch<React.SetStateAction<boolean>>;
@@ -9,7 +11,7 @@ interface UploadModalProps {
 
 const UploadModal = ({ setModalOpen, setIsError }: UploadModalProps) => {
   return (
-    <div className="fixed left-0 top-0 z-modal flex h-screen w-screen items-center justify-center bg-black bg-opacity-40">
+    <Dimmed>
       <div className="flex flex-col gap-5 rounded-2xl bg-white p-8">
         <header className="flex flex-col gap-3">
           <div className="flex items-center gap-4">
@@ -27,7 +29,7 @@ const UploadModal = ({ setModalOpen, setIsError }: UploadModalProps) => {
         </header>
         <FileInput setIsError={setIsError} />
       </div>
-    </div>
+    </Dimmed>
   );
 };
 
