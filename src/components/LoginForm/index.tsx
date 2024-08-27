@@ -3,34 +3,13 @@
 import Input from "@/components/core/Input";
 import Button from "@/components/core/Button";
 import CheckBox from "@/components/core/CheckBox";
-import { useForm } from "react-hook-form";
+import { FormProvider, useForm } from "react-hook-form";
 import type { FieldError, SubmitErrorHandler, SubmitHandler } from "react-hook-form";
 import { useCallback } from "react";
 import { useRouter } from "next/navigation";
+import { LOGIN_FORMS } from "./index.constants";
+import LoginFormInput from "./LoginFormInput";
 
-const LOGIN_FORMS = [
-  {
-    id: "username",
-    type: "text",
-    placeholder: "아이디를 입력해주세요.",
-    required: "아이디를 입력하세요.",
-    pattern: {
-      value: /[0-9]+/,
-      message: "아이디 또는 비밀번호가 맞지 않습니다. 다시 확인해주세요.",
-    },
-  },
-  {
-    id: "password",
-    type: "password",
-    placeholder: "비밀번호를 입력해주세요.",
-    required: "비밀번호를 입력하세요.",
-    pattern: {
-      value: /^(?:(?=.*[a-zA-Z])(?=.*\d|.*[!@#$%^&_+\[\]{}:,.<>?])|(?=.*\d)(?=.*[!@#$%^&_+\[\]{}:,.<>?])).{8,}$/,
-      message: "아이디 또는 비밀번호가 맞지 않습니다. 다시 확인해주세요.",
-    },
-  },
-] as const;
-// 특수문자 !@#$%^&_+[]{}:,.<>?
 const LoginForm = () => {
   // TODO
   const initialState = {
@@ -39,12 +18,12 @@ const LoginForm = () => {
   };
 
   const router = useRouter();
+  const useFormMethods = useForm({ defaultValues: initialState });
   const {
-    register,
     handleSubmit,
     formState: { errors },
     resetField,
-  } = useForm({ defaultValues: initialState });
+  } = useFormMethods;
 
   const onSubmit: SubmitHandler<typeof initialState> = async (formData) => {
     // TODO
@@ -59,43 +38,28 @@ const LoginForm = () => {
     });
   };
 
-  const createInputComponent = useCallback(
-    (form: (typeof LOGIN_FORMS)[number], error?: FieldError) => {
-      return (
-        <Input
-          key={form.id}
-          type={form.type}
-          placeholder={error?.type === "required" ? error.message : form.placeholder}
-          autoComplete="off"
-          state={error ? "error" : "default"}
-          {...register(form.id, {
-            required: form.required,
-            pattern: form.pattern,
-          })}
-        />
-      );
-    },
-    [register],
-  );
-
   return (
     <div className="flex w-[404px] flex-col gap-5">
       <header className="flex flex-col gap-2">
         <h2 className="text-gray-900 text-H-28-B">배송관리시스템</h2>
         <span className="text-gray-700 text-T-20-M">GLT Korea TMS서비스에 오신 것을 환영합니다.</span>
       </header>
-      <form className="flex flex-col gap-4" onSubmit={handleSubmit(onSubmit, onError)}>
-        {LOGIN_FORMS.map((form) => {
-          return createInputComponent(form, errors[form.id]);
-        })}
-        <CheckBox label="아이디 저장" initialState={false} />
-        <Button className="h-[43px] p-3" type="submit">
-          로그인
-        </Button>
-        {(errors.username?.type === "pattern" || errors.password?.type === "pattern") && (
-          <p className="text-center text-red-500 text-T-16-M">{errors.username?.message || errors.password?.message}</p>
-        )}
-      </form>
+      <FormProvider {...useFormMethods}>
+        <form className="flex flex-col gap-4" onSubmit={handleSubmit(onSubmit, onError)}>
+          {LOGIN_FORMS.map((form) => {
+            return <LoginFormInput key={form.id} form={form} error={errors[form.id]} />;
+          })}
+          <CheckBox label="아이디 저장" initialState={false} />
+          <Button className="h-[43px] p-3" type="submit">
+            로그인
+          </Button>
+          {(errors.username?.type === "pattern" || errors.password?.type === "pattern") && (
+            <p className="text-center text-red-500 text-T-16-M">
+              {errors.username?.message || errors.password?.message}
+            </p>
+          )}
+        </form>
+      </FormProvider>
     </div>
   );
 };
