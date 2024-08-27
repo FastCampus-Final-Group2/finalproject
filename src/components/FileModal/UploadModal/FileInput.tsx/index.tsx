@@ -2,12 +2,12 @@
 
 import { excelDataState } from "@/atoms/excelData";
 import Icon from "@/components/core/Icon";
-import { EXCEL_HEADERS } from "@/constants/excel";
 import { ExcelData } from "@/types/order";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useSetRecoilState } from "recoil";
 import * as XLSX from "xlsx";
+import { EXCEL_HEADERS } from "@/components/FileModal/UploadModal/index.constants";
 
 interface FileInputProps {
   setIsError: React.Dispatch<React.SetStateAction<boolean>>;

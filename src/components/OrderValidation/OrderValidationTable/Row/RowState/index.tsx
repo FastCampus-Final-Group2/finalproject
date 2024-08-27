@@ -8,7 +8,7 @@ interface RowStateProps {
 
 const RowState = ({ isError }: RowStateProps) => {
   return (
-    <div className="h-[35px] w-[140px] px-5">
+    <div className="h-[35px] w-[140px] flex-shrink-0 px-5">
       <div className={cn(rowStateVariants({ isError }))}>
         {isError ? (
           <>
