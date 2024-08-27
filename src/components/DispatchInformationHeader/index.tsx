@@ -1,33 +1,38 @@
 import CopyButton from "@/components/core/CopyButton";
+import Button from "@/components/core/Button";
 
 const DispatchInformationHeader = () => {
-
   return (
-    <div className="flex justify-between items-center w-[1696px] h-[92px] px-[40px] pt-[28px] pb-[24px] border-b">
-      <div className="flex items-center gap-5 w-[535px] h-[36px]">
-        <div className="flex items-center justify-center w-[172px] h-[36px] font-pretendard text-[20px] font-B gap-[6px] leading-[24px]">
+    <div className="flex h-[92px] w-[1696px] items-center justify-between border-b px-[40px] pb-[24px] pt-[28px]">
+      <div className="flex h-[36px] w-[535px] items-center gap-5">
+        <div className="flex h-[36px] w-[172px] items-center justify-center gap-[6px] text-[20px] font-B leading-[24px]">
           <span>240808C001#1</span>
-          <CopyButton />
+          <CopyButton copyString={"240808C001#1"} />
         </div>
-        <div className="flex gap-6 w-[351px] h-[36px]">
-          <div className="flex items-center justify-center w-[174px] h-[36px] text-T-18-M leading-[24px]">
+        <div className="flex h-[36px] w-[351px] gap-6">
+          <div className="flex h-[36px] w-[174px] items-center justify-center leading-[24px] text-T-18-M">
             인플루언서 A 긴급건
           </div>
-          <div className="flex items-center justify-center w-[116px] h-[36px] bg-[#E6E6E6] text-B-14-M leading-[24px] rounded-[4px]">
+          <div className="flex h-[36px] w-[116px] items-center justify-center rounded-[4px] bg-gray-100 leading-[24px] text-B-14-M">
             08월08일14:00
           </div>
-          <div className="flex items-center justify-center w-[41px] h-[36px] bg-[#4D4D4D] text-[#FFFFFF] text-B-14-B leading-[24px] rounded-[4px]">
+          <div className="flex h-[36px] w-[41px] items-center justify-center rounded-[4px] bg-gray-700 leading-[24px] text-white text-B-14-B">
             택배
           </div>
         </div>
       </div>
-      <div className="flex gap-4 w-[164px] h-[40px]">
-        <button className="flex items-center justify-center w-[76px] h-[40px] bg-white hover:bg-[#CCCCCC] text-black rounded-md">
+      <div className="flex h-[40px] gap-4">
+        <Button
+          size="s"
+          shape="fill"
+          intent="secondary"
+          className="h-[41px] bg-gray-100 py-[12px] text-gray-900 text-B-14-B"
+        >
           배차 취소
-        </button>
-        <button className="flex items-center justify-center w-[76px] h-[40px] bg-blue-500 text-white border border-blue-500 rounded-md">
+        </Button>
+        <Button size="s" shape="fill" intent="primary" className="h-[41px] bg-blue-500 py-[12px] text-14 text-white">
           배차 확정
-        </button>
+        </Button>
       </div>
     </div>
   );

@@ -1,4 +1,9 @@
-const CircularProgressBar = ({ percentage, color }) => {
+interface CircularProgressBarProps {
+  percentage: number;
+  color: string;
+}
+
+const CircularProgressBar = ({ percentage, color }: CircularProgressBarProps) => {
   const radius = 30; // 반지름
   const stroke = 4; // 두께
   const normalizedRadius = radius - stroke * 2;
@@ -7,18 +12,14 @@ const CircularProgressBar = ({ percentage, color }) => {
 
   // const backgroundClass = color === 'blue' ? 'text-blue-50' : color === 'lime' ? 'text-lime-100' : 'text-gray-200';
   // const foregroundClass = color === 'blue' ? 'text-blue-500' : color === 'lime' ? 'text-lime-650' : 'text-gray-900';
-  const backgroundClass = color === 'blue' ? 'text-blue-50' : 'text-lime-100';
-  const foregroundClass = color === 'blue' ? 'text-blue-500' : 'text-lime-650';  
+  const backgroundClass = color === "blue" ? "text-blue-50" : "text-lime-100";
+  const foregroundClass = color === "blue" ? "text-blue-500" : "text-lime-650";
 
   return (
-    <div className="w-[101px] h-[60px] justify-start items-start gap-1 inline-flex">
-      <div className="w-[37px] h-[20px] text-[#808080] text-14">용적률</div>
-      <div className="w-[60px] h-[60px] relative">
-        <svg
-          height={radius * 2}
-          width={radius * 2}
-          className="transform -rotate-90"
-        >
+    <div className="inline-flex h-[60px] w-[101px] items-start justify-start gap-1">
+      <div className="h-[20px] w-[37px] text-gray-500 text-B-14-M">용적률</div>
+      <div className="relative h-[60px] w-[60px]">
+        <svg height={radius * 2} width={radius * 2} className="-rotate-90 transform">
           <circle
             className={backgroundClass}
             stroke="currentColor"
@@ -33,16 +34,17 @@ const CircularProgressBar = ({ percentage, color }) => {
             stroke="currentColor"
             fill="transparent"
             strokeWidth={stroke}
-            strokeDasharray={circumference + ' ' + circumference}
+            strokeDasharray={circumference + " " + circumference}
             style={{ strokeDashoffset }}
             r={normalizedRadius}
             cx={radius}
             cy={radius}
+            strokeLinecap="round"
           />
         </svg>
-        <div className="absolute inset-0 flex justify-center items-center">
-          <div className="w-[24px] h-[22px] text-gray-900 text-T-18-B">{percentage}</div>
-          <div className="w-[14px] h-[20px] text-gray-900 text-B-14-B">%</div>
+        <div className="absolute inset-0 flex items-center justify-center">
+          <div className="h-[22px] w-[24px] text-gray-900 text-T-18-B">{percentage}</div>
+          <div className="h-[20px] w-[14px] text-gray-900 text-B-14-B">%</div>
         </div>
       </div>
     </div>

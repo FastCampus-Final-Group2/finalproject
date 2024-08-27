@@ -1,6 +1,6 @@
 import { colors } from "@/styles/theme";
 
-type IconId =
+export type IconId =
   | "arrowLargeDoubleLeft"
   | "arrowLargeDoubleRight"
   | "arrowLargeLeft"
@@ -75,24 +75,25 @@ type IconId =
   | "wing_3.5T"
   | "wing_5T"
   | "wing_8T"
-  | "wing_11T";
+  | "wing_11T"
+  | "flagFilled"
+  | "flagOutlined";
 
 type IconSize = 14 | 16 | 18 | 20 | 24 | 28 | 32 | 40;
 
-type ColorKey = keyof typeof colors;
+// type ColorKey = keyof typeof colors;
 
-type ColorScale<K extends ColorKey> = keyof (typeof colors)[K] extends string | number
-  ? `${keyof (typeof colors)[K]}`
-  : never;
+// type ColorScale<K extends ColorKey> = keyof (typeof colors)[K] extends string | number
+//   ? `${keyof (typeof colors)[K]}`
+//   : never;
 
-type TextColor<K extends ColorKey> = K extends "white" | "black" ? `text-${K}` : `text-${K}-${ColorScale<K>}`;
+// type TextColor<K extends ColorKey> = K extends "white" | "black" ? `text-${K}` : `text-${K}-${ColorScale<K>}`;
 
-type ColorType = TextColor<ColorKey>;
+// type ColorType = TextColor<ColorKey>;
 
 interface IconProps extends Omit<React.SVGProps<SVGSVGElement>, "width" | "height"> {
   id: IconId;
   size?: IconSize;
-  className?: ColorType;
 }
 
 const Icon = ({ id, size = 24, className = "text-black", ...props }: IconProps) => {

@@ -11,7 +11,12 @@ const height = {
   gnb: "104px",
 };
 
+const borderRadius = {
+  4: "4px",
+};
+
 export const layout = {
   width,
   height,
+  borderRadius,
 };
