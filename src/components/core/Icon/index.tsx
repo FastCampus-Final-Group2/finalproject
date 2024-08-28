@@ -1,5 +1,3 @@
-import { colors } from "@/styles/theme";
-
 export type IconId =
   | "arrowLargeDoubleLeft"
   | "arrowLargeDoubleRight"
@@ -83,19 +81,10 @@ export type IconId =
   | "arrowBack"
   | "place"
   | "download"
-  | "upload";
+  | "upload"
+  | "circleLoading";
 
-type IconSize = 14 | 16 | 18 | 20 | 24 | 28 | 32 | 40;
-
-// type ColorKey = keyof typeof colors;
-
-// type ColorScale<K extends ColorKey> = keyof (typeof colors)[K] extends string | number
-//   ? `${keyof (typeof colors)[K]}`
-//   : never;
-
-// type TextColor<K extends ColorKey> = K extends "white" | "black" ? `text-${K}` : `text-${K}-${ColorScale<K>}`;
-
-// type ColorType = TextColor<ColorKey>;
+export type IconSize = 14 | 16 | 18 | 20 | 24 | 28 | 32 | 40;
 
 interface IconProps extends Omit<React.SVGProps<SVGSVGElement>, "width" | "height"> {
   id: IconId;

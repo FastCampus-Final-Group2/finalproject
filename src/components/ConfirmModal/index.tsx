@@ -14,12 +14,13 @@ interface ConfirmModalProps {
     type: "main" | "sub" | "alert";
     value: string;
   }[];
+  onClickClose: () => void;
   onConfirm?: () => void;
   leftButtonText: string;
   rightButtonText: string;
 }
 
-const ConfirmModal = ({ title, text, onConfirm, leftButtonText, rightButtonText }: ConfirmModalProps) => {
+const ConfirmModal = ({ title, text, onClickClose, onConfirm, leftButtonText, rightButtonText }: ConfirmModalProps) => {
   const [isConfirmed, toggleIsConfirmed] = useReducer((v) => !v, false);
 
   return (
@@ -46,7 +47,7 @@ const ConfirmModal = ({ title, text, onConfirm, leftButtonText, rightButtonText 
           )}
         </div>
         <div className="flex justify-center gap-2">
-          <Button shape="text" intent="secondary" className="w-[156px]">
+          <Button shape="text" intent="secondary" className="w-[156px]" onClick={() => onClickClose()}>
             {leftButtonText}
           </Button>
           <Button
