@@ -9,7 +9,7 @@ const OrderValidationTable = () => {
     <>
       <OrderValidationTabList tabValue={{ total: 120, complete: 116, error: 4 }} />
       <OrderValidationButtons />
-      <ul className="mx-2.5 flex w-full flex-col overflow-x-scroll">
+      <ul className="mx-2.5 flex w-full flex-col overflow-x-scroll scrollbar-hide">
         <OrderValidationTableHeader />
         {ORDER_LIST.map((order, index) => {
           return <OrderValidationTableRow key={index} order={order} isOdd={index % 2 === 0} />;

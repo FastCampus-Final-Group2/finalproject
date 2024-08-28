@@ -11,7 +11,7 @@ const Dispatch = () => {
   const excelData = useRecoilValue(excelDataState);
   const orderList = useRecoilValue(orderListState);
   const router = useRouter();
-
+  return <OrderValidation />;
   if (excelData.length !== 0) {
     return <OrderValidation />;
   } else if (orderList.length !== 0) {
