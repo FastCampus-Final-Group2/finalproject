@@ -33,7 +33,7 @@ export default plugin(function ({ addUtilities, theme }) {
       letterSpacing: theme("letterSpacing.normal"),
     },
     ".text-T-16-B": {
-      fontSize: theme("fontSize.61"),
+      fontSize: theme("fontSize.16"),
       fontWeight: theme("fontWeight.B"),
       lineHeight: theme("lineHeight.120"),
       letterSpacing: theme("letterSpacing.normal"),
