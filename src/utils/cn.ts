@@ -16,6 +16,7 @@ const customTypographyClasses = [
   "text-B-14-M",
   "text-B-14-R",
   "text-C-12-M",
+  "text-C-12-B",
 ];
 
 const customTwMerge = createTailwindMerge(() => {

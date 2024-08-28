@@ -4,6 +4,7 @@ import { useState } from "react";
 import { ORDER_VALIDATION_TABLE_TABS } from "./index.constants";
 import Item from "./Item";
 import { Entries, ObjectValues } from "@/types/util";
+import Buttons from "./Buttons";
 
 interface OrderValidationTabListProps {
   tabValue: {
@@ -17,7 +18,7 @@ const OrderValidationTabList = ({ tabValue }: OrderValidationTabListProps) => {
   const [activeTab, setActiveTab] = useState<ObjectValues<typeof ORDER_VALIDATION_TABLE_TABS>>("전체");
 
   return (
-    <div className="flex w-full gap-3 border-b border-gray-200">
+    <div className="relative flex w-full gap-3 border-b border-gray-200">
       {(Object.entries(ORDER_VALIDATION_TABLE_TABS) as Entries<typeof ORDER_VALIDATION_TABLE_TABS>).map(
         ([key, tabName]) => {
           return (
@@ -31,6 +32,9 @@ const OrderValidationTabList = ({ tabValue }: OrderValidationTabListProps) => {
           );
         },
       )}
+      <div className="absolute right-0 top-0">
+        <Buttons />
+      </div>
     </div>
   );
 };

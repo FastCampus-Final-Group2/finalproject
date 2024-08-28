@@ -86,5 +86,11 @@ export default plugin(function ({ addUtilities, theme }) {
       lineHeight: theme("lineHeight.120"),
       letterSpacing: theme("letterSpacing.normal"),
     },
+    ".text-C-12-B": {
+      fontSize: theme("fontSize.12"),
+      fontWeight: theme("fontWeight.B"),
+      lineHeight: theme("lineHeight.120"),
+      letterSpacing: theme("letterSpacing.normal"),
+    },
   });
 });
