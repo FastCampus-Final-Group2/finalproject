@@ -12,7 +12,16 @@ export const ORDER_DETAIL: OrderDetail = {
   productCount: 5, // 수량
   volume: 600, // 볼륨
   weight: 50, // 중량
-  managerName: "홍길동", // 담당자명
-  phoneNumber: "01012345678", // 담당자연락처
-  deliveryDestinationCode: 154851, // 배송처 코드
+  // destinationInfo: {
+  //   managerName: "홍길동", // 담당자명
+  //   phoneNumber: "01012345678", // 담당자연락처
+  //   deliveryDestinationCode: 154851, // 배송처 코드
+  // },
+  clientInfo: {
+    client: "나다",
+    phoneNumber: "00000000000",
+    roadAddress: "저기",
+    detailAddress: "여기",
+    note: "뭐라뭐라",
+  },
 };

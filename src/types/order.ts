@@ -57,7 +57,16 @@ export interface OrderDetail {
   productCount: number; // 수량
   volume: number; // 볼륨
   weight: number; // 중량
-  managerName: string; // 담당자명
-  phoneNumber: string; // 담당자연락처
-  deliveryDestinationCode: number; // 배송처 코드
+  destinationInfo?: {
+    managerName: string; // 담당자명
+    phoneNumber: string; // 담당자연락처
+    deliveryDestinationCode: number; // 배송처 코드
+  };
+  clientInfo?: {
+    client: string; // 고객명
+    phoneNumber: string; // 고객연락처
+    roadAddress: string; // 주소
+    detailAddress: string; // 상세주소
+    note: string; // 고객전달사항
+  };
 }
