@@ -3,9 +3,9 @@ import { DISPATCH_MODE_INFOS } from "@/components/DispatchSelector/index.constan
 
 const DispatchSelectorList = () => {
   return (
-    <div className="flex gap-8">
+    <div className="flex gap-16">
       {DISPATCH_MODE_INFOS.map((info) => {
-        return <DispatchSelectorItem key={info.tag} dispatchModeInfo={info} />;
+        return <DispatchSelectorItem key={info.label} dispatchModeInfo={info} />;
       })}
     </div>
   );

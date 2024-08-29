@@ -20,9 +20,14 @@ const zIndex = {
   modal: "9999",
 };
 
+const boxShadow = {
+  thumbnail: "0px 4px 4px 0px rgba(0, 0, 0, 0.25)",
+};
+
 export const layout = {
   width,
   height,
   borderRadius,
   zIndex,
+  boxShadow,
 };
