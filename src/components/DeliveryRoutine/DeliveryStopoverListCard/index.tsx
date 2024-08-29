@@ -10,13 +10,14 @@ interface DeliveryStopoverListCardProps extends VariantProps<typeof DeliveryStop
 const DeliveryStopoverListCard = ({
   background,
   border,
+  height,
   children,
   className,
   ...props
 }: DeliveryStopoverListCardProps) => {
   return (
     <>
-      <div className={cn(DeliveryStopoverListCardClass({ background, border }))} {...props}>
+      <div className={cn(DeliveryStopoverListCardClass({ background, border, height }))} {...props}>
         {children}
       </div>
     </>

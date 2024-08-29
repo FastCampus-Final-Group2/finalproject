@@ -14,6 +14,10 @@ export const DeliveryStopoverListCardClass = cva(
         delayed: "border-[2px] border-red-500",
         deliveryStartEnd: "border-none",
       },
+      height: {
+        default: "",
+        cancelled: "h-[88px]",
+      },
     },
     compoundVariants: [
       {
@@ -32,6 +36,7 @@ export const DeliveryStopoverListCardClass = cva(
     defaultVariants: {
       background: "default",
       border: "default",
+      height: "default",
     },
   },
 );

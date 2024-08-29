@@ -135,15 +135,18 @@ const DeliveryRoutineDetail = () => {
           <React.Fragment key={item.order}>
             <div className="flex w-[430px] justify-between">
               <CircleCheckbox iconId={item.iconId} status={item.status} order={item.order} />
-              <DeliveryStopoverListCard background={item.status === "default" ? "start" : undefined}>
-                <ul className={item.status === "cancelled" ? "text-gray-300" : ""}>
+              <DeliveryStopoverListCard
+                background={item.status === "default" ? "start" : undefined}
+                height={item.status === "cancelled" ? "cancelled" : "default"}
+              >
+                <ul className={`${item.status === "cancelled" ? "text-gray-300" : ""} `}>
                   <li className="flex items-center gap-[8px]">
                     <DeliveryStatusTag text={item.status || "default"}>{item.text}</DeliveryStatusTag>
                     {/* 주소 표시 부분 */}
                     <p
                       className={`cursor-pointer text-nowrap border-b border-blue-500 text-T-16-M ${
                         item.status === "cancelled" ? "border-gray-300 text-gray-300" : "text-blue-500"
-                      }`}
+                      } `}
                     >
                       {item.address}
                     </p>

@@ -1,15 +1,10 @@
-import Icon from "@/components/core/Icon";
-import Button from "@/components/core/Button";
-import DeliveryIssues from "@/components/DeliveryIssues";
-import FloorAreaRatioCard from "@/components/FloorAreaRatioCard";
 import DeliveryProgressInfo from "@/components/DeliveryProgressInfo";
 import AccessTimeRefresh from "@/components/AccessTimeRefresh";
 import DeliveryRoutine from "@/components/DeliveryRoutine";
-// todo: bg-gray-50 지우기
 const ControlDetailPage = () => {
   return (
     <>
-      <div className="flex justify-between">
+      {/* <div className="flex justify-between">
         <ul className="flex items-center gap-[16px]">
           <li className="flex items-center gap-[4px]">
             <p className="text-T-18-B">240808C001#1</p>
@@ -27,21 +22,13 @@ const ControlDetailPage = () => {
         </ul>
         <div className="flex gap-[4px]">
           <Icon id="menuKebab" />
-          {/* todo: 아이콘 추후 교체 */}
           <div>배차목록 보기</div>
         </div>
-      </div>
+      </div> */}
 
       <div className="flex h-[884px] w-fit flex-col gap-[24px] bg-purple-50 px-[32px] pb-[15px] pt-[20px]">
         <div className="flex w-fit flex-col gap-[4px] rounded-[8px] bg-white p-[20px]">
-          <div className="flex gap-[19px]">
-            <FloorAreaRatioCard />
-            <div className="flex flex-col gap-[12px] p-[12px]">
-              <DeliveryProgressInfo />
-              <AccessTimeRefresh />
-            </div>
-          </div>
-          <DeliveryIssues />
+          <DeliveryProgressInfo />
         </div>
         <div className="flex w-fit flex-col gap-[4px] rounded-[8px] bg-white pb-[8px] pl-[12px] pr-[16px] pt-[20px]">
           <DeliveryRoutine />
