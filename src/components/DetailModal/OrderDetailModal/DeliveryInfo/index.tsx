@@ -1,5 +1,8 @@
-import { ORDER_DETAIL_DELIVERY_INFO_KEYS, ORDER_DETAIL_TEXT_MAP } from "@/components/OrderDetailModal/index.constants";
-import InfoItem from "@/components/OrderDetailModal/InfoItem";
+import {
+  ORDER_DETAIL_DELIVERY_INFO_KEYS,
+  ORDER_DETAIL_TEXT_MAP,
+} from "@/components/DetailModal/OrderDetailModal/index.constants";
+import InfoItem from "@/components/DetailModal/OrderDetailModal/InfoItem";
 
 interface DeliveryInfoProps {
   info: { managerName: string; phoneNumber: string; deliveryDestinationCode: number };

@@ -1,6 +1,9 @@
 import { OrderDetail } from "@/types/order";
-import InfoItem from "@/components/OrderDetailModal/InfoItem";
-import { ORDER_DETAIL_DISPATCH_INFO_KEYS, ORDER_DETAIL_TEXT_MAP } from "@/components/OrderDetailModal/index.constants";
+import {
+  ORDER_DETAIL_DISPATCH_INFO_KEYS,
+  ORDER_DETAIL_TEXT_MAP,
+} from "@/components/DetailModal/OrderDetailModal/index.constants";
+import InfoItem from "@/components/DetailModal/OrderDetailModal/InfoItem";
 
 interface DispatchInfoProps {
   info: OrderDetail;
