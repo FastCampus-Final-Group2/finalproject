@@ -9,6 +9,7 @@ export type IconId =
   | "arrowRight"
   | "star"
   | "starFill"
+  | "calendar"
   | "checkBox"
   | "checkBoxFill"
   | "circle"

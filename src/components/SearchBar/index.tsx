@@ -26,8 +26,9 @@ const SearchBars = ({ data }: SearchBarsProps) => {
         <SearchTextInput />
       </div>
       <div className="flex gap-[12px] p-[16px] text-SB-14-M">
-        <CheckBox />
-        <span className="text-SB-14-M">내 담당 주문만 보기</span>
+        <CheckBox label="내 담당 주문만 보기" />
+
+        {/* <span className="text-SB-14-M"></span> */}
       </div>
     </div>
   );

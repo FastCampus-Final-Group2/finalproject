@@ -2,6 +2,7 @@
 
 import { useState, useRef } from "react";
 import CalendarPicker from "@/components/CalendarPicker";
+import Icon from "@/components/core/Icon";
 
 const SearchDate = () => {
   const [startDate, setStartDate] = useState<string>("YYYY-MM-DD --:--");
@@ -39,8 +40,9 @@ const SearchDate = () => {
 
   return (
     <>
-      <div className="flex w-fit gap-[12px] rounded-[8px] p-[12px] text-T-16-B">
+      <div className="flex w-fit items-center gap-[12px] rounded-[8px] p-[12px] text-T-16-B">
         <div>상하차시작일시</div>
+        <Icon id="calendar" size={18} />
         <p
           className="flex cursor-pointer items-center text-SB-14-M"
           onClick={() => toggleCalendar("start")}

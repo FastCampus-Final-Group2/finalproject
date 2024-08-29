@@ -1,0 +1,47 @@
+{
+  "dispatchCode": "240808C001#001",
+  "dispatchName": "인플루언서A 긴급건",
+  "totalProgressionRate": 40,
+  "totalCompletedOrderNum": 4,
+  "totalOrderNum": 10,
+  "issueOrderNum": 5,
+  "startStopover": {
+    "centerId": 1,
+    "address": "서울특별시 강남구 역삼동 123-45",
+    "lat": 37.5995,
+    "lon": 127.1116,
+    "delayTime": "00:30:00"
+  },
+  "dispatchList": [
+    {
+      "dispatchId": 20,
+      "dispatchStatus": "이동 중",
+      "smName": "임혜정",
+      "completedOrderNum": 5,
+      "orderNum": 10,
+      "progressionRate": 50,
+      "stopoverList": [
+        {
+          "lat": 37.5995,
+          "lon": 127.1116
+        }
+      ],
+      "coordinates": [
+        {
+          "lon": 37.5999,
+          "lat": 127.1120
+        }
+      ]
+    }
+  ],
+  "issueList": [
+    {
+      "dispatchCodeId": 25,
+      "dispatchId": 20,
+      "smName": "임혜정",
+      "address": "서울시 종로구 1",
+      "deliveryDestinationId": 40,
+      "issue": "배송지 연락 불가"
+    }
+  ]
+}
