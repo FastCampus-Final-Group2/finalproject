@@ -30,6 +30,7 @@ const DriverList = ({ onClickToggle }: DriverListProps) => {
             tonCode={"top_1.2T"}
             capacityRate={90}
             onClickToggle={onClickToggle}
+            bgColor={"lime"}
           />
           <Driver
             checkOrWarning={"check"}
@@ -40,6 +41,7 @@ const DriverList = ({ onClickToggle }: DriverListProps) => {
             tonCode={"top"}
             capacityRate={31}
             onClickToggle={onClickToggle}
+            bgColor={"sky"}
           />
           <Driver
             checkOrWarning={"check"}
@@ -50,6 +52,7 @@ const DriverList = ({ onClickToggle }: DriverListProps) => {
             tonCode={"wing_3.5T"}
             capacityRate={50}
             onClickToggle={onClickToggle}
+            bgColor={"brown"}
           />
           <Driver
             checkOrWarning={"check"}
@@ -60,6 +63,7 @@ const DriverList = ({ onClickToggle }: DriverListProps) => {
             tonCode={"cargo_5T"}
             capacityRate={190}
             onClickToggle={onClickToggle}
+            bgColor={"forest"}
           />
           <Driver
             checkOrWarning={"warning"}
@@ -70,6 +74,7 @@ const DriverList = ({ onClickToggle }: DriverListProps) => {
             tonCode={"cargo_1.2T"}
             capacityRate={0}
             onClickToggle={onClickToggle}
+            bgColor={"olive"}
           />
           <Driver
             checkOrWarning={"check"}
@@ -80,6 +85,7 @@ const DriverList = ({ onClickToggle }: DriverListProps) => {
             tonCode={"wing_3.5T"}
             capacityRate={10}
             onClickToggle={onClickToggle}
+            bgColor={"peanut"}
           />
           <Driver
             checkOrWarning={"warning"}
@@ -90,6 +96,7 @@ const DriverList = ({ onClickToggle }: DriverListProps) => {
             tonCode={"wing_8T"}
             capacityRate={90}
             onClickToggle={onClickToggle}
+            bgColor={"redwood"}
           />
         </div>
       )}

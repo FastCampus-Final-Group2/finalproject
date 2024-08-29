@@ -1,6 +1,7 @@
 import Icon from "@/components/core/Icon";
 import { DriverListProps } from "@/components/OrderDashBoard/DriverList";
 import { IconId } from "@/components/core/Icon";
+import { BG_350 } from "@/styles/smColor";
 
 interface DriverProps extends DriverListProps {
   checkOrWarning: "check" | "warning";
@@ -10,6 +11,7 @@ interface DriverProps extends DriverListProps {
   hours: number;
   tonCode: string;
   capacityRate: number;
+  bgColor: keyof typeof BG_350;
 }
 
 const Driver = ({
@@ -21,6 +23,7 @@ const Driver = ({
   tonCode,
   capacityRate,
   onClickToggle,
+  bgColor,
 }: DriverProps) => {
   const checkOrWarningBgColor = checkOrWarning === "check" ? "bg-green-50" : "bg-red-600";
   const checkOrWarningTextColor = checkOrWarning === "check" ? "text-green-500" : "text-white";
@@ -33,6 +36,8 @@ const Driver = ({
     capacityBgColor = "bg-blue-250";
   } else if (capacityRate > 30) {
     capacityBgColor = "bg-blue-400";
+  } else if (capacityRate === 0) {
+    capacityBgColor = "bg-gray-600";
   } else {
     capacityBgColor = "bg-blue-500";
   }
@@ -76,7 +81,9 @@ const Driver = ({
         </div>
       </div>
       <div className="group relative">
-        <div className="flex h-10 w-3 items-center rounded-br rounded-tr bg-sky-350 px-[4px] transition-all duration-300 ease-in-out group-hover:w-[22px] group-hover:justify-center">
+        <div
+          className={`flex h-10 w-3 items-center rounded-br rounded-tr ${BG_350[bgColor]} px-[4px] transition-all duration-300 ease-in-out group-hover:w-[22px] group-hover:justify-center`}
+        >
           <button className="flex h-full w-full items-center justify-center" onClick={onClickToggle}>
             <Icon
               id="arrowLargeDoubleRight"

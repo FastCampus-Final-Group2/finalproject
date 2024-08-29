@@ -1,6 +1,8 @@
 import Icon from "@/components/core/Icon";
+import { BG_50 } from "@/styles/smColor";
+import { ColorProps } from "@/components/SideTapDriverDetail/StopOverList";
 
-const StopOverStartCenter = () => {
+const StopOverStartCenter = ({ bgColor }: ColorProps) => {
   return (
     <div className="inline-flex h-[103px] items-start justify-start gap-5">
       <div className="inline-flex w-6 flex-col items-center justify-start gap-3 self-stretch pt-3">
@@ -17,7 +19,9 @@ const StopOverStartCenter = () => {
             </div>
           </div>
         </div>
-        <div className="inline-flex h-[52px] items-center justify-start gap-[8px] self-stretch bg-lime-50 px-[8px] py-[16px]">
+        <div
+          className={`inline-flex h-[52px] items-center justify-start gap-[8px] self-stretch ${BG_50[bgColor]} px-[8px] py-[16px]`}
+        >
           <div className="flex items-center justify-start">
             <div className="text-center text-gray-700 text-B-14-R">12.5</div>
             <div className="text-center text-gray-700 text-B-14-R">km</div>

@@ -5,7 +5,7 @@ import PendingOrder from "@/components/OrderDashBoard/PendingOrderList/PendingOr
 import ToggleExpandSwitch from "@/components/core/ToggleExpandSwitch";
 
 const PendingOrderList = () => {
-  const { isExpanded, toggleExpand } = ToggleExpandSwitch();
+  const { isExpanded, toggleExpand } = ToggleExpandSwitch(false);
 
   return (
     <div className="max-h-[344px] min-h-[64px] w-[460px] gap-[16px] rounded-[8px] bg-white p-[20px]">
@@ -33,10 +33,10 @@ const PendingOrderList = () => {
       {isExpanded && (
         <div className="inline-flex max-h-[264px] w-full flex-col items-start justify-start gap-4 overflow-y-auto rounded-lg bg-white pt-[16px] scrollbar-hide">
           <div className="flex w-full flex-col items-start justify-start gap-2.5">
-            <PendingOrder address={"nnn시text구text동"} meter={0.016} kilogram={0.111} />
+            <PendingOrder address={"서울시 동대문구 동"} meter={0.016} kilogram={0.111} />
             <PendingOrder address={"nnn시text구te동"} meter={0.016} kilogram={1111} />
-            <PendingOrder address={"nnnn시tex구text동"} meter={0.0161} kilogram={1211} />
-            <PendingOrder address={"nnn시text구text동"} meter={0.016} kilogram={2222} />
+            <PendingOrder address={"서울특별시tex구text동"} meter={0.0161} kilogram={1211} />
+            <PendingOrder address={"제주특별시서귀포구text동"} meter={0.016} kilogram={2222} />
             <PendingOrder address={"nn시text구text동"} meter={0.016} kilogram={3333} />
             <PendingOrder address={"nnn시tex구text동"} meter={0.016} kilogram={4444} />
           </div>

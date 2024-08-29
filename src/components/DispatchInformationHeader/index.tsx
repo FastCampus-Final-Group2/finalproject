@@ -22,17 +22,10 @@ const DispatchInformationHeader = () => {
         </div>
       </div>
       <div className="flex h-[40px] gap-4">
-        <Button
-          size="s"
-          shape="fill"
-          intent="secondary"
-          className="h-[41px] bg-gray-100 py-[12px] text-gray-900 text-B-14-B"
-        >
+        <Button size="s" intent="secondary">
           배차 취소
         </Button>
-        <Button size="s" shape="fill" intent="primary" className="h-[41px] bg-blue-500 py-[12px] text-14 text-white">
-          배차 확정
-        </Button>
+        <Button size="s">배차 확정</Button>
       </div>
     </div>
   );

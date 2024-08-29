@@ -1,6 +1,13 @@
 import Icon from "@/components/core/Icon";
+import { BG_50 } from "@/styles/smColor";
+import { ColorProps } from "@/components/SideTapDriverDetail/StopOverList";
 
-const StopOver = () => {
+interface StopOverProps extends ColorProps {
+  warningCheck: boolean;
+  errorMessage: string;
+}
+
+const StopOver = ({ warningCheck, errorMessage, bgColor }: StopOverProps) => {
   return (
     <div className="inline-flex items-start justify-start gap-[20px] self-stretch">
       <div className="inline-flex flex-col items-center justify-start gap-[12px] self-stretch pt-[12px]">
@@ -10,8 +17,8 @@ const StopOver = () => {
         <div className="shrink grow basis-0 border-2 border-dashed"></div>
       </div>
       <div className="inline-flex w-[332px] flex-col items-start justify-start">
-        <div className="flex h-[116px] w-full flex-col items-start justify-start gap-[12px] rounded-lg bg-white p-[16px]">
-          <div className="flex h-[44px] flex-col items-start justify-start gap-[4px] self-stretch">
+        <div className="flex w-full flex-col items-start justify-start gap-[12px] rounded-lg bg-white p-[16px]">
+          <div className="flex flex-col items-start justify-start gap-[4px] self-stretch">
             <div className="inline-flex items-center justify-start gap-[8px] self-stretch">
               <button className="flex items-center justify-start gap-[4px] border-b border-blue-500 pt-[1px]">
                 <div className="text-center text-blue-500 text-T-16-M">서울시</div>
@@ -20,10 +27,12 @@ const StopOver = () => {
               </button>
               <div className="shrink grow basis-0 text-gray-500 text-B-14-M">448-52</div>
             </div>
-            <div className="inline-flex items-center justify-start gap-[4px] self-stretch rounded">
-              <Icon id="warning" size={14} className="text-red-500" />
-              <div className="text-center text-red-500 text-B-14-M">진입 제한 조건 </div>
-            </div>
+            {warningCheck && (
+              <div className="inline-flex items-center justify-start gap-[4px] self-stretch rounded">
+                <Icon id="warning" size={14} className="text-red-500" />
+                <div className="text-center text-red-500 text-B-14-M">{errorMessage}</div>
+              </div>
+            )}
           </div>
           <div className="inline-flex items-center justify-center gap-[8px]">
             <div className="flex items-center justify-start gap-[4px]">
@@ -51,7 +60,9 @@ const StopOver = () => {
             </div>
           </div>
         </div>
-        <div className="inline-flex h-[52px] items-center justify-start gap-[8px] self-stretch bg-[#eefaea] px-[8px] py-[16px]">
+        <div
+          className={`inline-flex h-[52px] items-center justify-start gap-[8px] self-stretch ${BG_50[bgColor]} px-[8px] py-[16px]`}
+        >
           <div className="flex items-center justify-start">
             <div className="text-center text-gray-700 text-B-14-R">12.5</div>
             <div className="text-center text-gray-700 text-B-14-R">km</div>

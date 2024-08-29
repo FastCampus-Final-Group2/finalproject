@@ -1,11 +1,28 @@
 import Icon from "@/components/core/Icon";
 import CircularProgressBar from "@/components/core/CircularProgressBar";
+import { ColorProps } from "@/components/SideTapDriverDetail/StopOverList";
+import { BG_50, TEXT_650 } from "@/styles/smColor";
 
-const DriverDispatchDetailDashboard = () => {
+interface DriverDispatchDetailDashboardProps extends ColorProps {
+  drivingTime: number;
+  mileage: number;
+  totalOrder: number;
+  availabilityOrder: number;
+}
+
+const DriverDispatchDetailDashboard = ({
+  drivingTime,
+  mileage,
+  totalOrder,
+  availabilityOrder,
+  bgColor,
+}: DriverDispatchDetailDashboardProps) => {
+  const orderTextColor = totalOrder > availabilityOrder ? "text-red-500" : TEXT_650[bgColor];
+
   return (
-    <div className="inline-flex h-[228px] flex-col items-center justify-start bg-lime-50 px-8 pb-6 pt-5">
+    <div className={`inline-flex h-[228px] flex-col items-center justify-start ${BG_50[bgColor]} px-8 pb-6 pt-5`}>
       <div className="flex h-[198px] flex-col items-center justify-start gap-4 rounded-lg bg-white p-5">
-        <div className="inline-flex w-[336px] items-center justify-between rounded bg-lime-50 px-3 py-1">
+        <div className={`inline-flex w-[336px] items-center justify-between rounded ${BG_50[bgColor]} px-3 py-1`}>
           <div className="flex items-center justify-start gap-1 py-1.5">
             <div className="text-center text-gray-900 text-B-14-B">김기사</div>
             <div className="text-center text-gray-700 text-B-14-R">010-1234-5678</div>
@@ -23,7 +40,7 @@ const DriverDispatchDetailDashboard = () => {
               </div>
               <div className="flex items-center justify-start">
                 <div className="inline-flex flex-col items-start justify-center">
-                  <div className="text-lime-650 text-T-20-B">16</div>
+                  <div className={`${TEXT_650[bgColor]} text-T-20-B`}>{drivingTime}</div>
                 </div>
                 <div className="inline-flex flex-col items-center justify-center gap-3 pb-0.5 pt-[3px]">
                   <div className="self-stretch text-justify text-gray-700 text-T-16-B">시간</div>
@@ -37,10 +54,10 @@ const DriverDispatchDetailDashboard = () => {
               </div>
               <div className="flex items-center justify-start">
                 <div className="inline-flex flex-col items-start justify-center">
-                  <div className="text-lime-650 text-T-20-B">23</div>
+                  <div className={`${TEXT_650[bgColor]} text-T-20-B`}>{mileage}</div>
                 </div>
                 <div className="inline-flex flex-col items-center justify-center gap-3 pb-0.5 pt-[3px]">
-                  <div className="leading-tight self-stretch text-justify text-gray-700 text-T-16-B">km</div>
+                  <div className="self-stretch text-justify text-gray-700 text-T-16-B">km</div>
                 </div>
               </div>
             </div>
@@ -59,13 +76,13 @@ const DriverDispatchDetailDashboard = () => {
                 </div>
                 <div className="flex items-center justify-start">
                   <div className="inline-flex flex-col items-start justify-center">
-                    <div className="leading-normal text-lime-650 text-T-20-B">20</div>
+                    <div className={`${orderTextColor} text-T-20-B`}>{totalOrder}</div>
                   </div>
                   <div className="inline-flex flex-col items-center justify-center gap-3 pb-0.5 pt-[3px]">
-                    <div className="leading-tight self-stretch text-justify text-gray-700 text-T-16-B">/80</div>
+                    <div className="self-stretch text-justify text-gray-700 text-T-16-B">/{availabilityOrder}</div>
                   </div>
                   <div className="inline-flex flex-col items-center justify-center gap-3 pb-0.5 pt-[3px]">
-                    <div className="leading-tight self-stretch text-justify text-gray-700 text-T-16-B">건</div>
+                    <div className="self-stretch text-justify text-gray-700 text-T-16-B">건</div>
                   </div>
                 </div>
               </div>
@@ -73,7 +90,7 @@ const DriverDispatchDetailDashboard = () => {
           </div>
           <div className="h-[0px] w-[60px] rotate-90 border border-gray-50"></div>
 
-          <CircularProgressBar percentage={90} color={"lime"} />
+          <CircularProgressBar percentage={90} bgColor={bgColor} />
         </div>
       </div>
     </div>

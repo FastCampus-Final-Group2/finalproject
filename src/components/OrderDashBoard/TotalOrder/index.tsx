@@ -57,7 +57,7 @@ const TotalOrder = ({ totalOrders, errorOrders, estimatedTime, capacityRate }: T
         <div className="h-[60px] w-[0px] border border-gray-50"></div>
 
         {/* 용적률 */}
-        <CircularProgressBar percentage={capacityRate} color={"blue"} />
+        <CircularProgressBar percentage={capacityRate} bgColor={"blue"} />
       </div>
     </div>
   );

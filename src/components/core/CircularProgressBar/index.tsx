@@ -1,19 +1,37 @@
+import { TEXT_100, TEXT_650 } from "@/styles/smColor";
+
 interface CircularProgressBarProps {
   percentage: number;
-  color: string;
+  bgColor: keyof typeof TEXT_100 | "blue";
 }
 
-const CircularProgressBar = ({ percentage, color }: CircularProgressBarProps) => {
+const CircularProgressBar = ({ percentage, bgColor }: CircularProgressBarProps) => {
   const radius = 30; // 반지름
   const stroke = 4; // 두께
   const normalizedRadius = radius - stroke * 2;
   const circumference = normalizedRadius * 2 * Math.PI;
-  const strokeDashoffset = circumference - (percentage / 100) * circumference;
 
-  // const backgroundClass = color === 'blue' ? 'text-blue-50' : color === 'lime' ? 'text-lime-100' : 'text-gray-200';
-  // const foregroundClass = color === 'blue' ? 'text-blue-500' : color === 'lime' ? 'text-lime-650' : 'text-gray-900';
-  const backgroundClass = color === "blue" ? "text-blue-50" : "text-lime-100";
-  const foregroundClass = color === "blue" ? "text-blue-500" : "text-lime-650";
+  // 100을 초과하면 100으로 설정
+  const limitedPercentage = Math.min(percentage, 100);
+  const strokeDashoffset = circumference - (limitedPercentage / 100) * circumference;
+
+  // 색상을 조건에 따라 동적으로 변경
+  let backgroundClass = "text-gray-200";
+  let foregroundClass = "text-gray-400";
+
+  if (percentage > 100) {
+    backgroundClass = "text-red-100";
+    foregroundClass = "text-red-500";
+  } else if (percentage === 0) {
+    backgroundClass = "text-gray-200";
+    foregroundClass = "text-gray-400";
+  } else if (bgColor === "blue") {
+    backgroundClass = "text-blue-50";
+    foregroundClass = "text-blue-500";
+  } else {
+    backgroundClass = TEXT_100[bgColor];
+    foregroundClass = TEXT_650[bgColor];
+  }
 
   return (
     <div className="inline-flex h-[60px] w-[101px] items-start justify-start gap-1">
@@ -43,8 +61,8 @@ const CircularProgressBar = ({ percentage, color }: CircularProgressBarProps) =>
           />
         </svg>
         <div className="absolute inset-0 flex items-center justify-center">
-          <div className="h-[22px] w-[24px] text-gray-900 text-T-18-B">{percentage}</div>
-          <div className="h-[20px] w-[14px] text-gray-900 text-B-14-B">%</div>
+          <div className="h-[22px] min-w-[12px] text-center text-gray-900 text-B-14-B">{percentage}</div>
+          <div className="h-[20px] w-[14px] text-center text-gray-900 text-B-14-B">%</div>
         </div>
       </div>
     </div>
