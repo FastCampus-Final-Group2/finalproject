@@ -1,6 +1,7 @@
 import type { Config } from "tailwindcss";
 import { colors, fonts, layout } from "./src/styles/theme";
 import typography from "./src/styles/plugins/typography";
+import { BG_50, BG_100, BG_350, BG_650, TEXT_50, TEXT_100, TEXT_350, TEXT_650 } from "./src/styles/smColor";
 
 const config: Config = {
   content: [
@@ -20,5 +21,15 @@ const config: Config = {
     },
   },
   plugins: [typography, require("tailwind-scrollbar-hide")],
+  safelist: [
+    ...Object.values(BG_50),
+    ...Object.values(BG_100),
+    ...Object.values(BG_350),
+    ...Object.values(BG_650),
+    ...Object.values(TEXT_50),
+    ...Object.values(TEXT_100),
+    ...Object.values(TEXT_350),
+    ...Object.values(TEXT_650),
+  ],
 };
 export default config;
