@@ -45,7 +45,7 @@ export interface ExcelData {
   productQuantity?: number;
 }
 
-export interface OrderDetail {
+export interface OrderInfo {
   receivedDate: string; // 주문 접수일
   transportOrderNumber: string; // 운송장 번호
   deliveryType: string; // 배송유형
@@ -69,4 +69,22 @@ export interface OrderDetail {
     detailAddress: string; // 상세주소
     note: string; // 고객전달사항
   };
+}
+
+export interface DeliveryInfo {
+  deliveryDestinationName: string; // 배송처명
+  managerName: string; // 담당자명
+  managerPhoneNumber: string; // 연락처
+  zipCode: string; // 우편번호
+  latitude: number; // 위도
+  longitude: number; // 경도
+  basicAddress: string; // 기본 주소
+  detailedAddress: string; // 상세 주소
+  delayTime: number; // 작업추가 소요시간
+  comment: string; // 비고
+  restrictedTonCode: string; // 진입제약 차량
+  centerId: number; // 센터코드
+  centerName: string; // 센터명
+  updateAt: string; // 수정일시
+  createAt: string; // 생성일시
 }

@@ -1,6 +1,6 @@
-import { OrderDetail } from "@/types/order";
+import { OrderInfo } from "@/types/order";
 
-export const ORDER_DETAIL: OrderDetail = {
+export const ORDER: OrderInfo = {
   receivedDate: "2024.08.11", // 주문접수일
   transportOrderNumber: "C0029384889", // 운송장 번호
   deliveryType: "지입", // 배송유형

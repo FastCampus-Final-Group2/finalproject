@@ -1,4 +1,4 @@
-export const ORDER_DETAIL_DISPATCH_INFO_LABEL = {
+export const ORDER_DISPATCH_INFO_LABEL = {
   receivedDate: "주문접수일",
   transportOrderNumber: "운송장번호",
   deliveryType: "배송유형",
@@ -12,7 +12,7 @@ export const ORDER_DETAIL_DISPATCH_INFO_LABEL = {
   weight: "중량 (kg)",
 } as const;
 
-export const ORDER_DETAIL_DISPATCH_INFO_KEYS = [
+export const ORDER_DISPATCH_INFO_KEYS = [
   { key: "receivedDate", line: 1 },
   { key: "transportOrderNumber", line: 1 },
   { key: "deliveryType", line: 3 },
@@ -26,19 +26,19 @@ export const ORDER_DETAIL_DISPATCH_INFO_KEYS = [
   { key: "weight", line: 1 },
 ] as const;
 
-export const ORDER_DETAIL_DELIVERY_INFO_LABEL = {
+export const ORDER_DELIVERY_INFO_LABEL = {
   managerName: "담당자명",
   phoneNumber: "담당자연락처",
   deliveryDestinationCode: "배송처 코드",
 } as const;
 
-export const ORDER_DETAIL_DELIVERY_INFO_KEYS = [
+export const ORDER_DELIVERY_INFO_KEYS = [
   { key: "managerName", line: 1 },
   { key: "phoneNumber", line: 1 },
   { key: "deliveryDestinationCode", line: 3 },
 ] as const;
 
-export const ORDER_DETAIL_CLIENT_INFO_LABEL = {
+export const ORDER_CLIENT_INFO_LABEL = {
   client: "고객명",
   phoneNumber: "고객연락처",
   roadAddress: "주소",
@@ -46,7 +46,7 @@ export const ORDER_DETAIL_CLIENT_INFO_LABEL = {
   note: "고객전달사항",
 } as const;
 
-export const ORDER_DETAIL_CLIENT_INFO_KEYS = [
+export const ORDER_CLIENT_INFO_KEYS = [
   { key: "client", line: 1 },
   { key: "phoneNumber", line: 1 },
   { key: "roadAddress", line: 2 },
