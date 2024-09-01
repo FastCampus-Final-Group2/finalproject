@@ -36,12 +36,13 @@ const SideNavBarMenu = ({
   const [isMenuOpened, toggleMenu] = useReducer((v) => !v, false);
 
   const handleMenuToggleButton = useCallback(() => {
+    if (!isSNBOpened) return;
+
     if (subMenu) {
       setCurrentMenu(name);
       toggleMenu();
     } else {
       if (!href) return;
-      if (!isSNBOpened) return;
       if (name !== DEFAULT_TAB.name) {
         addTab(href, name);
       }
