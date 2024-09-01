@@ -12,7 +12,7 @@ const SideNavBarList = () => {
     <div className="flex flex-1 flex-col justify-between overflow-hidden">
       <div className="flex flex-1 flex-col gap-5 overflow-hidden">
         <SideNavBarMyMenu />
-        <div className="h-[2px] w-full shrink-0 bg-gray-800" aria-hidden />
+        <div className="h-[2px] w-snb-open shrink-0 bg-gray-800" aria-hidden />
         {SIDE_NAV_BAR_LINKS.slice(0, -1).map((info) => {
           return (
             <SideNavBarMenu
