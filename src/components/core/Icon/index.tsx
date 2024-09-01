@@ -21,6 +21,7 @@ export type IconId =
   | "circleCheckFill"
   | "circleAlert"
   | "circleAlertFill"
+  | "download"
   | "triangleUp"
   | "triangleDown"
   | "warning"
@@ -74,7 +75,9 @@ export type IconId =
   | "wing_3.5T"
   | "wing_5T"
   | "wing_8T"
-  | "wing_11T";
+  | "wing_11T"
+  | "flagFilled"
+  | "flagOutlined";
 
 type IconSize = 14 | 16 | 18 | 20 | 24 | 28 | 32 | 40;
 
