@@ -21,7 +21,7 @@ const AccessTimeRefresh = () => {
 
   return (
     <div className="pr-[12px]">
-      <ul className="flex items-center justify-end gap-[4px] text-gray-300 text-B-14-M">
+      <ul className="flex items-center gap-[4px] text-gray-300 text-B-14-M">
         <li>{accessTime} 기준</li>
         <li className="cursor-pointer" onClick={handleRefresh}>
           <Icon id="restart" className="text-gray-300" size={18} />

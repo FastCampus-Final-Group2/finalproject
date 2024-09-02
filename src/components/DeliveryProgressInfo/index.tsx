@@ -7,10 +7,12 @@ const DeliveryProgressInfo = () => {
   return (
     <div className="flex flex-col gap-[12px]">
       <div className="flex justify-between">
-        <FloorAreaRatioCard />
-        <DeliveryCompletedCard />
+        <FloorAreaRatioCard phoneNumber={"010-1234-5555"} smName={"김도희"} progressRate={70} />
+        <DeliveryCompletedCard deliveryProgressRate={50} />
       </div>
-      <AccessTimeRefresh />
+      <div className="flex justify-end">
+        <AccessTimeRefresh />
+      </div>
       <DeliveryIssues />
     </div>
   );
