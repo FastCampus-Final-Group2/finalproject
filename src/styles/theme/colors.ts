@@ -1,3 +1,5 @@
+const transparent = "transparent";
+
 const white = "#FFFFFF";
 
 const black = "#000000";
@@ -121,6 +123,7 @@ const olive = {
 };
 
 export const colors = {
+  transparent,
   white,
   black,
   gray,

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "pretendard/dist/web/variable/pretendardvariable-dynamic-subset.css";
 import "./globals.css";
+import RecoilRootProvider from "@/providers/RecoilRootProvider";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -14,7 +15,9 @@ const RootLayout = ({
 }>) => {
   return (
     <html lang="ko">
-      <body>{children}</body>
+      <body>
+        <RecoilRootProvider>{children}</RecoilRootProvider>
+      </body>
     </html>
   );
 };
