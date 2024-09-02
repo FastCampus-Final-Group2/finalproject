@@ -1726,11 +1726,23 @@ export type WithdrawData = any;
 
 export type LogoutData = any;
 
+export interface GetTransportOrderByIdParams {
+  /** @format int64 */
+  destinationId?: number;
+  /** @format int64 */
+  transportOrderId: number;
+}
+
 export type GetTransportOrderByIdData = TransportOrderResponse;
 
 export type GetTransportOrderByIdError = ErrorResponse;
 
 export type DownloadOrderFormExcelData = any;
+
+export interface SearchDispatchesParams {
+  /** 배차 검색 요청 정보 */
+  request: DispatchNumberSearchRequest;
+}
 
 export type SearchDispatchesData = DispatchNumberSearchResponse;
 
@@ -1741,5 +1753,11 @@ export type GetDispatchListError = ErrorResponse;
 export type GetDispatchDetailData = DispatchDetailResponse;
 
 export type GetDispatchDetailError = ErrorResponse;
+
+export interface GetCenterOrDeliveryDestinationInfoParams {
+  "is-center": boolean;
+  /** @format int64 */
+  placeId: number;
+}
 
 export type GetCenterOrDeliveryDestinationInfoData = object;
