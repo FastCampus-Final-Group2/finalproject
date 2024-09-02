@@ -1,5 +1,6 @@
 import CopyButton from "@/components/core/CopyButton";
 import Icon from "@/components/core/Icon";
+import Link from "next/link";
 
 const ControlDiapatchHeader = () => {
   return (
@@ -15,10 +16,10 @@ const ControlDiapatchHeader = () => {
           <p className="rounded-[4px] bg-gray-700 p-[8px] text-white text-B-14-M">택배</p>
         </li>
       </ul>
-      <div className="flex items-center gap-[4px]">
-        <Icon id="menuKebab" />
-        <div className="text-T-16-B">배차목록 보기</div>
-      </div>
+      <Link href="/control" className="flex items-center gap-[4px] hover:text-blue-500">
+        <Icon id="menuKebab" className="hover:text-blue-500" />
+        <p className="text-T-16-B">배차목록 보기</p>
+      </Link>
     </div>
   );
 };

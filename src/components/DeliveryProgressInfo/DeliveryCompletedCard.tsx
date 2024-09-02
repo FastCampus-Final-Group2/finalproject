@@ -1,4 +1,5 @@
 import Icon, { IconId } from "@/components/core/Icon";
+import { BG_100, BG_650, TEXT_650 } from "@/styles/smColor";
 
 // todo: 완료 주문의 unit은 api 연동 후 변경
 const progressData: { title: string; count: number; unit: string | number; iconId: IconId; devide: string }[] = [
@@ -9,22 +10,26 @@ const progressData: { title: string; count: number; unit: string | number; iconI
 
 interface DeliveryCompletedCardProps {
   deliveryProgressRate: number;
+  selectedColor: keyof typeof BG_100 | keyof typeof TEXT_650;
 }
 
-const DeliveryCompletedCard = ({ deliveryProgressRate }: DeliveryCompletedCardProps) => {
+const DeliveryCompletedCard = ({ deliveryProgressRate, selectedColor }: DeliveryCompletedCardProps) => {
   return (
     <div className="flex flex-col gap-[12px] px-[12px] pt-[12px]">
       <ul className="flex items-center justify-between gap-[20px] text-gray-700 text-B-14-M">
         <li className="flex items-center gap-[4px]">
           <p>진행률</p>
           <p>
-            <span className="text-lime-650 text-T-20-B">{deliveryProgressRate}</span>
+            <span className={`${TEXT_650[selectedColor]} text-T-20-B`}>{deliveryProgressRate}</span>
             <span className="text-T-16-B">%</span>
           </p>
         </li>
-        <li className="h-[12px] w-[80px] rounded-full bg-lime-100">
+        <li className={`h-[12px] w-[80px] rounded-full ${BG_100[selectedColor]}`}>
           {/* progressRate를 인라인 스타일로 적용 */}
-          <p className="h-[12px] rounded-full bg-lime-650" style={{ width: `${deliveryProgressRate}px` }}></p>
+          <p
+            className={`h-[12px] rounded-full ${BG_650[selectedColor]}`}
+            style={{ width: `${deliveryProgressRate}px` }}
+          ></p>
         </li>
       </ul>
       <div className="text-gray-700 text-B-14-M">
@@ -35,7 +40,7 @@ const DeliveryCompletedCard = ({ deliveryProgressRate }: DeliveryCompletedCardPr
               <p>{data.title}</p>
             </li>
             <li className="flex items-end text-gray-700">
-              <p className="text-lime-650 text-T-20-B">{data.count}</p>
+              <p className={`${TEXT_650[selectedColor]} text-T-20-B`}>{data.count}</p>
               <p>{data.devide}</p>
               <p className="text-T-16-B">{data.unit}</p>
             </li>

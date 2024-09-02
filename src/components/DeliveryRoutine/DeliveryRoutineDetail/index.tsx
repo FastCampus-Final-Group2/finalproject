@@ -59,6 +59,7 @@ const DeliveryRoutineDetailStatus: DeliveryRoutineDetailStatusItem[] = [
     iconId: "circle",
     address: "서울시 마포구 합정동",
     addressDetail: "331-7 360동 2503호",
+    errorMessage: "화물 엘리베이터 대기시간 1시간",
   },
   {
     order: 4,
@@ -71,6 +72,7 @@ const DeliveryRoutineDetailStatus: DeliveryRoutineDetailStatusItem[] = [
     iconId: "circleDashFill",
     address: "서울시 마포구 합정동",
     addressDetail: "331-7 360동 2503호",
+    errorMessage: "화물 엘리베이터 대기시간 1시간",
   },
   {
     order: 5,
@@ -83,6 +85,7 @@ const DeliveryRoutineDetailStatus: DeliveryRoutineDetailStatusItem[] = [
     iconId: "circle",
     address: "서울시 마포구 합정동",
     addressDetail: "331-7 360동 2503호",
+    errorMessage: "화물 엘리베이터 대기시간 1시간",
   },
   {
     order: 6,
@@ -95,6 +98,7 @@ const DeliveryRoutineDetailStatus: DeliveryRoutineDetailStatusItem[] = [
     iconId: "circle",
     address: "서울시 마포구 합정동",
     addressDetail: "331-7 360동 2503호",
+    errorMessage: "화물 엘리베이터 대기시간 1시간",
   },
 ];
 
