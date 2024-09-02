@@ -33,8 +33,7 @@ const DeliveryIssues = () => {
       : memo;
 
   return (
-    // todo: 418px는 나중에 지울 것
-    <div className="w-[418px] rounded-[8px] border p-[12px] text-B-14-M">
+    <div className="w-[418px] rounded-[8px] border px-[12px] py-[8px] text-B-14-M">
       <ul className="flex">
         <li className="min-h-[32px] flex-1">
           {isOpen ? (
@@ -42,10 +41,12 @@ const DeliveryIssues = () => {
               value={memo}
               onChange={handleMemoChange}
               placeholder={`배송이슈 및 기타 메모 입력\n(300자 이내)`}
-              className="h-[160px] w-full resize-none whitespace-pre-line scrollbar-hide"
+              className="h-[150px] w-full resize-none whitespace-pre-line scrollbar-hide"
             />
           ) : (
-            <p className="text-gray-600">{displayedText || "배송이슈 및 기타 메모 입력(300자 이내)"}</p>
+            <p className="whitespace-pre-line text-gray-600">
+              {displayedText || "배송이슈 및 기타 메모 입력\n(300자 이내)"}
+            </p>
           )}
         </li>
         <li className="ml-[8px] flex flex-col items-center justify-between">

@@ -8,7 +8,9 @@ const progressData: { title: string; count: number; unit: string | number; iconI
 ];
 
 const DeliveryCompletedCard = () => {
-  const progressRate = (80 / 100) * 50;
+  const progressPercentage = 50;
+  const progressRate = (progressPercentage / 100) * 80; // 80px의 50%
+
   return (
     <div className="flex flex-col gap-[12px] px-[12px] pt-[12px]">
       <ul className="flex items-center justify-between gap-[20px] text-gray-700 text-B-14-M">
@@ -20,7 +22,8 @@ const DeliveryCompletedCard = () => {
           </p>
         </li>
         <li className="h-[12px] w-[80px] rounded-full bg-lime-100">
-          <p className={`h-[12px] w-[${progressRate}px] rounded-full bg-lime-650`}></p>
+          {/* progressRate를 인라인 스타일로 적용 */}
+          <p className="h-[12px] rounded-full bg-lime-650" style={{ width: `${progressRate}px` }}></p>
         </li>
       </ul>
       <div className="text-gray-700 text-B-14-M">

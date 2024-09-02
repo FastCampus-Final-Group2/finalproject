@@ -5,7 +5,6 @@ import Icon from "@/components/core/Icon";
 import dayjs from "dayjs";
 
 const AccessTimeRefresh = () => {
-  // todo: 데이터 새로고침 기능 넣기
   const [accessTime, setAccessTime] = useState("");
 
   useEffect(() => {
@@ -13,11 +12,18 @@ const AccessTimeRefresh = () => {
     setAccessTime(currentTime);
   }, []);
 
+  const handleRefresh = () => {
+    const currentTime = dayjs().format("HH:mm:ss");
+    setAccessTime(currentTime);
+    alert("AccessTimeRefresh.tsx에서 새로고침 발생");
+    console.log("AccessTimeRefresh.tsx에서 새로고침 발생");
+  };
+
   return (
     <div className="pr-[12px]">
       <ul className="flex items-center justify-end gap-[4px] text-gray-300 text-B-14-M">
         <li>{accessTime} 기준</li>
-        <li>
+        <li className="cursor-pointer" onClick={handleRefresh}>
           <Icon id="restart" className="text-gray-300" size={18} />
         </li>
       </ul>

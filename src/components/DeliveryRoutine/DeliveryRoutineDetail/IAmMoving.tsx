@@ -1,6 +1,6 @@
 import DeliveryStatusTag from "@/components/DeliveryStatusTag";
 
-const Moving = () => {
+const IAmMoving = () => {
   return (
     <div className="ml-[50px] flex items-center gap-[8px] pl-[18px]">
       <DeliveryStatusTag>이동 중</DeliveryStatusTag>
@@ -11,4 +11,4 @@ const Moving = () => {
   );
 };
 
-export default Moving;
+export default IAmMoving;

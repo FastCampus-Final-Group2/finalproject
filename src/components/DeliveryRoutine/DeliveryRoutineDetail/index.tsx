@@ -1,24 +1,24 @@
 "use client";
 
-import { IconId } from "@/components/core/Icon";
+import Icon, { IconId } from "@/components/core/Icon";
 import DeliveryStatusTag from "@/components/DeliveryStatusTag";
 import DeliveryStopoverListCard from "@/components/DeliveryRoutine/DeliveryStopoverListCard";
 import CircleCheckbox from "./CircleCheckbox";
 import React from "react";
-import Moving from "./Moving";
+import IAmMoving from "./IAmMoving";
 
-// DeliveryRoutineDetailStatus 배열의 타입을 정의합니다
 interface DeliveryRoutineDetailStatusItem {
   order: number;
   status: "delayed" | "completed" | "cancelled" | "waiting" | "default" | "";
   text: string;
-  startTime: string;
-  endTime: string;
-  expectedStartTime: string;
-  expectedEndTime: string;
+  startTime?: string;
+  endTime?: string;
+  expectedStartTime?: string;
+  expectedEndTime?: string;
   iconId: IconId;
   address: string;
   addressDetail: string;
+  errorMessage?: string;
 }
 
 const DeliveryRoutineDetailStatus: DeliveryRoutineDetailStatusItem[] = [
@@ -33,6 +33,7 @@ const DeliveryRoutineDetailStatus: DeliveryRoutineDetailStatusItem[] = [
     iconId: "circleFill",
     address: "서울시 마포구 합정동",
     addressDetail: "331-7 360동 2503호",
+    errorMessage: "화물 엘리베이터 대기시간 1시간",
   },
   {
     order: 2,
@@ -45,6 +46,7 @@ const DeliveryRoutineDetailStatus: DeliveryRoutineDetailStatusItem[] = [
     iconId: "circle",
     address: "서울시 마포구 합정동",
     addressDetail: "331-7 360동 2503호",
+    errorMessage: "화물 엘리베이터 대기시간 1시간",
   },
   {
     order: 3,
@@ -98,7 +100,7 @@ const DeliveryRoutineDetailStatus: DeliveryRoutineDetailStatusItem[] = [
 
 const DeliveryRoutineDetail = () => {
   return (
-    <div className="flex h-[355px] flex-col gap-[12px] overflow-scroll scrollbar-hide">
+    <div className="flex flex-col gap-[12px] overflow-scroll scrollbar-hide">
       {DeliveryRoutineDetailStatus.map((item, index) => {
         let startTimeLabel = "시작";
         let endTimeLabel = "종료";
@@ -135,30 +137,37 @@ const DeliveryRoutineDetail = () => {
           <React.Fragment key={item.order}>
             <div className="flex w-[430px] justify-between">
               <CircleCheckbox iconId={item.iconId} status={item.status} order={item.order} />
-              <DeliveryStopoverListCard
-                background={item.status === "default" ? "start" : undefined}
-                height={item.status === "cancelled" ? "cancelled" : "default"}
-              >
-                <ul className={`${item.status === "cancelled" ? "text-gray-300" : ""} `}>
-                  <li className="flex items-center gap-[8px]">
-                    <DeliveryStatusTag text={item.status || "default"}>{item.text}</DeliveryStatusTag>
-                    {/* 주소 표시 부분 */}
-                    <p
-                      className={`cursor-pointer text-nowrap border-b border-blue-500 text-T-16-M ${
-                        item.status === "cancelled" ? "border-gray-300 text-gray-300" : "text-blue-500"
-                      } `}
+              <DeliveryStopoverListCard background={item.status === "default" ? "start" : undefined}>
+                <div className="flex flex-col gap-[8px]">
+                  <ul className={`${item.status === "cancelled" ? "text-gray-300" : ""} `}>
+                    <li className="flex items-center gap-[8px]">
+                      <DeliveryStatusTag text={item.status || "default"}>{item.text}</DeliveryStatusTag>
+                      {/* 주소 표시 부분 */}
+                      <p
+                        className={`cursor-pointer text-nowrap border-b border-blue-500 text-T-16-M ${
+                          item.status === "cancelled" ? "border-gray-300 text-gray-300" : "text-blue-500"
+                        } `}
+                      >
+                        {item.address}
+                      </p>
+                      <p
+                        className={`overflow-hidden text-ellipsis whitespace-nowrap text-B-14-M ${
+                          item.status === "cancelled" ? "text-gray-300" : "text-gray-500"
+                        } ${maxWClass}`}
+                      >
+                        {item.addressDetail}
+                      </p>
+                    </li>
+                  </ul>
+                  <ul className="h-[20px]">
+                    <li
+                      className={`${item.errorMessage ? "text-B-14-M" : "hidden"} flex h-[20px] items-center gap-[4px]`}
                     >
-                      {item.address}
-                    </p>
-                    <p
-                      className={`overflow-hidden text-ellipsis whitespace-nowrap text-B-14-M ${
-                        item.status === "cancelled" ? "text-gray-300" : "text-gray-500"
-                      } ${maxWClass}`}
-                    >
-                      {item.addressDetail}
-                    </p>
-                  </li>
-                </ul>
+                      <Icon id="circleAlertFill" size={14} />
+                      <p>{item.errorMessage}</p>
+                    </li>
+                  </ul>
+                </div>
                 <ul
                   className={`flex flex-col items-end gap-[8px] text-nowrap text-B-14-M ${
                     item.status === "cancelled" ? "hidden" : "text-gray-700"
@@ -174,7 +183,7 @@ const DeliveryRoutineDetail = () => {
               </DeliveryStopoverListCard>
             </div>
             {/* '작업완료'와 '작업대기' 사이에 '이동 중' 컴포넌트를 삽입 */}
-            {item.text === "작업완료" && DeliveryRoutineDetailStatus[index + 1]?.text === "작업대기" && <Moving />}
+            {item.text === "작업완료" && DeliveryRoutineDetailStatus[index + 1]?.text === "작업대기" && <IAmMoving />}
           </React.Fragment>
         );
       })}

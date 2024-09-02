@@ -1,6 +1,6 @@
 import DeliveryProgressInfo from "@/components/DeliveryProgressInfo";
-import AccessTimeRefresh from "@/components/AccessTimeRefresh";
 import DeliveryRoutine from "@/components/DeliveryRoutine";
+
 const ControlDetailPage = () => {
   return (
     <>
@@ -30,7 +30,7 @@ const ControlDetailPage = () => {
         <div className="flex w-fit flex-col gap-[4px] rounded-[8px] bg-white p-[20px]">
           <DeliveryProgressInfo />
         </div>
-        <div className="flex w-fit flex-col gap-[4px] rounded-[8px] bg-white pb-[8px] pl-[12px] pr-[16px] pt-[20px]">
+        <div className="flex h-[556px] w-fit flex-col gap-[4px] rounded-[8px] bg-white pl-[12px] pr-[16px] pt-[20px]">
           <DeliveryRoutine />
         </div>
       </div>
