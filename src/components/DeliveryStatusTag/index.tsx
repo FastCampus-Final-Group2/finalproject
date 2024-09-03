@@ -18,6 +18,7 @@ type VehicleStatusType =
 interface DeliveryStatusTagProps extends VariantProps<typeof deliveryStatusClass> {
   children?: string;
   vehicleStatus: VehicleStatusType;
+  restDisplay?: boolean;
 }
 
 // 상태값과 한국어 텍스트를 매핑한다.
@@ -35,7 +36,13 @@ const statusTextMap: Record<VehicleStatusType, string> = {
   RESTING_TIME: "60분",
 };
 
-const DeliveryStatusTag = ({ vehicleStatus, background, children, ...props }: DeliveryStatusTagProps) => {
+const DeliveryStatusTag = ({
+  vehicleStatus,
+  background,
+  children,
+  restDisplay = true,
+  ...props
+}: DeliveryStatusTagProps) => {
   // 상태에 맞는 한국어 텍스트를 가져오기
   const statusText = statusTextMap[vehicleStatus] || "ERROR";
 
@@ -44,7 +51,7 @@ const DeliveryStatusTag = ({ vehicleStatus, background, children, ...props }: De
       <div className={cn(deliveryStatusClass({ vehicleStatus, background }))} {...props}>
         {statusText}
       </div>
-      {vehicleStatus === "RESTING" && (
+      {restDisplay && vehicleStatus === "RESTING" && (
         <div className={cn(deliveryStatusClass({ vehicleStatus: "RESTING_TIME", background }))} {...props}>
           <Icon id="clock" size={14} />
           {statusTextMap.RESTING_TIME}

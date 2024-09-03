@@ -155,7 +155,7 @@ const DeliveryRoutineDetail = () => {
           <React.Fragment key={item.order}>
             <div className="flex w-[430px] justify-between">
               {/* 체크박스 */}
-              <CircleCheckbox iconId={item.iconId} status={item.dispatchDetailStatus} order={item.order} />
+              <CircleCheckbox status={item.dispatchDetailStatus} order={item.order} />
               {/* 목록을 감싸는 카드 */}
               <DeliveryStopoverListCard background={item.dispatchDetailStatus === "default" ? "start" : undefined}>
                 <div className="flex flex-col gap-[8px]">

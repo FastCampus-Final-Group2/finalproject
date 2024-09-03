@@ -1,7 +1,8 @@
 "use client";
 
-import React, { ChangeEvent, useCallback, useReducer } from "react";
+import React, { ChangeEvent, MouseEvent, useCallback, useReducer } from "react";
 import Icon, { IconId } from "@/components/core/Icon";
+import DashBetween from "./DashBetween";
 
 interface CircleCheckboxProps {
   status: string;
@@ -16,7 +17,7 @@ const CircleCheckbox = React.forwardRef<HTMLInputElement, CircleCheckboxProps>(
 
     const handleCheckboxChange = useCallback(
       (event: ChangeEvent<HTMLInputElement>) => {
-        if (status !== "cancelled" && status !== "completed") {
+        if (status !== "CANCELED" && status !== "WORK_COMPLETED" && status !== "RESTING") {
           toggleCheckBox();
           if (onChange) onChange(event, !isChecked);
         }
@@ -24,31 +25,49 @@ const CircleCheckbox = React.forwardRef<HTMLInputElement, CircleCheckboxProps>(
       [onChange, status, isChecked],
     );
 
+    const handleClick = useCallback(
+      (event: MouseEvent<HTMLDivElement>) => {
+        if (status !== "CANCELED" && status !== "WORK_COMPLETED" && status !== "RESTING") {
+          toggleCheckBox();
+          if (onChange) onChange(event as unknown as ChangeEvent<HTMLInputElement>, !isChecked);
+        }
+      },
+      [onChange, status, isChecked],
+    );
+
     const iconId: IconId =
-      status === "cancelled"
-        ? "circleDashFill"
-        : status === "completed"
-          ? "circleFill"
-          : isChecked
-            ? "circleCheck"
-            : "circle";
+      status === "RESTING"
+        ? "coffee"
+        : status === "CANCELED"
+          ? "circleDashFill"
+          : status === "WORK_COMPLETED"
+            ? "circleFill"
+            : isChecked
+              ? "circleCheck"
+              : "circle";
 
     return (
-      <div className="flex w-[46px] justify-center pt-[16px]">
-        <div className="relative flex h-fit cursor-pointer items-center justify-center text-gray-400 hover:text-blue-500">
+      <div
+        className={`relative flex h-[88px] w-[46px] items-start justify-center pt-[16px] before:absolute before:left-1/2 before:top-[50px] before:h-[56px] before:-translate-x-1/2 before:border-l-[2px] before:border-dashed before:border-gray-400`}
+      >
+        <div
+          className={`relative flex cursor-pointer items-center justify-center rounded-full text-gray-400 hover:text-blue-500 ${status === "RESTING" ? "h-[20px] w-[20px] cursor-default bg-orange-500" : ""}`}
+          onClick={handleClick}
+          role="input"
+        >
           <input type="checkbox" checked={isChecked} className="hidden" onChange={handleCheckboxChange} ref={ref} />
           <Icon
             id={iconId}
-            className={` ${isChecked ? "text-blue-500" : ""} ${status === "cancelled" || status === "completed" ? "cursor-default hover:text-gray-400" : ""} hover:text-blue-500`}
-            size={status === "cancelled" || status === "completed" ? 16 : 24}
+            className={`${isChecked ? "text-blue-500" : ""} ${status === "CANCELED" || status === "WORK_COMPLETED" || status === "RESTING" ? "cursor-default hover:text-gray-400" : ""} ${status === "RESTING" ? "text-white hover:text-white" : ""}`}
+            size={status === "CANCELED" || status === "WORK_COMPLETED" || status === "RESTING" ? 16 : 24}
           />
           <p
-            className={`${status === "cancelled" || status === "completed" || isChecked ? "hidden" : ""} absolute text-C-12-M`}
-            onClick={handleCheckboxChange}
+            className={`${status === "CANCELED" || status === "WORK_COMPLETED" || status === "RESTING" ? "hidden" : ""} absolute text-C-12-M`}
           >
-            {order}
+            <span className={`${isChecked ? "hidden" : ""}`}>{order}</span>
           </p>
         </div>
+        {/* <DashBetween /> */}
       </div>
     );
   },

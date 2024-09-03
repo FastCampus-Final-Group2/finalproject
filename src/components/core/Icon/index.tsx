@@ -20,6 +20,7 @@ export type IconId =
   | "circleCheckFill"
   | "circleAlert"
   | "circleAlertFill"
+  | "coffee"
   | "download"
   | "triangleUp"
   | "triangleDown"
@@ -84,7 +85,8 @@ export type IconId =
   | "download"
   | "upload"
   | "circleLoading"
-  | "event";
+  | "event"
+  | "list";
 
 export type IconSize = 14 | 16 | 18 | 20 | 24 | 28 | 32 | 40;
 

@@ -17,7 +17,7 @@ const ControlDiapatchHeader = () => {
         </li>
       </ul>
       <Link href="/control" className="flex items-center gap-[4px] hover:text-blue-500">
-        <Icon id="menuKebab" className="hover:text-blue-500" />
+        <Icon id="list" className="hover:text-blue-500" />
         <p className="text-T-16-B">배차목록 보기</p>
       </Link>
     </div>

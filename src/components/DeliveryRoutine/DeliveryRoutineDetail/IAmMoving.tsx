@@ -4,7 +4,7 @@ import DeliveryStatusTag from "@/components/DeliveryStatusTag";
 
 const IAmMoving = () => {
   return (
-    <div className="ml-[50px] flex items-center gap-[8px] pl-[18px]">
+    <div className="relative ml-[50px] flex items-center gap-[8px] pl-[18px] before:absolute before:left-[-28px] before:top-[2px] before:h-[43px] before:border-l-[2px] before:border-dashed before:border-gray-400">
       <DeliveryStatusTag vehicleStatus="MOVING" />
       <p className="text-B-14-R">
         <span className="text-B-14-B">48</span>분 소요 예상

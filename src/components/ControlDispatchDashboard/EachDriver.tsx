@@ -28,7 +28,7 @@ const EachDriver = ({
     <div className="flex flex-col gap-[10px] text-gray-900 text-B-14-B">
       <div className="flex h-[40px] items-center justify-between rounded-[4px] border border-gray-100">
         <ul className="box-border flex w-full items-center gap-[8px] py-[6px] pl-[12px]">
-          <DeliveryStatusTag vehicleStatus={dispatchDetailStatus}></DeliveryStatusTag> {/* 수정된 부분 */}
+          <DeliveryStatusTag vehicleStatus={dispatchDetailStatus} restDisplay={false} />
           <li>{name}</li>
           <span className="h-[20px] w-0 border-l border-gray-100"></span>
           <li className="w-[40px] text-B-14-M">
