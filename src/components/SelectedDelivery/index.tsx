@@ -1,6 +1,9 @@
 import Button from "@/components/core/Button";
+import { useState } from "react";
+import ConfirmModal from "@/components/ConfirmModal";
 
 const SelectedDelivery = ({ selectedOrders }) => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const handleCancel = () => {
     if (selectedOrders.length === 0) {
       alert("선택된 항목이 없습니다.");
@@ -18,21 +21,47 @@ const SelectedDelivery = ({ selectedOrders }) => {
     }
   };
 
+  const handleModalClose = () => {
+    setIsModalOpen(!isModalOpen);
+  };
+  // Define the alert message here
+  const alertMessage = {
+    type: "alert",
+    value: "배송 취소 시, 복구되지 않습니다.",
+  };
+
   return (
-    <div className="flex items-center justify-between text-T-18-B">
-      <ul className="flex gap-[2px] pl-[8px]">
-        <li>선택 배송</li>
-        <li>
-          <span className={`text-gray-500 ${selectedOrders.length >= 1 ? "text-red-500" : ""}`}>
-            {selectedOrders.length}
-          </span>
-          건
-        </li>
-      </ul>
-      <Button onClick={handleCancel} iconId="circleCancelFill" size="i" className="text-B-14-B hover:text-white">
-        배송취소
-      </Button>
-    </div>
+    <>
+      <div className="flex items-center justify-between text-T-18-B">
+        <ul className="flex gap-[2px] pl-[8px]">
+          <li>선택 배송</li>
+          <li>
+            <span className={`text-gray-500 ${selectedOrders.length >= 1 ? "text-red-500" : ""}`}>
+              {selectedOrders.length}
+            </span>
+            건
+          </li>
+        </ul>
+        <Button
+          onClick={() => setIsModalOpen(true)} // Open the modal when clicking the delete icon
+          iconId="circleCancelFill"
+          size="i"
+          className="text-B-14-B hover:text-white"
+        >
+          배송취소
+        </Button>
+      </div>
+      {isModalOpen && (
+        <ConfirmModal
+          title="삭제 확인"
+          text={[alertMessage]}
+          leftButtonText="아니오"
+          rightButtonText="네"
+          onConfirm={handleCancel}
+          onClickClose={handleModalClose}
+        />
+      )}
+    </>
   );
 };
 
