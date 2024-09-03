@@ -4,7 +4,7 @@ import Icon, { IconId } from "@/components/core/Icon";
 import DeliveryStatusTag from "@/components/DeliveryStatusTag";
 import DeliveryStopoverListCard from "@/components/DeliveryRoutine/DeliveryStopoverListCard";
 import CircleCheckbox from "./CircleCheckbox";
-import React from "react";
+import React, { useState } from "react";
 import IAmMoving from "./IAmMoving";
 
 interface DeliveryRoutineDetailStatusItem {
@@ -106,7 +106,7 @@ const DeliveryRoutineDetailStatus: DeliveryRoutineDetailStatusItem[] = [
     order: 7,
     dispatchDetailStatus: "RESTING",
     startTime: "15:30",
-    endTime: "",
+    endTime: "16:30",
     expectedStartTime: "",
     expectedEndTime: "16:00",
     iconId: "circle",
@@ -116,7 +116,15 @@ const DeliveryRoutineDetailStatus: DeliveryRoutineDetailStatusItem[] = [
   },
 ];
 
-const DeliveryRoutineDetail = () => {
+const DeliveryRoutineDetail = ({ selectedOrders, setSelectedOrders }) => {
+  // const [selectedOrders, setSelectedOrders] = useState<number[]>([]);
+
+  const handleCheckboxChange = (order: number, checked: boolean) => {
+    setSelectedOrders((prevSelectedOrders) =>
+      checked ? [...prevSelectedOrders, order] : prevSelectedOrders.filter((o) => o !== order),
+    );
+  };
+
   return (
     <div className="flex flex-col gap-[12px] overflow-scroll scrollbar-hide">
       {DeliveryRoutineDetailStatus.map((item, index) => {
@@ -155,7 +163,12 @@ const DeliveryRoutineDetail = () => {
           <React.Fragment key={item.order}>
             <div className="flex w-[430px] justify-between">
               {/* 체크박스 */}
-              <CircleCheckbox status={item.dispatchDetailStatus} order={item.order} />
+              <CircleCheckbox
+                status={item.dispatchDetailStatus}
+                order={item.order}
+                initialState={selectedOrders.includes(item.order)}
+                onChange={(e, checked) => handleCheckboxChange(item.order, checked)}
+              />
               {/* 목록을 감싸는 카드 */}
               <DeliveryStopoverListCard background={item.dispatchDetailStatus === "default" ? "start" : undefined}>
                 <div className="flex flex-col gap-[8px]">

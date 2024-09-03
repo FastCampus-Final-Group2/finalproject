@@ -2,7 +2,6 @@
 
 import React, { ChangeEvent, MouseEvent, useCallback, useReducer } from "react";
 import Icon, { IconId } from "@/components/core/Icon";
-import DashBetween from "./DashBetween";
 
 interface CircleCheckboxProps {
   status: string;
@@ -67,7 +66,6 @@ const CircleCheckbox = React.forwardRef<HTMLInputElement, CircleCheckboxProps>(
             <span className={`${isChecked ? "hidden" : ""}`}>{order}</span>
           </p>
         </div>
-        {/* <DashBetween /> */}
       </div>
     );
   },
