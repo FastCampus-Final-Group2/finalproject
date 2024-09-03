@@ -6,11 +6,22 @@ export interface DispatchedDriversProps {
   onClickToggle: (color: string) => void;
   smColors: string[];
   drivers: Array<{
-    statusText: string;
+    smNumber: number;
+    // statusText: string;
     smName: string;
     totalOrders: number;
     completed: number;
     deliveryProgress: number;
+    dispatchDetailStatus:
+      | "DELIVERY_DELAY"
+      | "WORK_COMPLETED"
+      | "CANCELED"
+      | "WORK_WAITING"
+      | "WORK_START"
+      | "MOVING"
+      | "RESTING"
+      | "RESTING_TIME"
+      | "default";
   }>;
 }
 
@@ -29,14 +40,14 @@ const DispatchedDrivers = ({ onClickToggle, smColors, drivers }: DispatchedDrive
         <div className="flex max-h-[264px] flex-col gap-2 overflow-y-auto scrollbar-hide">
           {drivers.map((driver, index) => (
             <EachDriver
-              key={index}
+              key={driver.smNumber}
               name={driver.smName}
               totalOrder={driver.totalOrders}
               completed={driver.completed}
               deliveryProgress={driver.deliveryProgress}
               onClickToggle={() => onClickToggle(smColors[index % smColors.length])}
               smColor={smColors[index % smColors.length]}
-              statusText={driver.statusText}
+              dispatchDetailStatus={driver.dispatchDetailStatus} // 추가됨
             />
           ))}
         </div>

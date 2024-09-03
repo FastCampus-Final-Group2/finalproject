@@ -7,6 +7,10 @@ import PaginationButtons from "@/components/core/Pagination";
 import mockdata from "./mockdata.json";
 import ListSelection from "@/components/ListSelection";
 
+// todo: 여기가 차량관제 중심
+// /api/dispatch-number?status=“”&isManager=boolean&startDate=””&endDate=””&searchOption=””&searchKeyword=””
+//
+
 interface DispatchItem {
   progress: number;
   diapatchCode: string;

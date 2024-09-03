@@ -10,6 +10,8 @@ interface EachDriverProps {
   completed: number;
   smColor: keyof typeof BG_350;
   statusText: string;
+  dispatchDetailStatus: VehicleStatusType;
+  smNumber: number;
 }
 
 const EachDriver = ({
@@ -20,12 +22,13 @@ const EachDriver = ({
   completed,
   smColor,
   statusText,
+  dispatchDetailStatus,
 }: EachDriverProps) => {
   return (
     <div className="flex flex-col gap-[10px] text-gray-900 text-B-14-B">
       <div className="flex h-[40px] items-center justify-between rounded-[4px] border border-gray-100">
         <ul className="box-border flex w-full items-center gap-[8px] py-[6px] pl-[12px]">
-          <DeliveryStatusTag text="default">{statusText}</DeliveryStatusTag>
+          <DeliveryStatusTag vehicleStatus={dispatchDetailStatus}></DeliveryStatusTag> {/* 수정된 부분 */}
           <li>{name}</li>
           <span className="h-[20px] w-0 border-l border-gray-100"></span>
           <li className="w-[40px] text-B-14-M">
