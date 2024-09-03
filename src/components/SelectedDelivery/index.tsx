@@ -2,11 +2,19 @@ import Button from "@/components/core/Button";
 
 const SelectedDelivery = ({ selectedOrders }) => {
   const handleCancel = () => {
-    if (selectedOrders.length > 0) {
+    if (selectedOrders.length === 0) {
+      alert("선택된 항목이 없습니다.");
+      return;
+    }
+
+    // 모든 선택된 항목이 WORK_WAITING 상태인지 확인
+    const allWorkWaiting = selectedOrders.every((order) => order.status === "WORK_WAITING");
+
+    if (allWorkWaiting) {
       alert("삭제 완료!");
       console.log("SelectDelivery에서 배송취소 버튼 클릭");
     } else {
-      alert("선택된 항목이 없습니다.");
+      alert("선택된 항목이 잘못되었습니다. '작업 대기' 상태만 선택 가능합니다.");
     }
   };
 

@@ -1,14 +1,11 @@
-"use client";
-
 import Icon, { IconId } from "@/components/core/Icon";
 import DeliveryStatusTag from "@/components/DeliveryStatusTag";
 import DeliveryStopoverListCard from "@/components/DeliveryRoutine/DeliveryStopoverListCard";
 import CircleCheckbox from "./CircleCheckbox";
-import React, { useState } from "react";
+import React from "react";
 import IAmMoving from "./IAmMoving";
 
 interface DeliveryRoutineDetailStatusItem {
-  order: number;
   dispatchDetailStatus:
     | "DELIVERY_DELAY"
     | "WORK_COMPLETED"
@@ -31,7 +28,6 @@ interface DeliveryRoutineDetailStatusItem {
 
 const DeliveryRoutineDetailStatus: DeliveryRoutineDetailStatusItem[] = [
   {
-    order: 1,
     dispatchDetailStatus: "WORK_COMPLETED",
     startTime: "14:30",
     endTime: "15:00",
@@ -43,7 +39,6 @@ const DeliveryRoutineDetailStatus: DeliveryRoutineDetailStatusItem[] = [
     errorMessage: "화물 엘리베이터 대기시간 1시간",
   },
   {
-    order: 2,
     dispatchDetailStatus: "WORK_WAITING",
     startTime: "",
     endTime: "",
@@ -55,7 +50,6 @@ const DeliveryRoutineDetailStatus: DeliveryRoutineDetailStatusItem[] = [
     errorMessage: "화물 엘리베이터 대기시간 1시간",
   },
   {
-    order: 3,
     dispatchDetailStatus: "DELIVERY_DELAY",
     startTime: "14:00",
     endTime: "14:30",
@@ -67,7 +61,6 @@ const DeliveryRoutineDetailStatus: DeliveryRoutineDetailStatusItem[] = [
     errorMessage: "화물 엘리베이터 대기시간 1시간",
   },
   {
-    order: 4,
     dispatchDetailStatus: "CANCELED",
     startTime: "",
     endTime: "",
@@ -79,7 +72,6 @@ const DeliveryRoutineDetailStatus: DeliveryRoutineDetailStatusItem[] = [
     errorMessage: "화물 엘리베이터 대기시간 1시간",
   },
   {
-    order: 5,
     dispatchDetailStatus: "WORK_WAITING",
     startTime: "",
     endTime: "",
@@ -91,7 +83,6 @@ const DeliveryRoutineDetailStatus: DeliveryRoutineDetailStatusItem[] = [
     errorMessage: "화물 엘리베이터 대기시간 1시간",
   },
   {
-    order: 6,
     dispatchDetailStatus: "WORK_START",
     startTime: "15:30",
     endTime: "",
@@ -103,7 +94,6 @@ const DeliveryRoutineDetailStatus: DeliveryRoutineDetailStatusItem[] = [
     errorMessage: "화물 엘리베이터 대기시간 1시간",
   },
   {
-    order: 7,
     dispatchDetailStatus: "RESTING",
     startTime: "15:30",
     endTime: "16:30",
@@ -116,12 +106,15 @@ const DeliveryRoutineDetailStatus: DeliveryRoutineDetailStatusItem[] = [
   },
 ];
 
-const DeliveryRoutineDetail = ({ selectedOrders, setSelectedOrders }) => {
-  // const [selectedOrders, setSelectedOrders] = useState<number[]>([]);
+interface DeliveryRoutineDetailProps {
+  selectedOrders: number[];
+  setSelectedOrders: React.Dispatch<React.SetStateAction<number[]>>;
+}
 
-  const handleCheckboxChange = (order: number, checked: boolean) => {
-    setSelectedOrders((prevSelectedOrders) =>
-      checked ? [...prevSelectedOrders, order] : prevSelectedOrders.filter((o) => o !== order),
+const DeliveryRoutineDetail: React.FC<DeliveryRoutineDetailProps> = ({ selectedOrders, setSelectedOrders }) => {
+  const handleCheckboxChange = (order: number, checked: boolean, status: string) => {
+    setSelectedOrders((prevSelectedOrders: number[]) =>
+      checked ? [...prevSelectedOrders, order] : prevSelectedOrders.filter((o: number) => o !== order),
     );
   };
 
@@ -160,14 +153,14 @@ const DeliveryRoutineDetail = ({ selectedOrders, setSelectedOrders }) => {
         }
 
         return (
-          <React.Fragment key={item.order}>
+          <React.Fragment key={index}>
             <div className="flex w-[430px] justify-between">
               {/* 체크박스 */}
               <CircleCheckbox
                 status={item.dispatchDetailStatus}
-                order={item.order}
-                initialState={selectedOrders.includes(item.order)}
-                onChange={(e, checked) => handleCheckboxChange(item.order, checked)}
+                order={index}
+                initialState={selectedOrders.some((o) => o.order === item.order)}
+                onChange={(e, checked) => handleCheckboxChange(index, checked, item.dispatchDetailStatus)}
               />
               {/* 목록을 감싸는 카드 */}
               <DeliveryStopoverListCard background={item.dispatchDetailStatus === "default" ? "start" : undefined}>

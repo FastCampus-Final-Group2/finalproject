@@ -18,7 +18,7 @@ const CircleCheckbox = React.forwardRef<HTMLInputElement, CircleCheckboxProps>(
       (event: ChangeEvent<HTMLInputElement>) => {
         if (status !== "CANCELED" && status !== "WORK_COMPLETED" && status !== "RESTING") {
           toggleCheckBox();
-          if (onChange) onChange(event, !isChecked);
+          if (onChange) onChange(event, !isChecked, status);
         }
       },
       [onChange, status, isChecked],
@@ -28,7 +28,7 @@ const CircleCheckbox = React.forwardRef<HTMLInputElement, CircleCheckboxProps>(
       (event: MouseEvent<HTMLDivElement>) => {
         if (status !== "CANCELED" && status !== "WORK_COMPLETED" && status !== "RESTING") {
           toggleCheckBox();
-          if (onChange) onChange(event as unknown as ChangeEvent<HTMLInputElement>, !isChecked);
+          if (onChange) onChange(event as unknown as ChangeEvent<HTMLInputElement>, !isChecked, status);
         }
       },
       [onChange, status, isChecked],

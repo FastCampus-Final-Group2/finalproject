@@ -1,12 +1,13 @@
 "use client";
 
 import Icon from "@/components/core/Icon";
-import React from "react";
-import { useState } from "react";
+import React, { useState } from "react";
+import ConfirmModal from "@/components/ConfirmModal";
 
 const DeliveryIssues = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [memo, setMemo] = useState(""); // State to hold the memo text
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleIsOpen = () => {
     setIsOpen(!isOpen);
@@ -24,6 +25,10 @@ const DeliveryIssues = () => {
     }
   };
 
+  const handleModalClose = () => {
+    setIsModalOpen(!isModalOpen);
+  };
+
   const maxCollapsedLength = 60;
 
   const displayedText = isOpen
@@ -31,6 +36,12 @@ const DeliveryIssues = () => {
     : memo.length > maxCollapsedLength
       ? `${memo.slice(0, maxCollapsedLength)}...`
       : memo;
+
+  // Define the alert message here
+  const alertMessage = {
+    type: "alert",
+    value: "삭제 시, 복구되지 않습니다.",
+  };
 
   return (
     <div className="w-[418px] rounded-[8px] border px-[12px] py-[8px] text-B-14-M">
@@ -59,13 +70,23 @@ const DeliveryIssues = () => {
           />
           <div
             className={`cursor-pointer rounded-full bg-gray-300 p-[4px] hover:bg-gray-700 ${isOpen ? "" : "hidden"}`}
-            onClick={handleDelete}
+            onClick={() => setIsModalOpen(true)} // Open the modal when clicking the delete icon
             role="button"
           >
             <Icon id="delete" size={16} className="text-white" />
           </div>
         </li>
       </ul>
+      {isModalOpen && (
+        <ConfirmModal
+          title="삭제 확인"
+          text={[alertMessage]}
+          leftButtonText="아니오"
+          rightButtonText="네"
+          onConfirm={handleDelete}
+          onClickClose={handleModalClose}
+        />
+      )}
     </div>
   );
 };
