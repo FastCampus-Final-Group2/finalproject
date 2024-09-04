@@ -8,7 +8,23 @@ import DeliveryProgressSideTab from "./DeliveryProgressSideTab";
 
 type ColorType = "lime" | "sky" | "violet" | "redwood" | "peanut" | "brown" | "forest" | "yale" | "olive";
 
-const SmAndDeliveryRoutine = [
+const SmAndDeliveryRoutine: {
+  smNumber: number;
+  smName: string;
+  totalOrders: number;
+  completed: number;
+  deliveryProgress: number;
+  dispatchDetailStatus:
+    | "DELIVERY_DELAY"
+    | "WORK_COMPLETED"
+    | "CANCELED"
+    | "WORK_WAITING"
+    | "WORK_START"
+    | "MOVING"
+    | "RESTING"
+    | "RESTING_TIME"
+    | "default";
+}[] = [
   {
     smNumber: 1,
     dispatchDetailStatus: "DELIVERY_DELAY",
@@ -60,30 +76,6 @@ const SmAndDeliveryRoutine = [
   {
     smNumber: 7,
     dispatchDetailStatus: "DELIVERY_DELAY",
-    smName: "김기사",
-    totalOrders: 75,
-    completed: 25,
-    deliveryProgress: 55,
-  },
-  {
-    smNumber: 8,
-    dispatchDetailStatus: "WORK_START",
-    smName: "김기사",
-    totalOrders: 75,
-    completed: 25,
-    deliveryProgress: 12,
-  },
-  {
-    smNumber: 9,
-    dispatchDetailStatus: "WORK_WAITING",
-    smName: "김기사",
-    totalOrders: 75,
-    completed: 25,
-    deliveryProgress: 48,
-  },
-  {
-    smNumber: 10,
-    dispatchDetailStatus: "WORK_COMPLETED",
     smName: "김기사",
     totalOrders: 75,
     completed: 25,

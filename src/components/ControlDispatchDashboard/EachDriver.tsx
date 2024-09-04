@@ -21,7 +21,6 @@ const EachDriver = ({
   deliveryProgress,
   completed,
   smColor,
-  statusText,
   dispatchDetailStatus,
 }: EachDriverProps) => {
   return (

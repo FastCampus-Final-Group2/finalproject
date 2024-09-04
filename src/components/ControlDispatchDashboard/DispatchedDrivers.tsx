@@ -2,12 +2,13 @@ import Icon from "@/components/core/Icon";
 import ToggleExpandSwitch from "@/components/core/ToggleExpandSwitch";
 import EachDriver from "./EachDriver";
 
+type ColorType = "lime" | "sky" | "brown" | "forest"; // ColorType 정의
+
 export interface DispatchedDriversProps {
-  onClickToggle: (color: string) => void;
-  smColors: string[];
+  onClickToggle: (color: ColorType) => void; // ColorType으로 변경
+  smColors: ColorType[];
   drivers: Array<{
     smNumber: number;
-    // statusText: string;
     smName: string;
     totalOrders: number;
     completed: number;
@@ -47,7 +48,7 @@ const DispatchedDrivers = ({ onClickToggle, smColors, drivers }: DispatchedDrive
               deliveryProgress={driver.deliveryProgress}
               onClickToggle={() => onClickToggle(smColors[index % smColors.length])}
               smColor={smColors[index % smColors.length]}
-              dispatchDetailStatus={driver.dispatchDetailStatus} // 추가됨
+              dispatchDetailStatus={driver.dispatchDetailStatus}
             />
           ))}
         </div>

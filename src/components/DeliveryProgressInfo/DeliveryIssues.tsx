@@ -38,12 +38,6 @@ const DeliveryIssues = () => {
       ? `${memo.slice(0, maxCollapsedLength)}...`
       : memo;
 
-  // Define the alert message here
-  const alertMessage = {
-    type: "alert",
-    value: "삭제 시, 복구되지 않습니다.",
-  };
-
   return (
     <>
       <div className="w-[418px] rounded-[8px] border px-[12px] py-[8px] text-B-14-M">
@@ -83,7 +77,7 @@ const DeliveryIssues = () => {
       {isModalOpen && (
         <ConfirmModal
           title="삭제 확인"
-          text={[alertMessage]}
+          text={[{ type: "alert", value: "삭제 시, 복구되지 않습니다." }]}
           leftButtonText="아니오"
           rightButtonText="네"
           onConfirm={handleDelete}

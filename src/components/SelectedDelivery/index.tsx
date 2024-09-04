@@ -4,30 +4,25 @@ import ConfirmModal from "@/components/ConfirmModal";
 
 const SelectedDelivery = ({ selectedOrders }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const handleModalClose = () => {
+    setIsModalOpen(!isModalOpen);
+  };
+
   const handleCancel = () => {
     if (selectedOrders.length === 0) {
       alert("선택된 항목이 없습니다.");
       return;
     }
-
-    // 모든 선택된 항목이 WORK_WAITING 상태인지 확인
-    const allWorkWaiting = selectedOrders.every((order) => order.status === "WORK_WAITING");
-
-    if (allWorkWaiting) {
+    // 선택된 항목들 중에 'WORK_WAITING'이 아닌 상태가 있는지 확인
+    const hasNonWorkWaiting = selectedOrders.some((order) => order.dispatchDetailStatus !== "WORK_WAITING");
+    if (hasNonWorkWaiting) {
+      alert("선택된 항목이 잘못되었습니다. '작업 대기' 상태만 선택 가능합니다.");
+    } else {
       alert("삭제 완료!");
       console.log("SelectDelivery에서 배송취소 버튼 클릭");
-    } else {
-      alert("선택된 항목이 잘못되었습니다. '작업 대기' 상태만 선택 가능합니다.");
+      handleModalClose();
     }
-  };
-
-  const handleModalClose = () => {
-    setIsModalOpen(!isModalOpen);
-  };
-  // Define the alert message here
-  const alertMessage = {
-    type: "alert",
-    value: "배송 취소 시, 복구되지 않습니다.",
   };
 
   return (
@@ -54,7 +49,7 @@ const SelectedDelivery = ({ selectedOrders }) => {
       {isModalOpen && (
         <ConfirmModal
           title="삭제 확인"
-          text={[alertMessage]}
+          text={[{ type: "alert", value: "배송 취소 시, 복구되지 않습니다." }]}
           leftButtonText="아니오"
           rightButtonText="네"
           onConfirm={handleCancel}
