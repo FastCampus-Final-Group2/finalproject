@@ -25,7 +25,7 @@ const SideTapDriverDetail = ({ isExpanded, onClose }: SideTapDriverDetailProps) 
           />
           <StopOverList bgColor={bgColor} />
           <button
-            className={`absolute bottom-[326px] right-[-16px] flex h-[128px] w-[48px] -translate-y-1/2 transform items-center justify-center rounded-full ${BG_50[bgColor]}`}
+            className={`absolute bottom-[326px] right-[-16px] flex h-[128px] w-[48px] -translate-y-1/2 transform items-center justify-center rounded-full ${BG_50[bgColor]} z-10`}
             onClick={onClose}
           >
             <Icon id="arrowLargeDoubleLeft" size={24} className={TEXT_650[bgColor]} />

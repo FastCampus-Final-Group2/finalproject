@@ -1,110 +1,134 @@
-// "use client";
-
-// import { useEffect } from "react";
-
-// // 네이버 지도 API를 로드하고 지도 설정
-// const NaverMap = ({ lat = 37.5665, lng = 126.978, zoom = 15 }) => {
-//   useEffect(() => {
-//     const script = document.createElement("script");
-//     script.src = `https://oapi.map.naver.com/openapi/v3/maps.js?ncpClientId=${process.env.NEXT_PUBLIC_MAP_Client_ID}`;
-//     script.async = true;
-//     script.onload = () => initializeMap();
-//     document.head.appendChild(script);
-
-//     return () => {
-//       document.head.removeChild(script);
-//     };
-//   }, [lat, lng]);
-
-//   const initializeMap = () => {
-//     const map = new window.naver.maps.Map("map", {
-//       center: new window.naver.maps.LatLng(lat, lng),
-//       zoom: zoom,
-//     });
-
-//     new window.naver.maps.Marker({
-//       position: new window.naver.maps.LatLng(lat, lng),
-//       map: map,
-//     });
-//   };
-
-//   return (
-//     <div>
-//       <div id="map" style={{ width: "100%", height: "884px" }} />
-//     </div>
-//   );
-// };
-
-// export default NaverMap;
 "use client";
 
-import { useState, useEffect } from "react";
+import ReactDOMServer from "react-dom/server";
+import { useEffect, useRef } from "react";
+import StartMarkerIcon from "@/components/core/Icon/StartMarkerIcon";
+import EndMarkerIcon from "@/components/core/Icon/EndMarkerIcon";
+import TransitMarkerIcon from "@/components/core/Icon/TransitMarkerIcon";
 
-let mapInstance: naver.maps.Map | null = null;
+// 색상 매핑 객체
+const BG_COLOR_MAP = {
+  lime: "#3F9122", // Tailwind의 lime-650 색상 코드
+  sky: "#237B8F", // Tailwind의 sky-650 색상 코드
+  purple: "#3F238F",
+  violet: "#8F2377", // Tailwind의 violet-650 색상 코드
+  redwood: "#8F3623", // Tailwind의 redwood-650 색상 코드
+  peanut: "#8F6A23", // Tailwind의 peanut-650 색상 코드
+  brown: "#805332", // Tailwind의 brown-650 색상 코드
+  forest: "#417245", // Tailwind의 forest-650 색상 코드
+  yale: "#2F5683", // Tailwind의 yale-650 색상 코드
+  olive: "#768131", // Tailwind의 olive-650 색상 코드
+} as const;
 
-const loadScript = (src: string, callback: () => void) => {
-  const script = document.createElement("script");
-  script.type = "text/javascript";
-  script.src = src;
-  script.onload = () => callback();
-  document.head.appendChild(script);
-};
+// 타입 정의
+// type BGColorType = keyof typeof BG_COLOR_MAP;
 
-const NaverMap = ({ latitude, longitude }: { latitude: number; longitude: number }) => {
-  // 지도 로딩 상태
-  const [isMapLoaded, setMapLoaded] = useState(false);
+interface Waypoint {
+  lat: number;
+  lng: number;
+}
 
-  const initMap = () => {
-    // 추가 옵션 설정
-    const mapOptions = {
-      zoomControl: true,
-      zoomControlOptions: {
-        style: naver.maps.ZoomControlStyle.SMALL,
-        position: naver.maps.Position.TOP_RIGHT,
-      },
-      center: new naver.maps.LatLng(latitude, longitude),
-      zoom: 16,
-    };
+interface WaypointGroup {
+  id: number;
+  bgColor: keyof typeof BG_COLOR_MAP; // 색상 정보를 props로 받음
+  waypoints: Waypoint[];
+}
 
-    // 지도 초기화 확인
-    if (document.getElementById("map")) {
-      mapInstance = new naver.maps.Map("map", mapOptions);
-    }
-
-    // Marker 생성
-    const marker = new naver.maps.Marker({
-      position: new naver.maps.LatLng(latitude, longitude),
-      map: mapInstance,
-    });
-
-    // Marker 클릭 시 지도 초기화
-    naver.maps.Event.addListener(marker, "click", () => {
-      mapInstance?.setCenter(new naver.maps.LatLng(latitude, longitude));
-      mapInstance?.setZoom(16);
-    });
-
-    // 지도 로드 완료
-    setMapLoaded(true);
-  };
+const NaverMap = ({ waypointGroups }: { waypointGroups: WaypointGroup[] }) => {
+  const mapElement = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    // 스크립트 로딩 확인
-    if (typeof naver === "undefined") {
-      loadScript(
-        `https://oapi.map.naver.com/openapi/v3/maps.js?ncpClientId=${process.env.NEXT_PUBLIC_MAP_Client_ID}`,
-        initMap,
-      );
-    } else {
-      initMap();
-    }
-  }, [latitude, longitude]);
+    const loadScript = () => {
+      return new Promise<void>((resolve, reject) => {
+        const existingScript = document.getElementById("naver-map-script");
 
-  return (
-    <>
-      {/* 위치 정보(지도) */}
-      <div className="h-[884px] w-full">{isMapLoaded && <div id="map" className="h-full w-11/12" />}</div>
-    </>
-  );
+        if (existingScript) {
+          resolve();
+          return;
+        }
+
+        const script = document.createElement("script");
+        script.id = "naver-map-script";
+        script.src = `https://oapi.map.naver.com/openapi/v3/maps.js?ncpClientId=${process.env.NEXT_PUBLIC_MAP_Client_ID}`;
+        script.async = true;
+        script.onload = () => resolve();
+        script.onerror = (err) => reject(err);
+
+        document.head.appendChild(script);
+      });
+    };
+
+    loadScript()
+      .then(() => {
+        const mapOptions = {
+          center: new window.naver.maps.LatLng(waypointGroups[0].waypoints[0].lat, waypointGroups[0].waypoints[0].lng),
+          zoom: 14,
+          zoomControl: true,
+        };
+
+        const map = new window.naver.maps.Map(mapElement.current as HTMLElement, mapOptions);
+
+        waypointGroups.forEach((group, groupIndex) => {
+          group.waypoints.forEach((waypoint, index) => {
+            let markerOptions;
+
+            if (index === 0) {
+              markerOptions = {
+                position: new window.naver.maps.LatLng(waypoint.lat, waypoint.lng),
+                map: map,
+                icon: {
+                  content: ReactDOMServer.renderToString(<StartMarkerIcon color={BG_COLOR_MAP[group.bgColor]} />),
+                  size: new naver.maps.Size(50, 50),
+                  anchor: new naver.maps.Point(20, 30),
+                },
+                title: `Group ${groupIndex + 1} - Waypoint ${index + 1}`,
+              };
+            } else if (index === group.waypoints.length - 1) {
+              markerOptions = {
+                position: new window.naver.maps.LatLng(waypoint.lat, waypoint.lng),
+                map: map,
+                icon: {
+                  content: ReactDOMServer.renderToString(<EndMarkerIcon color={BG_COLOR_MAP[group.bgColor]} />),
+                  size: new naver.maps.Size(50, 50),
+                  anchor: new naver.maps.Point(20, 30),
+                },
+                title: `Group ${groupIndex + 1} - Waypoint ${index + 1}`,
+              };
+            } else {
+              // TransitMarkerIcon을 사용하여 중간 경유지 아이콘을 렌더링
+              markerOptions = {
+                position: new window.naver.maps.LatLng(waypoint.lat, waypoint.lng),
+                map: map,
+                icon: {
+                  content: ReactDOMServer.renderToString(
+                    <TransitMarkerIcon color={BG_COLOR_MAP[group.bgColor]} index={index} />,
+                  ),
+                  size: new naver.maps.Size(50, 50),
+                  anchor: new naver.maps.Point(25, 50), // 앵커 포인트 조정
+                },
+                title: `Group ${groupIndex + 1} - Waypoint ${index + 1}`,
+              };
+            }
+
+            const marker = new window.naver.maps.Marker(markerOptions);
+          });
+
+          // Polyline을 추가하여 경유지 간의 경로를 표시
+          const polyline = new window.naver.maps.Polyline({
+            path: group.waypoints.map((wp) => new window.naver.maps.LatLng(wp.lat, wp.lng)),
+            map: map,
+            strokeColor: BG_COLOR_MAP[group.bgColor], // 그룹별 bgColor 적용
+            strokeWeight: 4, // 선 두께
+            strokeStyle: "solid", // 선 스타일
+          });
+        });
+      })
+      .catch((err) => {
+        console.error("네이버 지도 API를 불러오는 중 오류가 발생했습니다:", err);
+      });
+  }, [waypointGroups]); // waypointGroups가 변경될 때마다 재실행
+
+  return <div ref={mapElement} id="map" className="h-[884px] w-full" />;
 };
 
 export default NaverMap;
