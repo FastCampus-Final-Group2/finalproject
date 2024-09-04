@@ -36,7 +36,8 @@ const Lists = ({ results, checkedItems, onCheckBoxChange }: ListsProps) => {
             )}
           >
             <p className={cn(dispatchListClass({ width: "extraSmall" }))}>
-              {!isEmpty && <CheckBox checked={checkedItems[index]} onChange={() => onCheckBoxChange(index)} />}
+              {/* todo: initialstate로 초기값을 내려주면 된다. */}
+              {!isEmpty && <CheckBox initialState={checkedItems[index]} onChange={() => onCheckBoxChange(index)} />}
             </p>
             <p className={cn(dispatchListClass({ width: "small" }))}>{data.progress ? `${data.progress}%` : ""}</p>
             <p className={cn(dispatchListClass({ width: "extraLarge" }))}>

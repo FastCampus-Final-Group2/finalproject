@@ -21,7 +21,7 @@ const ListHeader = ({ isAllChecked, onAllCheck }: ListHeaderProps) => {
   return (
     <ul className={cn(dispatchListClass({ backgroundColor: "header" }))}>
       <li className={cn(dispatchListClass({ width: "extraSmall" }))}>
-        <CheckBox checked={isAllChecked} onChange={() => onAllCheck(!isAllChecked)} />
+        <CheckBox initialState={isAllChecked} onChange={() => onAllCheck(!isAllChecked)} />
       </li>
       {tableHeader.map((header, index) => (
         <li key={index} className={cn(dispatchListClass({ width: header.width, text: "medium" }))}>
