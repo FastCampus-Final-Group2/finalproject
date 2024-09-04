@@ -7,26 +7,64 @@ import type { SubmitErrorHandler, SubmitHandler } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { LOGIN_FORMS } from "./index.constants";
 import LoginFormInput from "./LoginFormInput";
+import { UsersAPI } from "@/apis/users";
+import { useRecoilState } from "recoil";
+import { userState } from "@/atoms/user";
+import localStorage from "@/service/localStorage";
+import { useEffect } from "react";
 
 const LoginForm = () => {
-  // TODO
+  const router = useRouter();
+  const [user, setUser] = useRecoilState(userState);
+
+  useEffect(() => {
+    if (user) {
+      router.push("/dispatch");
+    }
+  }, [user, router]);
+
+  const localUsername = localStorage.username.get();
   const initialState = {
-    username: "",
+    username: localUsername || "",
     password: "",
+    save: localUsername !== "",
   };
 
-  const router = useRouter();
   const useFormMethods = useForm({ defaultValues: initialState });
   const {
     handleSubmit,
+    register,
     formState: { errors },
     resetField,
+    setError,
   } = useFormMethods;
 
   const onSubmit: SubmitHandler<typeof initialState> = async (formData) => {
-    // TODO
-    console.log(formData);
-    router.push("/dispatch");
+    const { save, ...loginRequest } = formData;
+
+    if (save) {
+      localStorage.username.set(loginRequest.username);
+    }
+
+    const [error, loginData] = await UsersAPI.login(loginRequest);
+
+    if (loginData) {
+      setUser(loginData.name);
+      router.push("/dispatch");
+    }
+
+    if (error && error.type === "AXIOS_ERROR") {
+      if (error.status === 404) {
+        setError("username", {
+          type: error.statusText,
+          message: "아이디 또는 비밀번호가 맞지 않습니다. 다시 확인해주세요.",
+        });
+        setError("password", {
+          type: error.statusText,
+          message: "아이디 또는 비밀번호가 맞지 않습니다. 다시 확인해주세요.",
+        });
+      }
+    }
   };
 
   const onError: SubmitErrorHandler<typeof initialState> = (errors) => {
@@ -47,13 +85,16 @@ const LoginForm = () => {
           {LOGIN_FORMS.map((form) => {
             return <LoginFormInput key={form.id} form={form} error={errors[form.id]} />;
           })}
-          <CheckBox label="아이디 저장" initialState={false} />
+          <CheckBox label="아이디 저장" initialState={localUsername !== ""} {...register("save")} />
           <Button className="h-[43px] p-3" type="submit">
             로그인
           </Button>
-          {(errors.username?.type === "pattern" || errors.password?.type === "pattern") && (
+          {(errors.username?.type === "pattern" ||
+            errors.username?.type === "Not Found" ||
+            errors.password?.type === "pattern" ||
+            errors.password?.type === "Not Found") && (
             <p className="text-center text-red-500 text-T-16-M">
-              {errors.username?.message || errors.password?.message}
+              아이디 또는 비밀번호가 맞지 않습니다. 다시 확인해주세요.
             </p>
           )}
         </form>

@@ -5,9 +5,11 @@
   "type": "module",
   "scripts": {
     "dev": "next dev",
+    "dev:https": "next dev --experimental-https",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "swagger": "swagger-typescript-api -p ./src/models/swagger.json --no-client --modular --module-name-first-tag -r -o ./src/models -d --extract-request-params --extract-request-body --extract-response-body --extract-response-error"
   },
   "dependencies": {
     "@next/eslint-plugin-next": "^14.2.5",
@@ -35,6 +37,7 @@
     "react-hook-form": "^7.52.2",
     "recoil": "^0.7.7",
     "recoil-persist": "^5.1.0",
+    "swagger-typescript-api": "^13.0.22",
     "tailwind-merge": "^2.5.2",
     "tailwind-scrollbar-hide": "^1.1.7",
     "xlsx": "^0.18.5"
