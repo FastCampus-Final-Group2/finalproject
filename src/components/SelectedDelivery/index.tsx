@@ -2,7 +2,7 @@ import Button from "@/components/core/Button";
 import { useState } from "react";
 import ConfirmModal from "@/components/ConfirmModal";
 
-const SelectedDelivery = ({ selectedOrders }) => {
+const SelectedDelivery = ({ selectedOrders }: { selectedOrders: DeliveryRoutineDetailStatusItem[] }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleModalClose = () => {

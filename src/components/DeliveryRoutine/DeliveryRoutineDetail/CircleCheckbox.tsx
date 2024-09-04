@@ -7,7 +7,7 @@ interface CircleCheckboxProps {
   status: string;
   order: number;
   initialState?: boolean;
-  onChange?: (event: ChangeEvent<HTMLInputElement>, checked: boolean) => void;
+  onChange?: (event: ChangeEvent<HTMLInputElement>, checked: boolean, status: string) => void;
 }
 
 const CircleCheckbox = React.forwardRef<HTMLInputElement, CircleCheckboxProps>(

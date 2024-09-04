@@ -10,7 +10,7 @@ const startEnd = [
 ];
 
 const DeliveryRoutine = () => {
-  const [selectedOrders, setSelectedOrders] = useState<number[]>([]);
+  const [selectedOrders, setSelectedOrders] = useState<DeliveryRoutineDetailStatusItem[]>([]);
 
   return (
     <>

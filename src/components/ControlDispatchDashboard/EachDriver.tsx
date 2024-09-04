@@ -2,6 +2,17 @@ import DeliveryStatusTag from "@/components/DeliveryStatusTag";
 import Icon from "@/components/core/Icon";
 import { BG_350 } from "@/styles/smColor";
 
+type VehicleStatusType =
+  | "DELIVERY_DELAY"
+  | "WORK_COMPLETED"
+  | "CANCELED"
+  | "WORK_WAITING"
+  | "WORK_START"
+  | "MOVING"
+  | "RESTING"
+  | "RESTING_TIME"
+  | "default";
+
 interface EachDriverProps {
   name: string;
   totalOrder: number;
@@ -9,7 +20,7 @@ interface EachDriverProps {
   deliveryProgress: number;
   completed: number;
   smColor: keyof typeof BG_350;
-  statusText: string;
+  // statusText: string;
   dispatchDetailStatus: VehicleStatusType;
   smNumber: number;
 }

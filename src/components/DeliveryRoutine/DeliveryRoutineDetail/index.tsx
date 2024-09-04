@@ -5,6 +5,7 @@ import CircleCheckbox from "./CircleCheckbox";
 import React from "react";
 import IAmMoving from "./IAmMoving";
 
+// DeliveryRoutineDetailStatusItem 정의 추가
 interface DeliveryRoutineDetailStatusItem {
   dispatchDetailStatus:
     | "DELIVERY_DELAY"

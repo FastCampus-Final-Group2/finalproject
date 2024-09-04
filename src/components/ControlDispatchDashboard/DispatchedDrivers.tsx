@@ -2,7 +2,7 @@ import Icon from "@/components/core/Icon";
 import ToggleExpandSwitch from "@/components/core/ToggleExpandSwitch";
 import EachDriver from "./EachDriver";
 
-type ColorType = "lime" | "sky" | "brown" | "forest"; // ColorType 정의
+type ColorType = "lime" | "sky" | "violet" | "redwood" | "peanut" | "brown" | "forest" | "yale" | "olive";
 
 export interface DispatchedDriversProps {
   onClickToggle: (color: ColorType) => void; // ColorType으로 변경
@@ -42,6 +42,8 @@ const DispatchedDrivers = ({ onClickToggle, smColors, drivers }: DispatchedDrive
           {drivers.map((driver, index) => (
             <EachDriver
               key={driver.smNumber}
+              smNumber={driver.smNumber} // 추가
+              // statusText={...}
               name={driver.smName}
               totalOrder={driver.totalOrders}
               completed={driver.completed}
