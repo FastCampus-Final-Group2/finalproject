@@ -3,12 +3,15 @@
 import { UsersAPI } from "@/apis/users";
 import { userState } from "@/atoms/user";
 import Icon from "@/components/core/Icon";
+import useOnlyClient from "@/hooks/useOnlyClient";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 import { useRecoilState } from "recoil";
 
 const ProfileBadge = () => {
+  const isClient = useOnlyClient();
+
   const router = useRouter();
   const [user, setUser] = useRecoilState(userState);
 
@@ -26,6 +29,11 @@ const ProfileBadge = () => {
       router.push("/");
     }
   };
+
+  if (!isClient) {
+    // return <div className="h-9 w-[184px] animate-pulse rounded-lg bg-gray-800" />;
+    return null;
+  }
 
   return (
     <div className="flex items-center">
