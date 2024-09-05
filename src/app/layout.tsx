@@ -3,6 +3,7 @@ import "pretendard/dist/web/variable/pretendardvariable-dynamic-subset.css";
 import "./globals.css";
 import RecoilRootProvider from "@/providers/RecoilRootProvider";
 import { TabStateContextProvider } from "@/contexts/TabStateContext";
+import { QueryProvider } from "@/providers/query";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -18,7 +19,9 @@ const RootLayout = ({
     <html lang="ko">
       <body>
         <RecoilRootProvider>
-          <TabStateContextProvider>{children}</TabStateContextProvider>
+          <QueryProvider>
+          <TabStateContextProvider>{children}</QueryProvider>
+        </TabStateContextProvider>
         </RecoilRootProvider>
       </body>
     </html>
