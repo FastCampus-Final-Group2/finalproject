@@ -6,8 +6,8 @@ import SideNavBarMyMenu from "@/components/SideNavBar/SideNavBarMyMenu";
 import { useState } from "react";
 
 const SideNavBarList = () => {
-  const [currentMenu, setCurrentMenu] = useState<SideNavBarLink["name"]>("배차관리");
-
+  const [currentMenu, setCurrentMenu] = useState<SideNavBarLink["name"] | "">("배차관리");
+  console.log(currentMenu);
   return (
     <div className="flex flex-1 flex-col justify-between overflow-hidden">
       <div className="flex flex-1 flex-col gap-5 overflow-hidden">
