@@ -1,9 +1,10 @@
 "use client";
+
 import { useEffect, useState } from "react";
 import DispatchLists from "@/components/Dispatchlists";
 import TabForDispatchedList from "@/components/TabForDispatchedList";
 import SearchBars from "@/components/SearchBar";
-import PaginationButtons from "@/components/core/Pagination";
+import Pagination from "@/components/core/Pagination";
 import mockdata from "./mockdata.json";
 import ListSelection from "@/components/ListSelection";
 
@@ -25,7 +26,6 @@ const ControlPage = () => {
   const [selectedState, setSelectedState] = useState("주행중");
   const [filteredResults, setFilteredResults] = useState<DispatchItem[]>([]);
   const [page, setPage] = useState(1);
-  const [currentPageGroup, setCurrentPageGroup] = useState(1);
 
   const itemsPerPage = 10;
 
@@ -46,7 +46,6 @@ const ControlPage = () => {
     const results = filterResults();
     setFilteredResults(results);
     setPage(1); // 탭을 변경할 때 페이지를 초기화
-    setCurrentPageGroup(1); // 탭을 변경할 때 페이지 그룹도 초기화
   }, [selectedState]);
 
   const paginatedResults = filteredResults.slice((page - 1) * itemsPerPage, page * itemsPerPage);
@@ -73,14 +72,7 @@ const ControlPage = () => {
             results: paginatedResults,
           }}
         />
-        <PaginationButtons
-          page={page}
-          totalItems={filteredResults.length}
-          perPage={itemsPerPage}
-          onPageChange={setPage}
-          currentPageGroup={currentPageGroup}
-          setCurrentPageGroup={setCurrentPageGroup}
-        />
+        <Pagination currentPage={page} totalItems={filteredResults.length} onPageChange={setPage} />
       </div>
     </>
   );

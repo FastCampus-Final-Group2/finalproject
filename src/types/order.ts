@@ -1,7 +1,8 @@
 export interface Order {
-  deliveryType: "지입" | "용차" | "택배";
+  deliveryType: "지입" | "택배";
+  smId: number;
   smName: string;
-  shipmentNum: string;
+  shipmentNumber: string;
   clientOrderKey?: string;
   orderType: "배송" | "수거";
   receivedDate: Date;
@@ -19,30 +20,6 @@ export interface Order {
   productName: string;
   productCode?: string;
   productQuantity: number;
-}
-
-export interface ExcelData {
-  [key: string]: string | number | undefined;
-  deliveryType?: string;
-  smName?: string;
-  shipmentNum?: string;
-  clientOrderKey?: string;
-  orderType?: string;
-  receivedDate?: string;
-  serviceRequestDate?: string;
-  serviceRequestTime?: string;
-  clientName?: string;
-  contact?: string;
-  address?: string;
-  detailAddress?: string;
-  zipcode?: string;
-  volume?: number;
-  weight?: number;
-  note?: string;
-  expectedServiceDuration?: number;
-  productName?: string;
-  productCode?: string;
-  productQuantity?: number;
 }
 
 export interface OrderInfo {

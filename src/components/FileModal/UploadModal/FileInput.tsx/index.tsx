@@ -2,12 +2,14 @@
 
 import { excelDataState } from "@/atoms/excelData";
 import Icon from "@/components/core/Icon";
-import { ExcelData } from "@/types/order";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useSetRecoilState } from "recoil";
 import * as XLSX from "xlsx";
 import { EXCEL_HEADERS } from "@/components/FileModal/UploadModal/index.constants";
+import { ExcelData } from "@/types/excel";
+import { validExcelData } from "@/utils/validation/excel";
+import dayjs from "dayjs";
 
 interface FileInputProps {
   setIsError: React.Dispatch<React.SetStateAction<boolean>>;
@@ -29,13 +31,24 @@ const FileInput = ({ setIsError }: FileInputProps) => {
 
       reader.onload = (event) => {
         const arrayBuffer = event.target?.result as ArrayBuffer;
-        const workbook = XLSX.read(arrayBuffer, { type: "array" });
+        const workbook = XLSX.read(arrayBuffer, { type: "array", cellDates: true });
 
         const sheetName = workbook.SheetNames[0];
         const worksheet = workbook.Sheets[sheetName];
-        const excelData = (XLSX.utils.sheet_to_json(worksheet, { header: 1 }) as unknown[][]).filter((row) =>
-          row.some((cell) => cell !== undefined && cell !== ""),
-        );
+        const excelData = (XLSX.utils.sheet_to_json(worksheet, { header: 1, defval: "" }) as unknown[][])
+          .filter((row) => row.some((cell) => cell !== ""))
+          .map((row) =>
+            row.map((cell) => {
+              if (cell instanceof Date) {
+                return dayjs(cell).format("HH:mm");
+              }
+
+              return cell;
+            }),
+          )
+          .map((row) => {
+            return row.slice(0, 20);
+          }) as string[][];
 
         const isExcelHeaderCorrect = excelData[0].every((header, index) => {
           return header === EXCEL_HEADERS[index];
@@ -56,34 +69,11 @@ const FileInput = ({ setIsError }: FileInputProps) => {
           return;
         }
 
-        setExcelData(
-          excelData.slice(4).map((row) => {
-            return {
-              deliveryType: row[0],
-              smName: row[1],
-              shipmentNum: row[2],
-              clientOrderKey: row[3],
-              orderType: row[4],
-              receivedDate: row[5],
-              serviceRequestDate: row[6],
-              serviceRequestTime: row[7],
-              clientName: row[8],
-              contact: row[9],
-              address: row[10],
-              detailAddress: row[11],
-              zipcode: row[12],
-              volume: Number(row[13]),
-              weight: Number(row[14]),
-              note: row[15],
-              expectedServiceDuration: row[16] ? Number(row[16]) : undefined,
-              productName: row[17],
-              productCode: row[18],
-              productQuantity: Number(row[19]),
-            } as ExcelData;
-          }),
-        );
+        const validedExcelData: ExcelData[] = excelData.slice(4).map((row, index) => {
+          return validExcelData(row, index);
+        });
 
-        router.push("/dispatch");
+        setExcelData(validedExcelData);
       };
 
       reader.readAsArrayBuffer(excelFile);
