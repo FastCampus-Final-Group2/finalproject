@@ -4,6 +4,7 @@ import { UsersAPI } from "@/apis/users";
 import { userState } from "@/atoms/user";
 import Icon from "@/components/core/Icon";
 import useOnlyClient from "@/hooks/useOnlyClient";
+import useResetAllAtoms from "@/hooks/useResetAllAtoms";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
@@ -14,6 +15,7 @@ const ProfileBadge = () => {
 
   const router = useRouter();
   const [user, setUser] = useRecoilState(userState);
+  const resetAllAtoms = useResetAllAtoms();
 
   useEffect(() => {
     if (!user) {
@@ -25,13 +27,13 @@ const ProfileBadge = () => {
     const [error] = await UsersAPI.logout();
 
     if (!error) {
+      resetAllAtoms();
       setUser(undefined);
       router.push("/");
     }
   };
 
   if (!isClient) {
-    // return <div className="h-9 w-[184px] animate-pulse rounded-lg bg-gray-800" />;
     return null;
   }
 

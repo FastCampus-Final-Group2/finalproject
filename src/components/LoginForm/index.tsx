@@ -12,10 +12,12 @@ import { useRecoilState } from "recoil";
 import { userState } from "@/atoms/user";
 import localStorage from "@/service/localStorage";
 import { useEffect } from "react";
+import useResetAllAtoms from "@/hooks/useResetAllAtoms";
 
 const LoginForm = () => {
   const router = useRouter();
   const [user, setUser] = useRecoilState(userState);
+  const resetAllAtoms = useResetAllAtoms();
 
   useEffect(() => {
     if (user) {
@@ -51,6 +53,7 @@ const LoginForm = () => {
     const [error, loginData] = await UsersAPI.login(loginRequest);
 
     if (loginData) {
+      resetAllAtoms();
       setUser(loginData.name);
       router.push("/dispatch");
     }
