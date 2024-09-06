@@ -44,6 +44,8 @@ const LoginForm = () => {
 
     if (save) {
       localStorage.username.set(loginRequest.username);
+    } else {
+      localStorage.username.remove();
     }
 
     const [error, loginData] = await UsersAPI.login(loginRequest);
