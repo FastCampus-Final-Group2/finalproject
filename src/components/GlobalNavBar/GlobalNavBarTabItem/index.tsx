@@ -21,7 +21,7 @@ const GlobalNavBarTabItem = ({ isMyMenu, href, tabName }: GlobalNavBarTabItem) =
   const { tabStates, removeTab } = useTabStateContext();
   const router = useRouter();
   const pathname = usePathname();
-  const isPageOpened = pathname === href;
+  const isPageOpened = pathname === "/dispatch/manual" ? "/dispatch" === href : pathname === href;
   const { addMyMenu, removeMyMenu } = useMyMenus();
 
   const handleToggleMyMenuButton: MouseEventHandler<HTMLButtonElement> = useCallback(

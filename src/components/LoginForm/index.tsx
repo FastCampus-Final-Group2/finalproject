@@ -13,11 +13,13 @@ import { userState } from "@/atoms/user";
 import localStorage from "@/service/localStorage";
 import { useEffect } from "react";
 import useResetAllAtoms from "@/hooks/useResetAllAtoms";
+import { useTabStateContext } from "@/contexts/TabStateContext";
 
 const LoginForm = () => {
   const router = useRouter();
   const [user, setUser] = useRecoilState(userState);
   const resetAllAtoms = useResetAllAtoms();
+  const { resetTabState } = useTabStateContext();
 
   useEffect(() => {
     if (user) {
@@ -54,6 +56,7 @@ const LoginForm = () => {
 
     if (loginData) {
       resetAllAtoms();
+      resetTabState();
       setUser(loginData.name);
       router.push("/dispatch");
     }

@@ -17,6 +17,7 @@ interface TabStateContextProps {
   tabStates: TabInfo[];
   addTab: (href: HrefType, name: NameType) => void;
   removeTab: (name: NameType) => void;
+  resetTabState: () => void;
 }
 
 const TabStateContext = createContext<TabStateContextProps | null>(null);
@@ -67,12 +68,22 @@ export const TabStateContextProvider = ({ children }: { children: React.ReactNod
     [tabStates],
   );
 
+  const resetTabState = useCallback(() => {
+    try {
+      sessionStorage.setItem(TabStateKey, JSON.stringify([]));
+      setTabStates([]);
+    } catch (error) {
+      return;
+    }
+  }, []);
+
   return (
     <TabStateContext.Provider
       value={{
         tabStates,
         addTab,
         removeTab,
+        resetTabState,
       }}
     >
       {children}

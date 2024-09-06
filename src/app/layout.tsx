@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "pretendard/dist/web/variable/pretendardvariable-dynamic-subset.css";
 import "./globals.css";
 import RecoilRootProvider from "@/providers/RecoilRootProvider";
+import { TabStateContextProvider } from "@/contexts/TabStateContext";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -16,7 +17,9 @@ const RootLayout = ({
   return (
     <html lang="ko">
       <body>
-        <RecoilRootProvider>{children}</RecoilRootProvider>
+        <RecoilRootProvider>
+          <TabStateContextProvider>{children}</TabStateContextProvider>
+        </RecoilRootProvider>
       </body>
     </html>
   );
