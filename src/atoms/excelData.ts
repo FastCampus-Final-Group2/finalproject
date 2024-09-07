@@ -1,4 +1,4 @@
-import { ExcelData } from "@/types/excel";
+import { DefaultExcelDataValue, ExcelData, ExcelDataHeader, SmNameExcelDataValue } from "@/types/excel";
 import { atom, selector, selectorFamily } from "recoil";
 import { persistAtom } from "./persistAtom";
 import { ORDER_VALIDATION_PER_PAGE } from "@/components/OrderValidation/OrderValidationTable/index.constants";
@@ -20,6 +20,18 @@ export const excelDataActiveTabState = atom<ObjectValues<typeof ORDER_VALIDATION
 export const excelDataPageState = atom<number>({
   key: "excelDataPageState",
   default: 1,
+  effects_UNSTABLE: [persistAtom],
+});
+
+export const dispatchNameState = atom<string>({
+  key: "dispatchNameState",
+  default: "",
+  effects_UNSTABLE: [persistAtom],
+});
+
+export const loadingStartTimeState = atom<string>({
+  key: "loadingStartTimeState",
+  default: "YYYY-MM-DD --:--",
   effects_UNSTABLE: [persistAtom],
 });
 
@@ -83,8 +95,8 @@ export const selectedExcelDataSelector = selector<ExcelData[]>({
   },
 });
 
-export const selectedExcelDataLengthState = selector<number>({
-  key: "selectedExcelDataLengthState",
+export const selectedExcelDataLengthSelector = selector<number>({
+  key: "selectedExcelDataLengthSelector",
   get: ({ get }) => {
     const tabValue = get(excelDataTabNum);
     const activeTab = get(excelDataActiveTabState);
@@ -114,11 +126,25 @@ export const startRowSelector = selector<number>({
 export const endRowSelector = selector<number>({
   key: "endRowSelector",
   get: ({ get }) => {
-    const selectedExcelDataLength = get(selectedExcelDataLengthState);
+    const selectedExcelDataLength = get(selectedExcelDataLengthSelector);
     const startRow = get(startRowSelector);
 
     return Math.min(startRow + ORDER_VALIDATION_PER_PAGE - 1, selectedExcelDataLength - 1);
   },
+});
+
+export const selectedExcelDataCellSelector = selectorFamily<
+  DefaultExcelDataValue | SmNameExcelDataValue,
+  { rowIndex: number; header: ExcelDataHeader }
+>({
+  key: "selectedExcelDataCellSelector",
+  get:
+    ({ rowIndex, header }) =>
+    ({ get }) => {
+      const selectedExcelData = get(selectedExcelDataSelector);
+
+      return selectedExcelData[rowIndex][header];
+    },
 });
 
 export const isValidRowState = selectorFamily<boolean, number>({

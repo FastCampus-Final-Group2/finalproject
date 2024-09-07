@@ -1,6 +1,6 @@
 "use client";
 
-import { dispatchNameState } from "@/atoms/dipatchData";
+import { dispatchNameState } from "@/atoms/excelData";
 import Icon from "@/components/core/Icon";
 import { useRecoilState } from "recoil";
 

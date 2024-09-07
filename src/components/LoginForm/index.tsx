@@ -12,13 +12,13 @@ import { useRecoilState } from "recoil";
 import { userState } from "@/atoms/user";
 import localStorage from "@/service/localStorage";
 import { useEffect } from "react";
-import useResetAllAtoms from "@/hooks/useResetAllAtoms";
 import { useTabStateContext } from "@/contexts/TabStateContext";
+import useResetExcelDataAtoms from "@/hooks/useResetExcelDataAtoms";
 
 const LoginForm = () => {
   const router = useRouter();
   const [user, setUser] = useRecoilState(userState);
-  const resetAllAtoms = useResetAllAtoms();
+  const resetExcelDataAtoms = useResetExcelDataAtoms();
   const { resetTabState } = useTabStateContext();
 
   useEffect(() => {
@@ -55,23 +55,21 @@ const LoginForm = () => {
     const [error, loginData] = await UsersAPI.login(loginRequest);
 
     if (loginData) {
-      resetAllAtoms();
+      resetExcelDataAtoms();
       resetTabState();
       setUser(loginData.name);
       router.push("/dispatch");
     }
 
     if (error && error.type === "AXIOS_ERROR") {
-      if (error.status === 404) {
-        setError("username", {
-          type: error.statusText,
-          message: "아이디 또는 비밀번호가 맞지 않습니다. 다시 확인해주세요.",
-        });
-        setError("password", {
-          type: error.statusText,
-          message: "아이디 또는 비밀번호가 맞지 않습니다. 다시 확인해주세요.",
-        });
-      }
+      setError("username", {
+        type: error.statusText,
+        message: "아이디 또는 비밀번호가 맞지 않습니다. 다시 확인해주세요.",
+      });
+      setError("password", {
+        type: error.statusText,
+        message: "아이디 또는 비밀번호가 맞지 않습니다. 다시 확인해주세요.",
+      });
     }
   };
 

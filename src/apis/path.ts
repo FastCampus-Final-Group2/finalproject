@@ -5,5 +5,6 @@ export const USERS_API_PATH = {
 
 export const TRANSPORT_ORDER_API_PATH = {
   excelExample: "/transport-order/excel-example",
-  valid: "/transport-order/excel-example",
+  valid: "/transport-order/valid",
+  postOrder: "/transport-order",
 } as const;

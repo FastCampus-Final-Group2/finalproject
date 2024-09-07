@@ -1,22 +1,31 @@
 "use client";
 
-import { loadingStartTimeState } from "@/atoms/dipatchData";
-import { excelDataActiveTabState, excelDataPageState, excelDataState, isValidExcelDataState } from "@/atoms/excelData";
+import { TransportAPI } from "@/apis/transportOrder";
+import { dispatchNameState, excelDataState, isValidExcelDataState, loadingStartTimeState } from "@/atoms/excelData";
 import Button from "@/components/core/Button";
-import { useRecoilValue, useResetRecoilState } from "recoil";
+import useResetExcelDataAtoms from "@/hooks/useResetExcelDataAtoms";
+import { formatTransportOrderRequest } from "@/utils/format/transportOrder";
+import { useRecoilValue } from "recoil";
 
 const Buttons = () => {
-  const resetExcelData = useResetRecoilState(excelDataState);
-  const resetExcelDataActiveTab = useResetRecoilState(excelDataActiveTabState);
-  const resetExcelDataPage = useResetRecoilState(excelDataPageState);
+  const resetExcelDataAtoms = useResetExcelDataAtoms();
 
   const loadingStartTime = useRecoilValue(loadingStartTimeState);
+  const dispatchName = useRecoilValue(dispatchNameState);
+  const excelData = useRecoilValue(excelDataState);
   const isValidExcelData = useRecoilValue(isValidExcelDataState);
 
   const handleClickCancelBtn = () => {
-    resetExcelData();
-    resetExcelDataPage();
-    resetExcelDataActiveTab();
+    resetExcelDataAtoms();
+  };
+
+  const handleClickDispathBtn = async () => {
+    const transportOrderRequest = formatTransportOrderRequest(loadingStartTime, dispatchName, excelData);
+
+    const [error, data] = await TransportAPI.postOrder(transportOrderRequest);
+
+    console.log("error", error);
+    console.log("data", data);
   };
 
   return (
@@ -24,7 +33,12 @@ const Buttons = () => {
       <Button size="s" intent="secondary" type="button" onClick={handleClickCancelBtn}>
         업로드 취소
       </Button>
-      <Button size="s" disabled={!(!!loadingStartTime && isValidExcelData)}>
+      <Button
+        type="button"
+        size="s"
+        disabled={!(loadingStartTime !== "YYYY-MM-DD --:--" && isValidExcelData)}
+        onClick={handleClickDispathBtn}
+      >
         배차 진행
       </Button>
     </div>

@@ -1,10 +1,12 @@
+import { SmInfos } from "@/types/excel";
 import dayjs from "dayjs";
 
+const SHIPMENT_NUM_REG_EXP = /^357\d{10}$/;
 const RECEIVED_DATE_REG_EXP = /^\d{8}$/;
 const SERVICE_REQUEST_DATE_REG_EXP = /^\d{8}$/;
 const SERVICE_REQUEST_TIME_REG_EXP = /^([01]\d|2[0-3]):([0-5]\d)$/;
-const CONTACT_REG_EXP = /^\d+$/;
-const ZIPCODE_REG_EXP = /^\d{1,5}$/;
+const CONTACT_REG_EXP = /^\d{9,11}$/;
+const ZIPCODE_REG_EXP = /^\d{5}$/;
 const VOLUME_REG_EXP = /^\d+$/;
 const WEIGHT_REG_EXP = /^\d+$/;
 const EXPECTED_SERVICE_DURATION_REG_EXP = /^\d+$/;
@@ -14,15 +16,24 @@ const validDeliveryType = (value: string): boolean => {
   return value === "지입" || value === "택배";
 };
 
-const validSmName = (value: string): { id: number; isValid: boolean } => {
+const validSmName = (value: string, smInfos?: SmInfos): { id: number; isValid: boolean } => {
+  if (smInfos) {
+    if (smInfos[value] && smInfos[value].smNameValid && smInfos[value].smId) {
+      return {
+        id: smInfos[value].smId,
+        isValid: smInfos[value].smNameValid,
+      };
+    }
+  }
+
   return {
-    id: 1,
-    isValid: true,
+    id: 0,
+    isValid: false,
   };
 };
 
-const validShipmentNumber = (value: string): boolean => {
-  return value !== "";
+const validShipmentNum = (value: string): boolean => {
+  return SHIPMENT_NUM_REG_EXP.test(value);
 };
 
 const validclientOrderKey = (value: string): boolean => {
@@ -109,7 +120,7 @@ const validProductQuantity = (value: string): boolean => {
 export const OrderValidationFunc = {
   deliveryType: validDeliveryType,
   smName: validSmName,
-  shipmentNumber: validShipmentNumber,
+  shipmentNumber: validShipmentNum,
   clientOrderKey: validclientOrderKey,
   orderType: validOrderType,
   receivedDate: validReceivedDate,

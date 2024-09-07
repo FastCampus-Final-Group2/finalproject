@@ -10,6 +10,7 @@ import { EXCEL_HEADERS } from "@/components/FileModal/UploadModal/index.constant
 import { ExcelData } from "@/types/excel";
 import { validExcelData } from "@/utils/validation/excel";
 import dayjs from "dayjs";
+import getSmInfos from "@/utils/getSmInfos";
 
 interface FileInputProps {
   setIsError: React.Dispatch<React.SetStateAction<boolean>>;
@@ -29,7 +30,7 @@ const FileInput = ({ setIsError }: FileInputProps) => {
 
       const reader = new FileReader();
 
-      reader.onload = (event) => {
+      reader.onload = async (event) => {
         const arrayBuffer = event.target?.result as ArrayBuffer;
         const workbook = XLSX.read(arrayBuffer, { type: "array", cellDates: true });
 
@@ -69,8 +70,15 @@ const FileInput = ({ setIsError }: FileInputProps) => {
           return;
         }
 
+        const [error, smInfos] = await getSmInfos(excelData.slice(4));
+
+        if (error) {
+          setIsError(true);
+          return;
+        }
+
         const validedExcelData: ExcelData[] = excelData.slice(4).map((row, index) => {
-          return validExcelData(row, index);
+          return validExcelData(row, index, smInfos);
         });
 
         setExcelData(validedExcelData);

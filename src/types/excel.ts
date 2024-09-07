@@ -1,3 +1,9 @@
+import { SmNameAndSmIdResponse } from "@/models/ApiTypes";
+
+export interface SmInfos {
+  [key: string]: SmNameAndSmIdResponse;
+}
+
 export type ExcelDataHeader =
   | "deliveryType" // 필수
   | "smName" // 필수
@@ -20,13 +26,20 @@ export type ExcelDataHeader =
   | "productCode"
   | "productQuantity"; // 필수
 
+export interface DefaultExcelDataValue {
+  value: string;
+  isValid: boolean;
+}
+
+export interface SmNameExcelDataValue {
+  id: number;
+  value: string;
+  isValid: boolean;
+}
+
 export type ExcelData = {
-  [key in Exclude<ExcelDataHeader, "smName">]: { value: string; isValid: boolean };
+  [key in Exclude<ExcelDataHeader, "smName">]: DefaultExcelDataValue;
 } & {
   rowId: number;
-  smName: {
-    id: number;
-    value: string;
-    isValid: boolean;
-  };
+  smName: SmNameExcelDataValue;
 };

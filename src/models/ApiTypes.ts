@@ -369,7 +369,7 @@ export interface LocalTime {
 
 /**
  * 주문 목록
- * @example [{"deliveryType":"택배","smId":123,"smName":"홍길동","shipmentNum":"1234567890","clientOrderKey":"A123456789","orderType":"배송","receivedDate":"2024-05-01","serviceRequestDate":"2024-05-02","serviceRequestTime":"14:00","clientName":"김철수","contact":"010-1234-5678","address":"서울특별시 강남구 테헤란로 123","detailAddress":"아파트 101호","zipcode":"06101","volume":2.5,"weight":10,"note":"문 앞에 놔주세요","expectedServiceDuration":30,"productName":"전자제품","productCode":"P123456","productQuantity":5},{"deliveryType":"지입","smId":124,"smName":"이영희","shipmentNum":"0987654321","clientOrderKey":"B987654321","orderType":"수거","receivedDate":"2024-06-01","serviceRequestDate":"2024-06-03","serviceRequestTime":"10:00","clientName":"박영수","contact":"010-9876-5432","address":"서울특별시 서초구 반포대로 200","detailAddress":"빌라 203호","zipcode":"06500","volume":3,"weight":15,"note":"빠른 수거 부탁드립니다","expectedServiceDuration":20,"productName":"가전제품","productCode":"G987654","productQuantity":2}]
+ * @example [{"deliveryType":"택배","smId":123,"smName":"홍길동","shipmentNumber":"1234567890","clientOrderKey":"A123456789","orderType":"배송","receivedDate":"2024-05-01","serviceRequestDate":"2024-05-02","serviceRequestTime":"14:00","clientName":"김철수","contact":"010-1234-5678","address":"서울특별시 강남구 테헤란로 123","detailAddress":"아파트 101호","zipcode":"06101","volume":2.5,"weight":10,"note":"문 앞에 놔주세요","expectedServiceDuration":30,"productName":"전자제품","productCode":"P123456","productQuantity":5},{"deliveryType":"지입","smId":124,"smName":"이영희","shipmentNumber":"0987654321","clientOrderKey":"B987654321","orderType":"수거","receivedDate":"2024-06-01","serviceRequestDate":"2024-06-03","serviceRequestTime":"10:00","clientName":"박영수","contact":"010-9876-5432","address":"서울특별시 서초구 반포대로 200","detailAddress":"빌라 203호","zipcode":"06500","volume":3,"weight":15,"note":"빠른 수거 부탁드립니다","expectedServiceDuration":20,"productName":"가전제품","productCode":"G987654","productQuantity":2}]
  */
 export interface OrderRequest {
   /**
@@ -496,7 +496,7 @@ export interface TransportOrderRequest {
   dispatchName: string;
   /**
    * 주문 목록
-   * @example [{"deliveryType":"택배","smId":123,"smName":"홍길동","shipmentNum":"1234567890","clientOrderKey":"A123456789","orderType":"배송","receivedDate":"2024-05-01","serviceRequestDate":"2024-05-02","serviceRequestTime":"14:00","clientName":"김철수","contact":"010-1234-5678","address":"서울특별시 강남구 테헤란로 123","detailAddress":"아파트 101호","zipcode":"06101","volume":2.5,"weight":10,"note":"문 앞에 놔주세요","expectedServiceDuration":30,"productName":"전자제품","productCode":"P123456","productQuantity":5},{"deliveryType":"지입","smId":124,"smName":"이영희","shipmentNum":"0987654321","clientOrderKey":"B987654321","orderType":"수거","receivedDate":"2024-06-01","serviceRequestDate":"2024-06-03","serviceRequestTime":"10:00","clientName":"박영수","contact":"010-9876-5432","address":"서울특별시 서초구 반포대로 200","detailAddress":"빌라 203호","zipcode":"06500","volume":3,"weight":15,"note":"빠른 수거 부탁드립니다","expectedServiceDuration":20,"productName":"가전제품","productCode":"G987654","productQuantity":2}]
+   * @example [{"deliveryType":"택배","smId":123,"smName":"홍길동","shipmentNumber":"1234567890","clientOrderKey":"A123456789","orderType":"배송","receivedDate":"2024-05-01","serviceRequestDate":"2024-05-02","serviceRequestTime":"14:00","clientName":"김철수","contact":"010-1234-5678","address":"서울특별시 강남구 테헤란로 123","detailAddress":"아파트 101호","zipcode":"06101","volume":2.5,"weight":10,"note":"문 앞에 놔주세요","expectedServiceDuration":30,"productName":"전자제품","productCode":"P123456","productQuantity":5},{"deliveryType":"지입","smId":124,"smName":"이영희","shipmentNumber":"0987654321","clientOrderKey":"B987654321","orderType":"수거","receivedDate":"2024-06-01","serviceRequestDate":"2024-06-03","serviceRequestTime":"10:00","clientName":"박영수","contact":"010-9876-5432","address":"서울특별시 서초구 반포대로 200","detailAddress":"빌라 203호","zipcode":"06500","volume":3,"weight":15,"note":"빠른 수거 부탁드립니다","expectedServiceDuration":20,"productName":"가전제품","productCode":"G987654","productQuantity":2}]
    */
   orderReuquestList: OrderRequest[];
 }
@@ -687,7 +687,7 @@ export interface CourseDetailResponse {
 
 /**
  * 경로별 리스트
- * @example [{"errorYn":false,"smName":"홍길동","smPhoneNumber":"010-1234-5678","tonCode":"5T","ton":5,"orderNum":10,"mileage":150,"totalTime":120,"floorAreaRatio":75,"courseDetailResponseList":[{"errorYn":false,"ett":30,"expectationOperationStartTime":"2024-08-30T09:30:00","expectationOperationEndTime":"2024-08-30T10:00:00","deliveryDestinationId":456,"managerName":"이영희","phoneNumber":"010-9876-5432","lat":37.5665,"lon":126.978,"distance":20,"deliveryType":"택배","smId":123,"smName":"홍길동","shipmentNum":"1234567890","clientOrderKey":"A123456789","orderType":"배송","receivedDate":"2024-05-01","serviceRequestDate":"2024-05-02","serviceRequestTime":"14:00","clientName":"김철수","contact":"010-1234-5678","address":"서울특별시 강남구 테헤란로 123","detailAddress":"아파트 101호","zipcode":"06101","volume":2.5,"weight":10,"note":"문 앞에 놔주세요","expectedServiceDuration":30,"productName":"전자제품","productCode":"P123456","productQuantity":5}],"coordinatesResponseList":[{"lon":126.978,"lat":37.5665},{"lon":126.9876,"lat":37.5653}]}]
+ * @example [{"errorYn":false,"smName":"홍길동","smPhoneNumber":"010-1234-5678","tonCode":"5T","ton":5,"orderNum":10,"mileage":150,"totalTime":120,"floorAreaRatio":75,"courseDetailResponseList":[{"errorYn":false,"ett":30,"expectationOperationStartTime":"2024-08-30T09:30:00","expectationOperationEndTime":"2024-08-30T10:00:00","deliveryDestinationId":456,"managerName":"이영희","phoneNumber":"010-9876-5432","lat":37.5665,"lon":126.978,"distance":20,"deliveryType":"택배","smId":123,"smName":"홍길동","shipmentNumber":"1234567890","clientOrderKey":"A123456789","orderType":"배송","receivedDate":"2024-05-01","serviceRequestDate":"2024-05-02","serviceRequestTime":"14:00","clientName":"김철수","contact":"010-1234-5678","address":"서울특별시 강남구 테헤란로 123","detailAddress":"아파트 101호","zipcode":"06101","volume":2.5,"weight":10,"note":"문 앞에 놔주세요","expectedServiceDuration":30,"productName":"전자제품","productCode":"P123456","productQuantity":5}],"coordinatesResponseList":[{"lon":126.978,"lat":37.5665},{"lon":126.9876,"lat":37.5653}]}]
  */
 export interface CourseResponse {
   /**
@@ -790,7 +790,7 @@ export interface DispatchResponse {
   startStopoverResponse?: StartStopoverResponse;
   /**
    * 경로별 리스트
-   * @example [{"errorYn":false,"smName":"홍길동","smPhoneNumber":"010-1234-5678","tonCode":"5T","ton":5,"orderNum":10,"mileage":150,"totalTime":120,"floorAreaRatio":75,"courseDetailResponseList":[{"errorYn":false,"ett":30,"expectationOperationStartTime":"2024-08-30T09:30:00","expectationOperationEndTime":"2024-08-30T10:00:00","deliveryDestinationId":456,"managerName":"이영희","phoneNumber":"010-9876-5432","lat":37.5665,"lon":126.978,"distance":20,"deliveryType":"택배","smId":123,"smName":"홍길동","shipmentNum":"1234567890","clientOrderKey":"A123456789","orderType":"배송","receivedDate":"2024-05-01","serviceRequestDate":"2024-05-02","serviceRequestTime":"14:00","clientName":"김철수","contact":"010-1234-5678","address":"서울특별시 강남구 테헤란로 123","detailAddress":"아파트 101호","zipcode":"06101","volume":2.5,"weight":10,"note":"문 앞에 놔주세요","expectedServiceDuration":30,"productName":"전자제품","productCode":"P123456","productQuantity":5}],"coordinatesResponseList":[{"lon":126.978,"lat":37.5665},{"lon":126.9876,"lat":37.5653}]}]
+   * @example [{"errorYn":false,"smName":"홍길동","smPhoneNumber":"010-1234-5678","tonCode":"5T","ton":5,"orderNum":10,"mileage":150,"totalTime":120,"floorAreaRatio":75,"courseDetailResponseList":[{"errorYn":false,"ett":30,"expectationOperationStartTime":"2024-08-30T09:30:00","expectationOperationEndTime":"2024-08-30T10:00:00","deliveryDestinationId":456,"managerName":"이영희","phoneNumber":"010-9876-5432","lat":37.5665,"lon":126.978,"distance":20,"deliveryType":"택배","smId":123,"smName":"홍길동","shipmentNumber":"1234567890","clientOrderKey":"A123456789","orderType":"배송","receivedDate":"2024-05-01","serviceRequestDate":"2024-05-02","serviceRequestTime":"14:00","clientName":"김철수","contact":"010-1234-5678","address":"서울특별시 강남구 테헤란로 123","detailAddress":"아파트 101호","zipcode":"06101","volume":2.5,"weight":10,"note":"문 앞에 놔주세요","expectedServiceDuration":30,"productName":"전자제품","productCode":"P123456","productQuantity":5}],"coordinatesResponseList":[{"lon":126.978,"lat":37.5665},{"lon":126.9876,"lat":37.5653}]}]
    */
   course?: CourseResponse[];
 }
@@ -925,13 +925,13 @@ export interface SmNameAndSmIdResponse {
    * 기사명 검증
    * @example true
    */
-  smNameValid?: boolean;
+  smNameValid: boolean;
   /**
    * 기사 ID
    * @format int32
    * @example 1
    */
-  smId?: number;
+  smId: number;
 }
 
 /**
@@ -1694,7 +1694,7 @@ export type TransportOrderToDispatchData = DispatchResponse;
 
 export type TransportOrderToDispatchError = ErrorResponse;
 
-export type ValidateSmNameAndSmIdsData = SmNameAndSmIdResponse;
+export type ValidateSmNameAndSmIdsData = SmNameAndSmIdResponse[];
 
 export type ValidateSmNameAndSmIdsError = ErrorResponse;
 

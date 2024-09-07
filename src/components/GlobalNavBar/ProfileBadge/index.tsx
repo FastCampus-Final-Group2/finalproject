@@ -4,7 +4,7 @@ import { UsersAPI } from "@/apis/users";
 import { userState } from "@/atoms/user";
 import Icon from "@/components/core/Icon";
 import useOnlyClient from "@/hooks/useOnlyClient";
-import useResetAllAtoms from "@/hooks/useResetAllAtoms";
+import useResetExcelDataAtoms from "@/hooks/useResetExcelDataAtoms";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
@@ -15,7 +15,7 @@ const ProfileBadge = () => {
 
   const router = useRouter();
   const [user, setUser] = useRecoilState(userState);
-  const resetAllAtoms = useResetAllAtoms();
+  const resetExcelDataAtoms = useResetExcelDataAtoms();
 
   useEffect(() => {
     if (!user) {
@@ -27,7 +27,7 @@ const ProfileBadge = () => {
     const [error] = await UsersAPI.logout();
 
     if (!error) {
-      resetAllAtoms();
+      resetExcelDataAtoms();
       setUser(undefined);
       router.push("/");
     }

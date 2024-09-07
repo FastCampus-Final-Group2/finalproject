@@ -4,10 +4,10 @@ import Pagination from "@/components/core/Pagination";
 import OrderValidationHeader from "./OrderValidationHeader";
 import OrderValidationTable from "./OrderValidationTable";
 import { useRecoilState, useRecoilValue } from "recoil";
-import { excelDataPageState, selectedExcelDataLengthState } from "@/atoms/excelData";
+import { excelDataPageState, selectedExcelDataLengthSelector } from "@/atoms/excelData";
 
 const OrderValidation = () => {
-  const selectedExcelDataLength = useRecoilValue(selectedExcelDataLengthState);
+  const selectedExcelDataLength = useRecoilValue(selectedExcelDataLengthSelector);
   const [currentPage, setCurrentPage] = useRecoilState(excelDataPageState);
 
   return (

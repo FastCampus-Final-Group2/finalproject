@@ -1,7 +1,7 @@
-import { ExcelData } from "@/types/excel";
+import { ExcelData, SmInfos } from "@/types/excel";
 import { OrderValidationFunc } from "./order";
 
-export const validExcelData = (row: string[], rowId: number): ExcelData => {
+export const validExcelData = (row: string[], rowId: number, smInfos: SmInfos): ExcelData => {
   return {
     rowId: rowId,
     deliveryType: {
@@ -10,7 +10,7 @@ export const validExcelData = (row: string[], rowId: number): ExcelData => {
     },
     smName: {
       value: row[1],
-      ...OrderValidationFunc.smName(row[1]),
+      ...OrderValidationFunc.smName(row[1], smInfos),
     },
     shipmentNumber: {
       value: row[2],
@@ -25,12 +25,12 @@ export const validExcelData = (row: string[], rowId: number): ExcelData => {
       isValid: OrderValidationFunc.orderType(row[4]),
     },
     receivedDate: {
-      value: row[5],
-      isValid: OrderValidationFunc.receivedDate(row[5]),
+      value: String(row[5]),
+      isValid: OrderValidationFunc.receivedDate(String(row[5])),
     },
     serviceRequestDate: {
-      value: row[6],
-      isValid: OrderValidationFunc.serviceRequestDate(row[6]),
+      value: String(row[6]),
+      isValid: OrderValidationFunc.serviceRequestDate(String(row[6])),
     },
     serviceRequestTime: {
       value: row[7],
@@ -41,8 +41,8 @@ export const validExcelData = (row: string[], rowId: number): ExcelData => {
       isValid: OrderValidationFunc.clientName(row[8]),
     },
     contact: {
-      value: row[9],
-      isValid: OrderValidationFunc.contact(row[9]),
+      value: String(row[9]).charAt(0) === "0" ? String(row[9]) : "0" + String(row[9]),
+      isValid: OrderValidationFunc.contact(String(row[9]).charAt(0) === "0" ? String(row[9]) : "0" + String(row[9])),
     },
     address: {
       value: row[10],
@@ -53,24 +53,24 @@ export const validExcelData = (row: string[], rowId: number): ExcelData => {
       isValid: OrderValidationFunc.detailAddress(row[11]),
     },
     zipcode: {
-      value: row[12],
-      isValid: OrderValidationFunc.zipcode(row[12]),
+      value: String(row[12]).padStart(5, "0"),
+      isValid: OrderValidationFunc.zipcode(String(row[12]).padStart(5, "0")),
     },
     volume: {
-      value: row[13],
-      isValid: OrderValidationFunc.volume(row[13]),
+      value: String(row[13]),
+      isValid: OrderValidationFunc.volume(String(row[13])),
     },
     weight: {
-      value: row[14],
-      isValid: OrderValidationFunc.weight(row[14]),
+      value: String(row[14]),
+      isValid: OrderValidationFunc.weight(String(row[14])),
     },
     note: {
       value: row[15],
       isValid: OrderValidationFunc.note(row[15]),
     },
     expectedServiceDuration: {
-      value: row[16] ? row[16] : "1",
-      isValid: OrderValidationFunc.expectedServiceDuration(row[16]),
+      value: row[16] ? String(row[16]) : "1",
+      isValid: OrderValidationFunc.expectedServiceDuration(String(row[16])),
     },
     productName: {
       value: row[17],
@@ -81,8 +81,8 @@ export const validExcelData = (row: string[], rowId: number): ExcelData => {
       isValid: OrderValidationFunc.productCode(row[18]),
     },
     productQuantity: {
-      value: row[19] ? row[19] : "1",
-      isValid: OrderValidationFunc.productQuantity(row[19]),
+      value: row[19] ? String(row[19]) : "1",
+      isValid: OrderValidationFunc.productQuantity(String(row[19])),
     },
   };
 };

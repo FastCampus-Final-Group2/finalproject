@@ -53,6 +53,7 @@ const DispatchSelectorItem = ({
             width={560}
             height={360}
             className={cn(imageVariants({ disabled }))}
+            priority
           />
           {!disabled && (
             <video width={560} height={360} autoPlay muted loop className="hidden group-hover:block">
