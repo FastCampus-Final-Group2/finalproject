@@ -133,6 +133,17 @@ export const endRowSelector = selector<number>({
   },
 });
 
+export const selectedExcelDataRowSelector = selectorFamily<ExcelData, number>({
+  key: "selectedExcelDataCellSelector",
+  get:
+    (rowIndex) =>
+    ({ get }) => {
+      const selectedExcelData = get(selectedExcelDataSelector);
+
+      return selectedExcelData[rowIndex];
+    },
+});
+
 export const selectedExcelDataCellSelector = selectorFamily<
   DefaultExcelDataValue | SmNameExcelDataValue,
   { rowIndex: number; header: ExcelDataHeader }
@@ -144,6 +155,23 @@ export const selectedExcelDataCellSelector = selectorFamily<
       const selectedExcelData = get(selectedExcelDataSelector);
 
       return selectedExcelData[rowIndex][header];
+    },
+  set:
+    ({ rowIndex, header }) =>
+    ({ set, get }, newValue) => {
+      const excelData = get(excelDataState);
+      const selectedExcelDataRow = get(selectedExcelDataRowSelector(rowIndex));
+
+      const changedRow = selectedExcelDataRow.rowId;
+
+      set(excelDataState, [
+        ...excelData.slice(0, changedRow),
+        {
+          ...excelData[changedRow],
+          [header]: newValue,
+        },
+        ...excelData.slice(changedRow + 1),
+      ]);
     },
 });
 

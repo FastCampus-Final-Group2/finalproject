@@ -3,8 +3,8 @@
 import { cn } from "@/utils/cn";
 import { itemVariants } from "./index.variants";
 import { ExcelDataHeader } from "@/types/excel";
-import { useRecoilState, useRecoilValue } from "recoil";
-import { excelDataState, selectedExcelDataSelector } from "@/atoms/excelData";
+import { useRecoilState } from "recoil";
+import { selectedExcelDataCellSelector } from "@/atoms/excelData";
 import { OrderValidationFunc } from "@/utils/validation/order";
 import { useEffect, useState } from "react";
 import { TransportAPI } from "@/apis/transportOrder";
@@ -15,111 +15,73 @@ interface ItemProps {
 }
 
 const Item = ({ rowIndex, header }: ItemProps) => {
-  const selectedExcelData = useRecoilValue(selectedExcelDataSelector);
-  const [excelData, setExcelData] = useRecoilState(excelDataState);
-  const [debouncedSmNameValue, setDebouncedSmNameValue] = useState(selectedExcelData[rowIndex][header].value);
+  const [selectedExcelDataCell, setSelectedExcelDataCell] = useRecoilState(
+    selectedExcelDataCellSelector({ rowIndex, header }),
+  );
+  const [debouncedValue, setDebouncedValue] = useState(selectedExcelDataCell.value);
 
   useEffect(() => {
+    if (header !== "smName") return;
+
     const timer = setTimeout(() => {
-      setDebouncedSmNameValue(selectedExcelData[rowIndex][header].value);
+      setDebouncedValue(selectedExcelDataCell.value);
     }, 1000);
 
     return () => {
       clearTimeout(timer);
     };
-  }, [header, rowIndex, selectedExcelData]);
+  }, [header, rowIndex, selectedExcelDataCell.value]);
 
   useEffect(() => {
     if (header !== "smName") return;
 
     const validDebouncedSmName = async () => {
-      const [error, smInfo] = await TransportAPI.valid({ requests: [{ smName: debouncedSmNameValue }] });
+      console.log(rowIndex, header, debouncedValue);
+      const [error, smInfo] = await TransportAPI.valid({ requests: [{ smName: debouncedValue }] });
 
       if (error) {
         throw Error(error.data?.statusText);
       } else {
-        const changedRow = selectedExcelData[rowIndex].rowId;
-
-        setExcelData((prev) => {
-          return [
-            ...prev.slice(0, changedRow),
-            {
-              ...excelData[changedRow],
-              [header]: {
-                ...excelData[changedRow][header],
-                id: smInfo[0].smId,
-                isValid: smInfo[0].smNameValid,
-              },
-            },
-            ...prev.slice(changedRow + 1),
-          ];
+        setSelectedExcelDataCell({
+          id: smInfo[0].smId,
+          value: selectedExcelDataCell.value,
+          isValid: smInfo[0].smNameValid,
         });
       }
     };
 
     validDebouncedSmName().catch(() => {
-      const changedRow = selectedExcelData[rowIndex].rowId;
-      setExcelData((prev) => {
-        return [
-          ...prev.slice(0, changedRow),
-          {
-            ...excelData[changedRow],
-            [header]: {
-              ...excelData[changedRow][header],
-              id: 0,
-              isValid: false,
-            },
-          },
-          ...prev.slice(changedRow + 1),
-        ];
+      setSelectedExcelDataCell({
+        id: 0,
+        value: selectedExcelDataCell.value,
+        isValid: false,
       });
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [debouncedSmNameValue]);
+  }, [debouncedValue]);
 
   const handleInputChange: React.ChangeEventHandler<HTMLInputElement> = (event) => {
     const value = event.target.value;
 
     if (header === "smName") {
-      const changedRow = selectedExcelData[rowIndex].rowId;
-
-      setExcelData((prev) => {
-        return [
-          ...prev.slice(0, changedRow),
-          {
-            ...excelData[changedRow],
-            [header]: {
-              ...excelData[changedRow][header],
-              value: value,
-            },
-          },
-          ...prev.slice(changedRow + 1),
-        ];
+      setSelectedExcelDataCell({
+        ...selectedExcelDataCell,
+        value: value,
       });
     } else {
       const isValid = OrderValidationFunc[header](value);
-      const changedRow = selectedExcelData[rowIndex].rowId;
 
-      setExcelData((prev) => {
-        return [
-          ...prev.slice(0, changedRow),
-          {
-            ...excelData[changedRow],
-            [header]: {
-              value: value,
-              isValid: isValid,
-            },
-          },
-          ...prev.slice(changedRow + 1),
-        ];
+      setSelectedExcelDataCell({
+        value: value,
+        isValid: isValid,
       });
     }
   };
 
   return (
     <input
-      value={selectedExcelData[rowIndex][header].value}
-      className={cn(itemVariants({ isValid: selectedExcelData[rowIndex][header].isValid }))}
+      value={selectedExcelDataCell.value}
+      className={cn(itemVariants({ isValid: selectedExcelDataCell.isValid }))}
       onChange={handleInputChange}
     />
   );
