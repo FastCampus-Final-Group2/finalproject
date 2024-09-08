@@ -11,4 +11,9 @@ const dispatchCancel = async (dispatchCancelRequest: DispatchCancelRequest) => {
 
 export default dispatchCancel;
 
-// todo: dispatchCancel.ts 인터페이스 다시 확인하기
+// export interface DispatchCancelRequest {
+//   isInTransit: boolean;
+//    * 배차 번호 id 목록
+//    * @example ["1","2"]
+//   dispatchNumberIds: number[];
+// }

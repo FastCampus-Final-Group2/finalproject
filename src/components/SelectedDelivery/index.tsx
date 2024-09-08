@@ -5,10 +5,6 @@ import ConfirmModal from "@/components/ConfirmModal";
 const SelectedDelivery = ({ selectedOrders }: { selectedOrders: DeliveryRoutineDetailStatusItem[] }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const handleModalClose = () => {
-    setIsModalOpen(!isModalOpen);
-  };
-
   const handleCancel = () => {
     if (selectedOrders.length === 0) {
       alert("선택된 항목이 없습니다.");
@@ -21,7 +17,7 @@ const SelectedDelivery = ({ selectedOrders }: { selectedOrders: DeliveryRoutineD
     } else {
       alert("삭제 완료!");
       console.log("SelectDelivery에서 배송취소 버튼 클릭");
-      handleModalClose();
+      setIsModalOpen(false);
     }
   };
 
@@ -53,7 +49,7 @@ const SelectedDelivery = ({ selectedOrders }: { selectedOrders: DeliveryRoutineD
           leftButtonText="아니오"
           rightButtonText="네"
           onConfirm={handleCancel}
-          onClickClose={handleModalClose}
+          onClickClose={() => setIsModalOpen(false)}
         />
       )}
     </>

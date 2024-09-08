@@ -1,7 +1,7 @@
-import CheckBox from "@/components/core/CheckBox";
 import Icon from "@/components/core/Icon";
 import { cn } from "@/utils/cn";
 import { dispatchListClass } from "./index.variants";
+import ListCheckbox from "./ListCheckbox";
 
 const tableHeader = [
   { text: "진행률", width: "small" as const },
@@ -21,7 +21,8 @@ const ListHeader = ({ isAllChecked, onAllCheck }: ListHeaderProps) => {
   return (
     <ul className={cn(dispatchListClass({ backgroundColor: "header" }))}>
       <li className={cn(dispatchListClass({ width: "extraSmall" }))}>
-        <CheckBox initialState={isAllChecked} onChange={() => onAllCheck(!isAllChecked)} />
+        {/* 전체 선택 체크박스 */}
+        <ListCheckbox isChecked={isAllChecked} onChange={() => onAllCheck(!isAllChecked)} />
       </li>
       {tableHeader.map((header, index) => (
         <li key={index} className={cn(dispatchListClass({ width: header.width, text: "medium" }))}>

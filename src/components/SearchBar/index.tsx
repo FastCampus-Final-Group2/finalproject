@@ -2,22 +2,12 @@ import SearchDate from "./SearchDate";
 import SearchCategory from "./SearchCategory";
 import SearchTextInput from "./SearchTextInput";
 import CheckBox from "@/components/core/CheckBox";
+import { DispatchResult } from "@/models/ApiTypes";
 
 interface SearchBarsProps {
-  data: {
-    results: {
-      progress: number;
-      diapatchCode: string;
-      dispatchName: string;
-      startDateTime: string;
-      totalOrder: number;
-      smNum: number;
-      manager: string;
-    }[];
-  };
+  data: DispatchResult[];
 }
-
-const SearchBars = ({ data }: SearchBarsProps) => {
+const SearchBars = (data: SearchBarsProps) => {
   return (
     <div className="flex items-center gap-[14px]">
       <SearchDate />

@@ -1,11 +1,11 @@
 
 import orderCancel from "./orderCancel"
-import vehicleControlDispatchId from "./vehicleControlDispatchId"
+import dispatchIdVehicleControl from "./DispatchIdvehicleControl"
 
 
 export const DispatchDetailApi = {
   orderCancel: orderCancel,
-  vehicleControlDispatchId: vehicleControlDispatchId,
+  dispatchIdVehicleControl: dispatchIdVehicleControl,
 }
 
 

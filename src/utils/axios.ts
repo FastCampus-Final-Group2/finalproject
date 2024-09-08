@@ -1,7 +1,8 @@
 import _axios, { AxiosInstance } from "axios";
 import { requestCookie, responseCookie } from "./cookies";
 
-const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || process.env.BACKEND_URL;
+const BACKEND_URL =
+  process.env.NEXT_PUBLIC_BACKEND_URL || process.env.BACKEND_URL;
 
 const axios: AxiosInstance = _axios.create({
   headers: {

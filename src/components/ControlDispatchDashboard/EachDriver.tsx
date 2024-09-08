@@ -14,35 +14,35 @@ type VehicleStatusType =
   | "default";
 
 interface EachDriverProps {
-  name: string;
-  totalOrder: number;
+  dispatchId: number;
+  smName: string;
+  orderNum: number;
   onClickToggle: () => void;
   deliveryProgress: number;
-  completed: number;
+  completedOrderNum: number;
   smColor: keyof typeof BG_350;
-  // statusText: string;
-  dispatchDetailStatus: VehicleStatusType;
-  smNumber: number;
+  dispatchStatus: VehicleStatusType;
 }
 
 const EachDriver = ({
-  name,
-  totalOrder,
+  dispatchId,
+  smName,
+  orderNum,
   onClickToggle,
   deliveryProgress,
-  completed,
+  completedOrderNum,
   smColor,
-  dispatchDetailStatus,
+  dispatchStatus,
 }: EachDriverProps) => {
   return (
     <div className="flex flex-col gap-[10px] text-gray-900 text-B-14-B">
       <div className="flex h-[40px] items-center justify-between rounded-[4px] border border-gray-100">
         <ul className="box-border flex w-full items-center gap-[8px] py-[6px] pl-[12px]">
-          <DeliveryStatusTag vehicleStatus={dispatchDetailStatus} restDisplay={false} />
-          <li>{name}</li>
+          <DeliveryStatusTag vehicleStatus={dispatchStatus} restDisplay={false} />
+          <li>{smName}</li>
           <span className="h-[20px] w-0 border-l border-gray-100"></span>
           <li className="w-[40px] text-B-14-M">
-            {completed}/{totalOrder}
+            {completedOrderNum}/{orderNum}
           </li>
           <span className="h-[20px] w-0 border-l border-gray-100"></span>
           <li className="flex items-center">
