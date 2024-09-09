@@ -28,7 +28,7 @@ const page = () => {
     // 추가 그룹...
   ];
   return (
-    <div className="w-[1696px]">
+    <div className="w-full">
       <DispatchInformationHeader />
       <div className="flex w-full">
         <OrderDashBoard />

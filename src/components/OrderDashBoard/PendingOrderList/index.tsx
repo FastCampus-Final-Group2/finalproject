@@ -1,10 +1,17 @@
 "use client";
 
+import { Draggable } from "react-beautiful-dnd";
+import { StrictModeDroppable } from "@/components/DragDrop/StrictModeDroppable";
 import Icon from "@/components/core/Icon";
-import PendingOrder from "@/components/OrderDashBoard/PendingOrderList/PendingOrder/";
+import PendingOrder from "@/components/OrderDashBoard/PendingOrderList/PendingOrder";
 import ToggleExpandSwitch from "@/components/core/ToggleExpandSwitch";
+import { ListStopOverData } from "@/components/SideTapDriverDetail";
 
-const PendingOrderList = () => {
+interface PendingOrderDataProps {
+  listPendingOrderData: ListStopOverData[];
+}
+
+const PendingOrderList = ({ listPendingOrderData }: PendingOrderDataProps) => {
   const { isExpanded, toggleExpand } = ToggleExpandSwitch(false);
 
   return (
@@ -13,8 +20,7 @@ const PendingOrderList = () => {
         <div className="flex w-full items-center justify-between">
           <div className="flex items-center gap-2">
             <div className="flex items-center gap-1">
-              <span className="text-gray-900 text-T-18-B">보류주문</span>
-              <span className="text-gray-900 text-T-18-B">(3)</span>
+              <span className="text-gray-900 text-T-18-B">보류주문 ({listPendingOrderData.length})</span>
             </div>
 
             <div className="h-[20px] w-[0px] border border-gray-200"></div>
@@ -31,16 +37,26 @@ const PendingOrderList = () => {
       </div>
 
       {isExpanded && (
-        <div className="inline-flex max-h-[264px] w-full flex-col items-start justify-start gap-4 overflow-y-auto rounded-lg bg-white pt-[16px] scrollbar-hide">
-          <div className="flex w-full flex-col items-start justify-start gap-2.5">
-            <PendingOrder address={"서울시 동대문구 동"} meter={0.016} kilogram={0.111} />
-            <PendingOrder address={"nnn시text구te동"} meter={0.016} kilogram={1111} />
-            <PendingOrder address={"서울특별시tex구text동"} meter={0.0161} kilogram={1211} />
-            <PendingOrder address={"제주특별시서귀포구text동"} meter={0.016} kilogram={2222} />
-            <PendingOrder address={"nn시text구text동"} meter={0.016} kilogram={3333} />
-            <PendingOrder address={"nnn시tex구text동"} meter={0.016} kilogram={4444} />
-          </div>
-        </div>
+        <StrictModeDroppable droppableId="droppablePendingOrderData">
+          {(provided) => (
+            <div
+              ref={provided.innerRef}
+              {...provided.droppableProps}
+              className="inline-flex max-h-[264px] w-full flex-col items-start justify-start gap-4 overflow-y-auto rounded-lg bg-white pt-[16px] scrollbar-hide"
+            >
+              {listPendingOrderData.map((order, index) => (
+                <Draggable key={order.id} draggableId={`pendingOrder-${order.id}`} index={index}>
+                  {(provided) => (
+                    <div ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
+                      <PendingOrder address={order.address} meter={order.meter} kilogram={order.kilogram} />
+                    </div>
+                  )}
+                </Draggable>
+              ))}
+              {provided.placeholder}
+            </div>
+          )}
+        </StrictModeDroppable>
       )}
     </div>
   );
