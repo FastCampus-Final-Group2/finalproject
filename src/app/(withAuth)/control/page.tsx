@@ -1,80 +1,170 @@
 "use client";
 
+import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
+import { DispatchNumberApi } from "@/apis/dispatches/dispatchNumber";
+import { DispatchResult } from "@/models/ApiTypes";
 import DispatchLists from "@/components/Dispatchlists";
 import TabForDispatchedList from "@/components/TabForDispatchedList";
 import SearchBars from "@/components/SearchBar";
-import Pagination from "@/components/core/Pagination";
-import mockdata from "./mockdata.json";
 import ListSelection from "@/components/ListSelection";
+import Pagination from "@/components/core/Pagination";
 
-// todo: 여기가 차량관제 중심
-// /api/dispatch-number?status=“”&isManager=boolean&startDate=””&endDate=””&searchOption=””&searchKeyword=””
-//
+// API를 통해 데이터를 가져오는 함수
+const fetchDispatchData = async ({ queryKey }: { queryKey: [string, "IN_TRANSIT" | "WAITING" | "COMPLETED"] }) => {
+  const status = queryKey[1];
+  try {
+    const { error, results } = await DispatchNumberApi.search({
+      request: {
+        status: status,
+        isManager: false,
+        startDateTime: "1900-01-01T23:59:59",
+        endDateTime: "3000-12-31T23:59:59",
+        searchOption: "",
+        searchKeyword: "",
+      },
+    });
 
-interface DispatchItem {
-  progress: number;
-  diapatchCode: string;
-  dispatchName: string;
-  startDateTime: string;
-  totalOrder: number;
-  smNum: number;
-  manager: string;
+    if (error) {
+      console.log("access denied");
+      throw new Error(error.type || "An error occurred while fetching data");
+    }
+
+    console.log("access success");
+    console.log("results?.results", results);
+
+    // results의 내용에 따라 status 결정
+    let updatedStatus = status;
+    if (results && Array.isArray(results.results)) {
+      const firstResult = results.results[0];
+      if (firstResult && firstResult.status) {
+        updatedStatus = firstResult.status;
+      }
+    }
+
+    // 업데이트된 status로 다시 API 호출
+    if (updatedStatus !== status) {
+      const updatedResponse = await DispatchNumberApi.search({
+        request: {
+          ...request,
+          status: updatedStatus,
+        },
+      });
+      if (updatedResponse.error) {
+        throw new Error(updatedResponse.error.type || "An error occurred while fetching updated data");
+      }
+      return updatedResponse.results as DispatchData;
+    }
+
+    return (
+      (results as DispatchData) ||
+      ({
+        inProgress: 0,
+        waiting: 0,
+        completed: 0,
+        results: [] as DispatchResult,
+      } as DispatchData)
+    );
+  } catch (err) {
+    console.log("access denied");
+    throw err;
+  }
+};
+
+interface DispatchData {
+  inProgress: number;
+  waiting: number;
+  completed: number;
+  results: DispatchResult[];
 }
 
 const ControlPage = () => {
-  const [selectedState, setSelectedState] = useState("주행중");
-  const [filteredResults, setFilteredResults] = useState<DispatchItem[]>([]);
+  const [selectedState, setSelectedState] = useState("IN_TRANSIT");
   const [page, setPage] = useState(1);
+  const [selectedItemsCount, setSelectedItemsCount] = useState(0);
+  const [searchResults, setSearchResults] = useState<DispatchResult[]>([]);
 
-  const itemsPerPage = 10;
+  const {
+    data: fetchedData = {
+      inProgress: 0,
+      waiting: 0,
+      completed: 0,
+      results: [] as DispatchResult,
+    } as DispatchData,
+    isLoading,
+    error,
+    refetch,
+  } = useQuery({
+    queryKey: ["dispatchData", selectedState],
+    queryFn: fetchDispatchData,
+    refetchOnWindowFocus: false,
+    retry: 3,
+  });
 
   useEffect(() => {
-    const filterResults = (): DispatchItem[] => {
-      switch (selectedState) {
-        case "주행중":
-          return mockdata.results.filter((item) => item.progress > 0 && item.progress < 100);
-        case "주행대기":
-          return mockdata.results.filter((item) => item.progress === 0);
-        case "주행완료":
-          return mockdata.results.filter((item) => item.progress === 100);
-        default:
-          return [];
+    if (fetchedData && fetchedData.results && fetchedData.results.length > 0) {
+      const firstResult = fetchedData.results[0];
+      if (firstResult && firstResult.status && firstResult.status !== selectedState) {
+        setSelectedState(firstResult.status);
+        refetch();
       }
-    };
+    }
+  }, [fetchedData, selectedState, refetch]);
 
-    const results = filterResults();
-    setFilteredResults(results);
-    setPage(1); // 탭을 변경할 때 페이지를 초기화
-  }, [selectedState]);
+  // 로딩 중이거나 에러 발생 시 처리
+  if (isLoading) return <div>Loading...</div>;
+  if (error instanceof Error) return <div>Error: {error.message}</div>;
 
-  const paginatedResults = filteredResults.slice((page - 1) * itemsPerPage, page * itemsPerPage);
+  const handleStateChange = (state: string) => {
+    setSelectedState(state);
+  };
+
+  const handleSelectedItemsCountChange = (count: number) => {
+    setSelectedItemsCount(count);
+  };
+
+  const getCurrentCount = () => {
+    switch (selectedState) {
+      case "IN_TRANSIT":
+        return fetchedData.inProgress;
+      case "WAITING":
+        return fetchedData.waiting;
+      case "COMPLETED":
+        return fetchedData.completed;
+      default:
+        return 0;
+    }
+  };
+
+  const handleSearch = (results: DispatchResult[]) => {
+    setSearchResults(results);
+  };
 
   return (
-    <>
-      <h1 className="text-H-28-B">차량 관제</h1>
+    <div className="p-[48px]">
+      <h1 className="mb-[24px] text-H-28-B">차량 관제</h1>
       <div className="flex flex-col gap-[28px] pl-[10px]">
-        <SearchBars data={mockdata} />
+        <SearchBars data={fetchedData.results} onSearch={handleSearch} />
         <TabForDispatchedList
           data={{
-            inProgress: mockdata.results.filter((item) => item.progress > 0 && item.progress < 100).length,
-            waiting: mockdata.results.filter((item) => item.progress === 0).length,
-            completed: mockdata.results.filter((item) => item.progress === 100).length,
+            inProgress: fetchedData.inProgress,
+            waiting: fetchedData.waiting,
+            completed: fetchedData.completed,
           }}
-          onStateChange={setSelectedState}
+          onStateChange={handleStateChange}
+          initialState={selectedState}
         />
-        <ListSelection data={mockdata} />
+        <ListSelection currentCount={getCurrentCount()} selectedCount={selectedItemsCount} />
         <DispatchLists
-          data={{
-            inProgress: filteredResults.filter((item) => item.progress > 0 && item.progress < 100).length,
-            waiting: filteredResults.filter((item) => item.progress === 0).length,
-            completed: filteredResults.filter((item) => item.progress === 100).length,
-            results: paginatedResults,
-          }}
+          inProgress={fetchedData.inProgress}
+          waiting={fetchedData.waiting}
+          completed={fetchedData.completed}
+          results={searchResults.length > 0 ? searchResults : fetchedData.results}
+          onSelectedItemsCountChange={handleSelectedItemsCountChange}
         />
-        <Pagination currentPage={page} totalItems={filteredResults.length} onPageChange={setPage} />
+        <Pagination currentPage={page} totalItems={fetchedData.results?.length} onPageChange={setPage} />
       </div>
-    </>
+    </div>
   );
 };
 

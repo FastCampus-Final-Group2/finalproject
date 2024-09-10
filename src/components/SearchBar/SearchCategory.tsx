@@ -5,24 +5,28 @@ import Icon from "@/components/core/Icon";
 
 const searchKeyword = [
   {
-    id: 1,
     name: "배차 코드",
+    value: "dispatchCode",
   },
   {
-    id: 2,
     name: "배차명",
+    value: "dispatchName",
   },
   {
-    id: 3,
     name: "배차담당자명",
+    value: "manager",
   },
   {
-    id: 4,
     name: "드라이버명",
+    value: "driverName",
   },
 ];
 
-const SearchCategory = () => {
+interface SearchCategoryProps {
+  onCategoryChange: (category: string) => void;
+}
+
+const SearchCategory = ({ onCategoryChange }: SearchCategoryProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState("[선택]");
 
@@ -33,6 +37,10 @@ const SearchCategory = () => {
   const handleCategorySelect = (category: string) => {
     setSelectedCategory(category);
     setIsOpen(false);
+    const selectedKeyword = searchKeyword.find((k) => k.name === category);
+    if (selectedKeyword) {
+      onCategoryChange(selectedKeyword.value);
+    }
   };
 
   return (
@@ -42,9 +50,9 @@ const SearchCategory = () => {
       </p>
       {isOpen && (
         <ul className="absolute left-[-12px] z-20 mt-[20px] flex w-[156px] flex-col gap-[7px] rounded-[8px] border border-gray-200 bg-white px-[16px] py-[10px]">
-          {searchKeyword.map((keyword) => (
+          {searchKeyword.map((keyword, index) => (
             <li
-              key={keyword.id}
+              key={index}
               className="cursor-pointer p-[4px] hover:bg-blue-100"
               onClick={() => handleCategorySelect(keyword.name)}
             >

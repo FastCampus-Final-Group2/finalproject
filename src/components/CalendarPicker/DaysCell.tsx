@@ -16,7 +16,8 @@ const Cell = ({ isStartDate, isToday, isPast, isCurrentMonth, onClick, children 
 
   return (
     <div
-      onClick={!isPast ? onClick : undefined}
+      role="button"
+      onClick={onClick}
       className={`flex h-8 flex-1 cursor-pointer items-center justify-center text-B-14-M ${isPast ? "!text-gray-400" : ""} ${isToday ? "text-B-14-B" : ""} ${isStartDate ? "font-bold rounded-full bg-blue-500 text-white" : ""} hover:border-blue-500`}
     >
       {children}

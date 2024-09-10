@@ -1,27 +1,27 @@
-import CheckBox from "@/components/core/CheckBox";
+import { DispatchResult } from "@/models/ApiTypes";
+import ListCheckbox from "./ListCheckbox";
 import { cn } from "@/utils/cn";
 import { dispatchListClass } from "./index.variants";
+import Link from "next/link";
 
 interface ListsProps {
-  results: {
-    progress: number;
-    diapatchCode: string;
-    dispatchName: string;
-    startDateTime: string;
-    totalOrder: number;
-    smNum: number;
-    manager: string;
-  }[];
+  results: DispatchResult[];
   checkedItems: boolean[];
   onCheckBoxChange: (index: number) => void;
 }
 
 const Lists = ({ results, checkedItems, onCheckBoxChange }: ListsProps) => {
+  const progressGraph = (progress: number) => {
+    const calculateWidth = (82 / 100) * (progress || 0);
+    return calculateWidth;
+  };
+
   return (
     <ul>
       {results.map((data, index) => {
-        const isEmpty = !data.diapatchCode;
-        const bgColor = checkedItems[index] ? "bg-gray-200" : index % 2 === 0 ? "" : "bg-gray-50";
+        const isEmpty = !data.dispatchCode;
+        const isChecked = !isEmpty && checkedItems[index];
+        const bgColor = isChecked ? "bg-gray-100" : index % 2 === 0 ? "" : "bg-gray-50";
 
         return (
           <li
@@ -30,18 +30,27 @@ const Lists = ({ results, checkedItems, onCheckBoxChange }: ListsProps) => {
               dispatchListClass({
                 hover: "please",
                 height: "please",
-                isChecked: checkedItems[index] ? "please" : undefined,
+                isChecked: isChecked ? "please" : undefined,
               }),
               bgColor,
             )}
           >
             <p className={cn(dispatchListClass({ width: "extraSmall" }))}>
-              {/* todo: initialstate로 초기값을 내려주면 된다. */}
-              {!isEmpty && <CheckBox initialState={checkedItems[index]} onChange={() => onCheckBoxChange(index)} />}
+              {!isEmpty && <ListCheckbox isChecked={checkedItems[index]} onChange={() => onCheckBoxChange(index)} />}
             </p>
-            <p className={cn(dispatchListClass({ width: "small" }))}>{data.progress ? `${data.progress}%` : ""}</p>
+            <p className={cn(dispatchListClass({ width: "small" }))}>
+              <p className={`relative h-[12px] w-[82px] rounded-full bg-blue-50 ${isEmpty ? "hidden" : ""}`}>
+                <p
+                  className="absolute h-[12px] rounded-full bg-blue-500"
+                  style={{ width: `${progressGraph(data.progress || 0)}px` }}
+                ></p>
+              </p>
+              <p>{data.progress ? `${data.progress}%` : ""}</p>
+            </p>
             <p className={cn(dispatchListClass({ width: "extraLarge" }))}>
-              <span className="w-1/2">{data.diapatchCode || ""}</span>
+              <Link href={`/control/detail/${data.dispatchNumberId}`} key={index}>
+                <span className="w-1/2">{data.dispatchCode || ""}</span>
+              </Link>
               <span className="w-1/2">{data.dispatchName || ""}</span>
             </p>
             <p className={cn(dispatchListClass({ width: "large" }))}>{data.startDateTime || ""}</p>

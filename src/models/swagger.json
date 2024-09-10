@@ -48,7 +48,9 @@
   "paths": {
     "/api/dispatch": {
       "put": {
-        "tags": ["Dispatch"],
+        "tags": [
+          "Dispatch"
+        ],
         "summary": "배차 변경",
         "description": "배차 탭에서 배차 변경을 합니다. (DispatchUpdateRequest, DispatchUpdateResponse)",
         "operationId": "updateDispatch",
@@ -106,7 +108,9 @@
         }
       },
       "post": {
-        "tags": ["Dispatch"],
+        "tags": [
+          "Dispatch"
+        ],
         "summary": "배차 확정",
         "description": "배차를 확정하여 데이터베이스에 저장합니다.",
         "operationId": "confirmDispatch",
@@ -127,7 +131,9 @@
         }
       },
       "patch": {
-        "tags": ["Dispatch"],
+        "tags": [
+          "Dispatch"
+        ],
         "summary": "차량관제 탭, 배차 삭제",
         "description": "차량관제 탭에서 배차 삭제를 합니다.",
         "operationId": "cancelDispatch",
@@ -160,7 +166,9 @@
     },
     "/api/users/register/super-admin": {
       "post": {
-        "tags": ["User"],
+        "tags": [
+          "User"
+        ],
         "summary": "최고 관리자 등록",
         "description": "최고 관리자를 등록합니다.",
         "operationId": "registerSuperAdmin",
@@ -186,7 +194,9 @@
     },
     "/api/users/register/driver": {
       "post": {
-        "tags": ["User"],
+        "tags": [
+          "User"
+        ],
         "summary": "기사 등록",
         "description": "기사를 등록합니다.",
         "operationId": "registerDriver",
@@ -215,7 +225,9 @@
     },
     "/api/users/register/admin": {
       "post": {
-        "tags": ["User"],
+        "tags": [
+          "User"
+        ],
         "summary": "관리자 등록",
         "description": "관리자를 등록합니다.",
         "operationId": "registerAdmin",
@@ -244,7 +256,9 @@
     },
     "/api/users/login": {
       "post": {
-        "tags": ["User"],
+        "tags": [
+          "User"
+        ],
         "summary": "사용자 로그인",
         "description": "로그인을 시도합니다.",
         "operationId": "login",
@@ -273,7 +287,9 @@
     },
     "/api/transport-order": {
       "post": {
-        "tags": ["Transport Order"],
+        "tags": [
+          "Transport Order"
+        ],
         "summary": "주문 확인 및 배차",
         "description": "입력된 주문 정보를 경로 최적화 후 최초 배차를 합니다.",
         "operationId": "TransportOrderToDispatch",
@@ -313,7 +329,9 @@
     },
     "/api/transport-order/valid": {
       "post": {
-        "tags": ["Transport Order"],
+        "tags": [
+          "Transport Order"
+        ],
         "summary": "운송 주문 데이터 검증",
         "description": "등록된 운송 주문의 SM명과 SM 아이디의 존재를 확인합니다.",
         "operationId": "validateSmNameAndSmIds",
@@ -353,7 +371,9 @@
     },
     "/api/delivery-destination": {
       "post": {
-        "tags": ["Delivery Destination"],
+        "tags": [
+          "Delivery Destination"
+        ],
         "summary": "배송처 추가",
         "description": "배송처를 추가합니다.\n(화면 설계서 상 사용되지 않을 기능이지만 개발 상의 편의를 위하여 추가합니다.)\"",
         "operationId": "addDeliveryDestination",
@@ -383,7 +403,9 @@
     },
     "/api/center": {
       "post": {
-        "tags": ["Center"],
+        "tags": [
+          "Center"
+        ],
         "summary": "센터 추가",
         "description": "센터를 추가합니다.\n(화면 설계서 상 사용되지 않을 기능이지만 개발 상의 편의를 위하여 추가합니다.)",
         "operationId": "addCenter",
@@ -433,7 +455,9 @@
     },
     "/api/dispatch/{dispatchId}/issue": {
       "patch": {
-        "tags": ["Dispatch"],
+        "tags": [
+          "Dispatch"
+        ],
         "summary": "배송 이슈",
         "description": "배송 이슈를 등록합니다.",
         "operationId": "updateIssue",
@@ -487,7 +511,9 @@
     },
     "/api/dispatch-detail/vehicle-control": {
       "patch": {
-        "tags": ["DispatchDetail"],
+        "tags": [
+          "DispatchDetail"
+        ],
         "summary": "배송 취소",
         "description": "dispatchDetailId List를 입력받아 배송 취소",
         "operationId": "cancelDispatchDetail",
@@ -544,7 +570,9 @@
     },
     "/api/delivery-destination/{deliveryDestinationId}": {
       "get": {
-        "tags": ["Delivery Destination"],
+        "tags": [
+          "Delivery Destination"
+        ],
         "summary": "배송처 상세 정보 조회",
         "description": "배송처의 상세 정보를 조회합니다.",
         "operationId": "getDeliveryDestination",
@@ -593,7 +621,9 @@
         }
       },
       "patch": {
-        "tags": ["Delivery Destination"],
+        "tags": [
+          "Delivery Destination"
+        ],
         "summary": "배송처 상세정보 변경",
         "description": "배송처에 대한 상세정보를 변경합니다.",
         "operationId": "updateDeliveryDestination",
@@ -654,7 +684,9 @@
     },
     "/api/center/{centerId}": {
       "get": {
-        "tags": ["Center"],
+        "tags": [
+          "Center"
+        ],
         "summary": "센터 상세 정보 조회",
         "description": "센터의 상세 정보를 조회합니다.",
         "operationId": "getCenter",
@@ -703,7 +735,9 @@
         }
       },
       "patch": {
-        "tags": ["Center"],
+        "tags": [
+          "Center"
+        ],
         "summary": "센터 상세정보 변경",
         "description": "센터에 대한 상세정보를 변경합니다.",
         "operationId": "updateCenter",
@@ -764,7 +798,9 @@
     },
     "/api/users/withdraw": {
       "get": {
-        "tags": ["User"],
+        "tags": [
+          "User"
+        ],
         "summary": "사용자 삭제",
         "description": "사용자를 삭제합니다.",
         "operationId": "withdraw",
@@ -780,7 +816,9 @@
     },
     "/api/users/logout": {
       "get": {
-        "tags": ["User"],
+        "tags": [
+          "User"
+        ],
         "summary": "사용자 로그아웃",
         "description": "로그아웃을 시도합니다.",
         "operationId": "logout",
@@ -796,7 +834,9 @@
     },
     "/api/transport-order/{transportOrderId}": {
       "get": {
-        "tags": ["Transport Order"],
+        "tags": [
+          "Transport Order"
+        ],
         "summary": "주문 상세 조회",
         "description": "배차 상세에서 주문 상세를 조회 (TransportOrderResponse)",
         "operationId": "getTransportOrderById",
@@ -847,7 +887,9 @@
     },
     "/api/transport-order/excel-example": {
       "get": {
-        "tags": ["Transport Order"],
+        "tags": [
+          "Transport Order"
+        ],
         "summary": "운송 주문 엑셀 양식 다운로드",
         "description": "수동 배차에서 사용되는 운송 주문 엑셀 양식을 다운로드합니다.",
         "operationId": "downloadOrderFormExcel",
@@ -863,7 +905,9 @@
     },
     "/api/dispatch-number": {
       "get": {
-        "tags": ["DispatchNumber"],
+        "tags": [
+          "DispatchNumber"
+        ],
         "summary": "차량관제 탭, 배차 검색",
         "description": "차량관제 탭에서 배차 검색을 합니다.",
         "operationId": "searchDispatches",
@@ -874,7 +918,7 @@
             "description": "배차 검색 요청 정보",
             "required": true,
             "schema": {
-              "$ref": "#/components/schemas/DispatchNumberSearchRequest"
+              "$ref": "#/components/schemas/dispatchNumberRequest"
             }
           }
         ],
@@ -890,11 +934,11 @@
             }
           },
           "200": {
-            "description": "배차 검색 성공",
+            "description": "OK",
             "content": {
               "*/*": {
                 "schema": {
-                  "$ref": "#/components/schemas/DispatchNumberSearchResponse"
+                  "$ref": "#/components/schemas/dispatchNumberResponse"
                 }
               }
             }
@@ -904,7 +948,9 @@
     },
     "/api/dispatch-number/{dispatchCodeId}/vehicle-control": {
       "get": {
-        "tags": ["DispatchNumber"],
+        "tags": [
+          "DispatchNumber"
+        ],
         "summary": "차량관제 탭, 배차코드 상세 조회",
         "description": "차량관제 탭에서 선택한 배차코드에 대한 정보를 조회합니다. (DispatchListResponse)",
         "operationId": "getDispatchList",
@@ -975,7 +1021,9 @@
     },
     "/api/dispatch-detail/{dispatchId}/vehicle-control": {
       "get": {
-        "tags": ["DispatchDetail"],
+        "tags": [
+          "DispatchDetail"
+        ],
         "summary": "차량 관제 배차 상세 조회",
         "description": "특정 배차 ID에 대한 상세 정보를 조회합니다.",
         "operationId": "getDispatchDetail",
@@ -1019,7 +1067,10 @@
   "components": {
     "schemas": {
       "DispatchUpdateRequest": {
-        "required": ["loadingStartTime", "smId"],
+        "required": [
+          "loadingStartTime",
+          "smId"
+        ],
         "type": "object",
         "properties": {
           "smId": {
@@ -1066,7 +1117,14 @@
         "example": "00:30"
       },
       "Order": {
-        "required": ["address", "expectedServiceDuration", "lat", "lon", "serviceRequestDate", "serviceRequestTime"],
+        "required": [
+          "address",
+          "expectedServiceDuration",
+          "lat",
+          "lon",
+          "serviceRequestDate",
+          "serviceRequestTime"
+        ],
         "type": "object",
         "properties": {
           "address": {
@@ -1646,7 +1704,12 @@
         }
       },
       "RegisterSuperAdminRequest": {
-        "required": ["name", "password", "phoneNumber", "username"],
+        "required": [
+          "name",
+          "password",
+          "phoneNumber",
+          "username"
+        ],
         "type": "object",
         "properties": {
           "name": {
@@ -1672,7 +1735,14 @@
         }
       },
       "RegisterDriverRequest": {
-        "required": ["centerId", "name", "password", "phoneNumber", "smId", "username"],
+        "required": [
+          "centerId",
+          "name",
+          "password",
+          "phoneNumber",
+          "smId",
+          "username"
+        ],
         "type": "object",
         "properties": {
           "centerId": {
@@ -1710,7 +1780,13 @@
         }
       },
       "RegisterAdminRequest": {
-        "required": ["centerId", "name", "password", "phoneNumber", "username"],
+        "required": [
+          "centerId",
+          "name",
+          "password",
+          "phoneNumber",
+          "username"
+        ],
         "type": "object",
         "properties": {
           "centerId": {
@@ -1742,7 +1818,10 @@
         }
       },
       "LoginRequest": {
-        "required": ["password", "username"],
+        "required": [
+          "password",
+          "username"
+        ],
         "type": "object",
         "properties": {
           "username": {
@@ -1941,7 +2020,11 @@
         ]
       },
       "TransportOrderRequest": {
-        "required": ["dispatchName", "loadingStartTime", "orderReuquestList"],
+        "required": [
+          "dispatchName",
+          "loadingStartTime",
+          "orderReuquestList"
+        ],
         "type": "object",
         "properties": {
           "loadingStartTime": {
@@ -2631,7 +2714,9 @@
         }
       },
       "SmNameRequest": {
-        "required": ["smName"],
+        "required": [
+          "smName"
+        ],
         "type": "object",
         "properties": {
           "smName": {
@@ -2651,7 +2736,9 @@
         ]
       },
       "ValidationListRequest": {
-        "required": ["requests"],
+        "required": [
+          "requests"
+        ],
         "type": "object",
         "properties": {
           "requests": {
@@ -2729,7 +2816,12 @@
         ]
       },
       "DispatchConfirmRequest": {
-        "required": ["dispatchCode", "dispatchList", "dispatchName", "loadingStartTime"],
+        "required": [
+          "dispatchCode",
+          "dispatchList",
+          "dispatchName",
+          "loadingStartTime"
+        ],
         "type": "object",
         "properties": {
           "dispatchCode": {
@@ -3131,13 +3223,18 @@
         }
       },
       "DispatchCancelRequest": {
-        "required": ["dispatchNumberIds"],
+        "required": [
+          "dispatchNumberIds"
+        ],
         "type": "object",
         "properties": {
           "dispatchNumberIds": {
             "type": "array",
             "description": "배차 번호 id 목록",
-            "example": [1, 2],
+            "example": [
+              1,
+              2
+            ],
             "items": {
               "type": "integer",
               "description": "배차 번호 id 목록",
@@ -3148,7 +3245,9 @@
         "description": "배차 취소 요청 정보"
       },
       "IssueRequest": {
-        "required": ["issue"],
+        "required": [
+          "issue"
+        ],
         "type": "object",
         "properties": {
           "issue": {
@@ -3348,15 +3447,24 @@
           }
         }
       },
-      "DispatchNumberSearchRequest": {
-        "required": ["endDateTime", "isManager", "startDateTime", "status"],
+      "dispatchNumberRequest": {
+        "required": [
+          "endDateTime",
+          "isManager",
+          "startDate",
+          "status"
+        ],
         "type": "object",
         "properties": {
           "status": {
             "type": "string",
             "description": "배차 상태",
             "example": "WAITING",
-            "enum": ["IN_TRANSIT", "WAITING", "COMPLETED"]
+            "enum": [
+              "IN_TRANSIT",
+              "WAITING",
+              "COMPLETED"
+            ]
           },
           "isManager": {
             "type": "boolean",
@@ -3385,7 +3493,7 @@
           }
         }
       },
-      "DispatchNumberSearchResponse": {
+      "dispatchNumberResponse": {
         "type": "object",
         "properties": {
           "inProgress": {

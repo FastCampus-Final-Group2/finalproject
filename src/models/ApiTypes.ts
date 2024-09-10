@@ -1553,7 +1553,7 @@ export interface TransportOrderResponse {
   clientInfo?: ClientInfo;
 }
 
-export interface DispatchNumberSearchRequest {
+export interface dispatchNumberRequest {
   /**
    * 배차 상태
    * @example "WAITING"
@@ -1586,7 +1586,7 @@ export interface DispatchNumberSearchRequest {
   searchKeyword?: string;
 }
 
-export interface DispatchNumberSearchResponse {
+export interface dispatchNumberResponse {
   /**
    * 진행중
    * @format int32
@@ -2043,10 +2043,10 @@ export type DownloadOrderFormExcelData = any;
 
 export interface SearchDispatchesParams {
   /** 배차 검색 요청 정보 */
-  request: DispatchNumberSearchRequest;
+  request: dispatchNumberRequest;
 }
 
-export type SearchDispatchesData = DispatchNumberSearchResponse;
+export type SearchDispatchesData = dispatchNumberResponse;
 
 export type SearchDispatchesError = ErrorResponse;
 

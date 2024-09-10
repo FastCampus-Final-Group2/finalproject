@@ -1,30 +1,22 @@
-import { useState, useEffect } from "react";
 import { tabClass, numberClass } from "./index.variants";
 import { cn } from "@/utils/cn";
 
 interface TabForDispatchedListChangeProps {
-  states?: string[];
-  numbers?: number[];
-  initialSelectedState?: string;
-  onStateChange?: (state: string) => void;
+  states: string[];
+  numbers: number[];
+  selectedState: string;
+  onStateChange: (state: string) => void;
 }
 
 const TabForDispatchedListChange = ({
-  states = [],
-  numbers = [],
-  initialSelectedState,
-  onStateChange = () => {},
+  states,
+  numbers,
+  selectedState,
+  onStateChange,
 }: TabForDispatchedListChangeProps) => {
-  const [selectedState, setSelectedState] = useState(initialSelectedState ?? states[0]);
-
   const handleStateClick = (state: string) => {
-    setSelectedState(state);
     onStateChange(state);
   };
-
-  useEffect(() => {
-    console.log(`Selected state: ${selectedState}`);
-  }, [selectedState]);
 
   return (
     <div className="flex h-[48px] text-T-18-B">

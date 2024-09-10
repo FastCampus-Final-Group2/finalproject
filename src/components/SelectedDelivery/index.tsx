@@ -1,13 +1,10 @@
 import Button from "@/components/core/Button";
 import { useState } from "react";
 import ConfirmModal from "@/components/ConfirmModal";
+import Icon from "@/components/core/Icon";
 
 const SelectedDelivery = ({ selectedOrders }: { selectedOrders: DeliveryRoutineDetailStatusItem[] }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-
-  const handleModalClose = () => {
-    setIsModalOpen(!isModalOpen);
-  };
 
   const handleCancel = () => {
     if (selectedOrders.length === 0) {
@@ -21,7 +18,7 @@ const SelectedDelivery = ({ selectedOrders }: { selectedOrders: DeliveryRoutineD
     } else {
       alert("삭제 완료!");
       console.log("SelectDelivery에서 배송취소 버튼 클릭");
-      handleModalClose();
+      setIsModalOpen(false);
     }
   };
 
@@ -37,14 +34,13 @@ const SelectedDelivery = ({ selectedOrders }: { selectedOrders: DeliveryRoutineD
             건
           </li>
         </ul>
-        <Button
+        <button
           onClick={() => setIsModalOpen(true)} // Open the modal when clicking the delete icon
-          iconId="circleCancelFill"
-          size="i"
-          className="text-B-14-B hover:text-white"
+          className="flex items-center justify-center gap-[6px] rounded-[4px] bg-gray-100 px-[8px] py-[6px] text-B-14-B hover:bg-red-500 hover:text-white"
         >
+          <Icon id="circleCancelFill" size={14} className="hover:text-white" />
           배송취소
-        </Button>
+        </button>
       </div>
       {isModalOpen && (
         <ConfirmModal
@@ -53,7 +49,7 @@ const SelectedDelivery = ({ selectedOrders }: { selectedOrders: DeliveryRoutineD
           leftButtonText="아니오"
           rightButtonText="네"
           onConfirm={handleCancel}
-          onClickClose={handleModalClose}
+          onClickClose={() => setIsModalOpen(false)}
         />
       )}
     </>

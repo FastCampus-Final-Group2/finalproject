@@ -17,115 +17,57 @@ interface DeliveryRoutineDetailStatusItem {
     | "RESTING"
     | "RESTING_TIME"
     | "default";
-  startTime?: string;
-  endTime?: string;
-  expectedStartTime?: string;
-  expectedEndTime?: string;
+  operationStartTime?: string;
+  operationEndTime?: string;
+  expectationOperationStartTime?: string;
+  expectationOperationEndTime?: string;
   iconId: IconId;
   address: string;
   addressDetail: string;
   errorMessage?: string;
 }
 
-const DeliveryRoutineDetailStatus: DeliveryRoutineDetailStatusItem[] = [
-  {
-    dispatchDetailStatus: "WORK_COMPLETED",
-    startTime: "14:30",
-    endTime: "15:00",
-    expectedStartTime: "",
-    expectedEndTime: "",
-    iconId: "circleFill",
-    address: "서울시 마포구 합정동",
-    addressDetail: "331-7 360동 2503호",
-    errorMessage: "화물 엘리베이터 대기시간 1시간",
-  },
-  {
-    dispatchDetailStatus: "WORK_WAITING",
-    startTime: "",
-    endTime: "",
-    expectedStartTime: "15:00",
-    expectedEndTime: "15:30",
-    iconId: "circle",
-    address: "서울시 마포구 합정동",
-    addressDetail: "331-7 360동 2503호",
-    errorMessage: "화물 엘리베이터 대기시간 1시간",
-  },
-  {
-    dispatchDetailStatus: "DELIVERY_DELAY",
-    startTime: "14:00",
-    endTime: "14:30",
-    expectedStartTime: "",
-    expectedEndTime: "",
-    iconId: "circle",
-    address: "서울시 마포구 합정동",
-    addressDetail: "331-7 360동 2503호",
-    errorMessage: "화물 엘리베이터 대기시간 1시간",
-  },
-  {
-    dispatchDetailStatus: "CANCELED",
-    startTime: "",
-    endTime: "",
-    expectedStartTime: "",
-    expectedEndTime: "",
-    iconId: "circleDashFill",
-    address: "서울시 마포구 합정동",
-    addressDetail: "331-7 360동 2503호",
-    errorMessage: "화물 엘리베이터 대기시간 1시간",
-  },
-  {
-    dispatchDetailStatus: "WORK_WAITING",
-    startTime: "",
-    endTime: "",
-    expectedStartTime: "15:00",
-    expectedEndTime: "15:30",
-    iconId: "circle",
-    address: "서울시 마포구 합정동",
-    addressDetail: "331-7 360동 2503호",
-    errorMessage: "화물 엘리베이터 대기시간 1시간",
-  },
-  {
-    dispatchDetailStatus: "WORK_WAITING",
-    startTime: "15:30",
-    endTime: "",
-    expectedStartTime: "15:30",
-    expectedEndTime: "16:00",
-    iconId: "circle",
-    address: "서울시 마포구 합정동",
-    addressDetail: "331-7 360동 2503호",
-    errorMessage: "화물 엘리베이터 대기시간 1시간",
-  },
-  {
-    dispatchDetailStatus: "RESTING",
-    startTime: "15:30",
-    endTime: "16:30",
-    expectedStartTime: "",
-    expectedEndTime: "16:00",
-    iconId: "circle",
-    address: "서울시 마포구 합정동",
-    addressDetail: "331-7 360동 2503호",
-    errorMessage: "화물 엘리베이터 대기시간 1시간",
-  },
-  {
-    dispatchDetailStatus: "WORK_WAITING",
-    startTime: "15:30",
-    endTime: "16:30",
-    expectedStartTime: "15:30",
-    expectedEndTime: "16:00",
-    iconId: "circle",
-    address: "서울시 마포구 합정동",
-    addressDetail: "331-7 360동 2503호",
-    errorMessage: "화물 엘리베이터 대기시간 1시간",
-  },
-];
-
 interface DeliveryRoutineDetailProps {
   selectedOrders: DeliveryRoutineDetailStatusItem[];
   setSelectedOrders: React.Dispatch<React.SetStateAction<DeliveryRoutineDetailStatusItem[]>>;
 }
 
-const DeliveryRoutineDetail = ({ selectedOrders, setSelectedOrders }: DeliveryRoutineDetailProps) => {
-  let orderCounter = 0; // 순서 번호를 추적하는 변수
+const DeliveryRoutineDetail = ({ selectedOrders, setSelectedOrders, fetchData }: DeliveryRoutineDetailProps) => {
+  let orderCounter = 0;
 
+  const formatTime = (dateTimeString: string | undefined): string => {
+    if (!dateTimeString) return "";
+    const date = new Date(dateTimeString);
+    const hours = date.getHours().toString().padStart(2, "0");
+    const minutes = date.getMinutes().toString().padStart(2, "0");
+    return `${hours}:${minutes}`;
+  };
+
+  const parseAddress = (fullAddress: string): { address: string; addressDetail: string } => {
+    // 특별시, 광역시, 특별자치시, 특별자치도를 간단히 표시하는 함수
+    const simplifyCity = (city: string): string => {
+      return city.replace(/특별시|광역시|특별자치시/, "시").replace(/특별자치도/, "도");
+    };
+
+    const regex = /(.*?[시도군구])\s(.*?[동읍면])\s(.+)/;
+    const match = fullAddress.match(regex);
+
+    if (match) {
+      const simplifiedCity = simplifyCity(match[1]);
+      return {
+        address: `${simplifiedCity} ${match[2]}`,
+        addressDetail: match[3],
+      };
+    }
+
+    // 매칭되지 않으면 원래 주소를 간단히 표시하여 반환
+    return {
+      address: simplifyCity(fullAddress),
+      addressDetail: "",
+    };
+  };
+
+  const fetchListItems = fetchData.dispatchDetailList;
   const handleCheckboxChange = (order: number, checked: boolean, item: DeliveryRoutineDetailStatusItem) => {
     setSelectedOrders((prevSelectedOrders) =>
       checked ? [...prevSelectedOrders, item] : prevSelectedOrders.filter((o) => o !== item),
@@ -134,16 +76,17 @@ const DeliveryRoutineDetail = ({ selectedOrders, setSelectedOrders }: DeliveryRo
 
   return (
     <div className="flex flex-col gap-[12px] overflow-scroll scrollbar-hide">
-      {DeliveryRoutineDetailStatus.map((item, index) => {
+      {fetchListItems.map((item, index) => {
+        const { address, addressDetail } = parseAddress(item.address);
         let startTimeLabel = "시작";
         let endTimeLabel = "종료";
-        let displayStartTime = item.startTime;
-        let displayEndTime = item.endTime;
+        let displayStartTime = formatTime(item.operationStartTime);
+        let displayEndTime = formatTime(item.operationEndTime);
         let maxWClass = "max-w-[50px]";
 
         switch (item.dispatchDetailStatus) {
           case "WORK_START":
-            displayEndTime = item.expectedEndTime;
+            displayEndTime = formatTime(item.expectationOperationEndTime);
             endTimeLabel = "종료 예상";
             maxWClass = "max-w-[20px]";
             break;
@@ -155,8 +98,8 @@ const DeliveryRoutineDetail = ({ selectedOrders, setSelectedOrders }: DeliveryRo
           case "WORK_WAITING":
             startTimeLabel = "시작 예상";
             endTimeLabel = "종료 예상";
-            displayStartTime = item.expectedStartTime;
-            displayEndTime = item.expectedEndTime;
+            displayStartTime = formatTime(item.expectationOperationStartTime);
+            displayEndTime = formatTime(item.expectationOperationEndTime);
             maxWClass = "max-w-[20px]";
             break;
           case "CANCELED":
@@ -171,6 +114,7 @@ const DeliveryRoutineDetail = ({ selectedOrders, setSelectedOrders }: DeliveryRo
 
         return (
           <React.Fragment key={index}>
+            {index === 0 && item.dispatchDetailStatus === "WORK_WAITING" && <IAmMoving />}
             <div className="flex w-[430px] justify-between">
               <CircleCheckbox
                 status={item.dispatchDetailStatus}
@@ -188,14 +132,14 @@ const DeliveryRoutineDetail = ({ selectedOrders, setSelectedOrders }: DeliveryRo
                           item.dispatchDetailStatus === "CANCELED" ? "border-gray-300 text-gray-300" : "text-blue-500"
                         } ${item.dispatchDetailStatus === "RESTING" ? "hidden" : ""} `}
                       >
-                        {item.address}
+                        {address}
                       </p>
                       <p
                         className={`overflow-hidden text-ellipsis whitespace-nowrap text-B-14-M ${
                           item.dispatchDetailStatus === "CANCELED" ? "text-gray-300" : "text-gray-500"
                         } ${maxWClass} ${item.dispatchDetailStatus === "RESTING" ? "hidden" : ""}`}
                       >
-                        {item.addressDetail}
+                        {addressDetail}
                       </p>
                     </li>
                   </ul>
@@ -223,7 +167,9 @@ const DeliveryRoutineDetail = ({ selectedOrders, setSelectedOrders }: DeliveryRo
               </DeliveryStopoverListCard>
             </div>
             {item.dispatchDetailStatus === "WORK_COMPLETED" &&
-              DeliveryRoutineDetailStatus[index + 1]?.dispatchDetailStatus === "WORK_WAITING" && <IAmMoving />}
+              fetchListItems[index + 1]?.dispatchDetailStatus === "WORK_WAITING" && (
+                <IAmMoving ett={fetchListItems.ett} />
+              )}
           </React.Fragment>
         );
       })}

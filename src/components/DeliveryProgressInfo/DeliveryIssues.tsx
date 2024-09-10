@@ -1,42 +1,56 @@
 "use client";
 
 import Icon from "@/components/core/Icon";
-import React, { useState } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import ConfirmModal from "@/components/ConfirmModal";
+import { dispatchApi } from "@/apis/dispatches/dispatch";
+import { IssueRequest } from "@/models/ApiTypes";
 
-const DeliveryIssues = () => {
+const DeliveryIssue = ({ issue, dispatchId }: { issue: string; dispatchId: number }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [memo, setMemo] = useState(""); // State to hold the memo text
+  const [memo, setMemo] = useState(issue);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [savedIssue, setSavedIssue] = useState(issue);
 
-  const handleModalClose = () => {
-    setIsModalOpen(!isModalOpen);
-  };
+  const fetchIssue = useCallback(
+    async (text: string) => {
+      try {
+        const issueRequest: IssueRequest = { issue: text };
+        const [error, response] = await dispatchApi.issue(dispatchId, issueRequest);
+        if (error) {
+          console.error("이슈 저장 중 오류 발생:", error);
+        } else {
+          setSavedIssue(text);
+          console.log("이슈가 성공적으로 저장되었습니다:", response);
+        }
+      } catch (error) {
+        console.error("이슈 저장 중 예외 발생:", error);
+      }
+    },
+    [dispatchId],
+  );
 
-  const handleIsOpen = () => {
-    setIsOpen(!isOpen);
-  };
+  useEffect(() => {
+    let timer: NodeJS.Timeout;
+    if (memo !== savedIssue) {
+      timer = setTimeout(() => {
+        fetchIssue(memo);
+      }, 1000);
+    }
+    return () => clearTimeout(timer);
+  }, [memo, savedIssue, fetchIssue]);
 
   const handleMemoChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    if (e.target.value.length <= 300) {
-      setMemo(e.target.value);
-    }
+    const newText = e.target.value.slice(0, 300);
+    setMemo(newText);
   };
 
   const handleDelete = () => {
-    if (confirm("Do you really want to delete the memo?")) {
-      setMemo("");
-      handleModalClose();
-    }
+    setMemo("");
+    setSavedIssue("");
+    fetchIssue("");
+    setIsModalOpen(false);
   };
-
-  const maxCollapsedLength = 60;
-
-  const displayedText = isOpen
-    ? memo
-    : memo.length > maxCollapsedLength
-      ? `${memo.slice(0, maxCollapsedLength)}...`
-      : memo;
 
   return (
     <>
@@ -52,7 +66,7 @@ const DeliveryIssues = () => {
               />
             ) : (
               <p className="whitespace-pre-line text-gray-600">
-                {displayedText || "배송이슈 및 기타 메모 입력\n(300자 이내)"}
+                {savedIssue || "배송이슈 및 기타 메모 입력\n(300자 이내)"}
               </p>
             )}
           </li>
@@ -60,7 +74,7 @@ const DeliveryIssues = () => {
             <Icon
               id={isOpen ? "arrowUp" : "arrowDown"}
               size={16}
-              onClick={handleIsOpen}
+              onClick={() => setIsOpen(!isOpen)}
               role="button"
               className="cursor-pointer"
             />
@@ -81,11 +95,11 @@ const DeliveryIssues = () => {
           leftButtonText="아니오"
           rightButtonText="네"
           onConfirm={handleDelete}
-          onClickClose={handleModalClose}
+          onClickClose={() => setIsModalOpen(false)}
         />
       )}
     </>
   );
 };
 
-export default DeliveryIssues;
+export default DeliveryIssue;
