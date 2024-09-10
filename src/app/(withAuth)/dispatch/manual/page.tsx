@@ -30,7 +30,7 @@ const page = () => {
   return (
     <div className="w-full">
       <DispatchInformationHeader />
-      <div className="flex w-full">
+      <div className="flex h-full w-full">
         <OrderDashBoard />
         <div className="w-full">
           <NaverMap waypointGroups={waypointGroups} />

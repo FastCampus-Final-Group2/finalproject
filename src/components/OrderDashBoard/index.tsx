@@ -148,7 +148,7 @@ const OrderDashBoard = () => {
       </div>
 
       {/* 변경된 배열 확인 */}
-      <div>
+      {/* <div>
         <h2>StopOverData 배열:</h2>
         <pre>{JSON.stringify(stopOverData, null, 2)}</pre>
       </div>
@@ -156,7 +156,7 @@ const OrderDashBoard = () => {
       <div>
         <h2>PendingOrderData 배열:</h2>
         <pre>{JSON.stringify(pendingOrderData, null, 2)}</pre>
-      </div>
+      </div> */}
     </DragDropContext>
   );
 };
