@@ -17,14 +17,14 @@ const Lists = ({ results, checkedItems, onCheckBoxChange }: ListsProps) => {
   };
 
   return (
-    <ul>
+    <div>
       {results.map((data, index) => {
         const isEmpty = !data.dispatchCode;
         const isChecked = !isEmpty && checkedItems[index];
         const bgColor = isChecked ? "bg-gray-100" : index % 2 === 0 ? "" : "bg-gray-50";
 
         return (
-          <li
+          <div
             key={index}
             className={cn(
               dispatchListClass({
@@ -35,18 +35,18 @@ const Lists = ({ results, checkedItems, onCheckBoxChange }: ListsProps) => {
               bgColor,
             )}
           >
-            <p className={cn(dispatchListClass({ width: "extraSmall" }))}>
+            <div className={cn(dispatchListClass({ width: "extraSmall" }))}>
               {!isEmpty && <ListCheckbox isChecked={checkedItems[index]} onChange={() => onCheckBoxChange(index)} />}
-            </p>
-            <p className={cn(dispatchListClass({ width: "small" }))}>
-              <p className={`relative h-[12px] w-[82px] rounded-full bg-blue-50 ${isEmpty ? "hidden" : ""}`}>
-                <p
+            </div>
+            <div className={cn(dispatchListClass({ width: "small" }))}>
+              <div className={`relative h-[12px] w-[82px] rounded-full bg-blue-50 ${isEmpty ? "hidden" : ""}`}>
+                <div
                   className="absolute h-[12px] rounded-full bg-blue-500"
                   style={{ width: `${progressGraph(data.progress || 0)}px` }}
-                ></p>
-              </p>
+                ></div>
+              </div>
               <p>{data.progress ? `${data.progress}%` : ""}</p>
-            </p>
+            </div>
             <p className={cn(dispatchListClass({ width: "extraLarge" }))}>
               <Link href={`/control/detail/${data.dispatchNumberId}`} key={index}>
                 <span className="w-1/2">{data.dispatchCode || ""}</span>
@@ -57,10 +57,10 @@ const Lists = ({ results, checkedItems, onCheckBoxChange }: ListsProps) => {
             <p className={cn(dispatchListClass({ width: "medium" }))}>{data.totalOrder || ""}</p>
             <p className={cn(dispatchListClass({ width: "medium" }))}>{data.smNum || ""}</p>
             <p className={cn(dispatchListClass({ width: "medium" }))}>{data.manager || ""}</p>
-          </li>
+          </div>
         );
       })}
-    </ul>
+    </div>
   );
 };
 
