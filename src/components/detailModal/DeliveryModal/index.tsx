@@ -5,32 +5,70 @@ import DeliveryInfo from "./DeliveryInfo";
 import AffiliationCenterInfo from "./AffiliationCenterInfo";
 import { DeliveryModalEditContextProvider } from "@/contexts/DeliveryModalEditContext";
 import EditButtons from "./EditButtons";
-import { parseRestrictedTonCode } from "@/utils/tonCode";
+import { parseRestrictedTonString } from "@/utils/tonCode";
+import { isCenterData } from "@/types/typeGuard/delivery";
+import { useEffect, useState } from "react";
+import { GetCenterData, GetDeliveryDestinationData } from "@/models/ApiTypes";
+import { CenterAPI } from "@/apis/center";
+import { DestinationAPI } from "@/apis/deliveryDestination";
 
 interface DeliveryModalProps {
   id: number;
-  info: DeliveryInfo;
   isCenter: boolean;
   onClose: () => void;
 }
 
-const DeliveryModal = ({ id, info, isCenter, onClose }: DeliveryModalProps) => {
+const DeliveryModal = ({ id, isCenter, onClose }: DeliveryModalProps) => {
+  const [info, setInfo] = useState<GetDeliveryDestinationData | GetCenterData | null>(null);
+
+  useEffect(() => {
+    if (isCenter) {
+      CenterAPI.getDetailInfo(id)
+        .then(([error, data]) => {
+          if (error) {
+            onClose();
+          }
+
+          setInfo(data);
+        })
+        .catch(() => {
+          onClose();
+        });
+    } else {
+      DestinationAPI.getDetailInfo(id)
+        .then(([error, data]) => {
+          if (error) {
+            onClose();
+          }
+
+          setInfo(data);
+        })
+        .catch(() => {
+          onClose();
+        });
+    }
+  }, [id, isCenter, onClose]);
+
+  if (!info) return null;
+
   return (
     <ModalBase title={isCenter ? "센터 상세정보" : "배송처 상세정보"}>
       <DeliveryModalEditContextProvider
-        initialComment={info.comment}
-        initialDelayTime={info.delayTime}
-        initialRestrictedTonCode={parseRestrictedTonCode(info.restrictedTonCode)}
+        initialComment={info.comment || ""}
+        initialDelayTime={info.delayTime || 0}
+        initialRestrictedWing={parseRestrictedTonString(info.restrictedWingBody || "")}
+        initialRestrictedTop={parseRestrictedTonString(info.restrictedBox || "")}
+        initialRestrictedCargo={parseRestrictedTonString(info.restrictedCargo || "")}
       >
-        <DeliveryInfo id={id} info={info} isCenter={isCenter} />
-        {isCenter || (
+        <DeliveryInfo info={info} />
+        {!isCenterData(info) && (
           <AffiliationCenterInfo
-            centerId={info.centerId}
-            centerName={info.centerName}
-            basicAddress={info.basicAddress}
+            centerCode={info.centerCode || ""}
+            centerName={info.centerName || ""}
+            address={info.centerRoadAddress || info.centerLotNumberAddress || ""}
           />
         )}
-        <EditButtons updateAt={info.updateAt} onClose={onClose} />
+        <EditButtons id={id} updateAt={info.updateAt} onClose={onClose} isCenter={isCenter} setInfo={setInfo} />
       </DeliveryModalEditContextProvider>
     </ModalBase>
   );

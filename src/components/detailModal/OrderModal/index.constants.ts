@@ -1,6 +1,6 @@
 export const ORDER_DISPATCH_INFO_LABEL = {
-  receivedDate: "주문접수일",
-  transportOrderNumber: "운송장번호",
+  orderDate: "주문접수일",
+  shipmentNumber: "운송장번호",
   deliveryType: "배송유형",
   requestedWorkDate: "작업희망일",
   requestedArrivalTime: "희망도착시간",
@@ -13,8 +13,8 @@ export const ORDER_DISPATCH_INFO_LABEL = {
 } as const;
 
 export const ORDER_DISPATCH_INFO_KEYS = [
-  { key: "receivedDate", line: 1 },
-  { key: "transportOrderNumber", line: 1 },
+  { key: "orderDate", line: 1 },
+  { key: "shipmentNumber", line: 1 },
   { key: "deliveryType", line: 3 },
   { key: "requestedWorkDate", line: 1 },
   { key: "requestedArrivalTime", line: 1 },
@@ -39,7 +39,7 @@ export const ORDER_DELIVERY_INFO_KEYS = [
 ] as const;
 
 export const ORDER_CLIENT_INFO_LABEL = {
-  client: "고객명",
+  clientName: "고객명",
   phoneNumber: "고객연락처",
   roadAddress: "주소",
   detailAddress: "",
@@ -47,7 +47,7 @@ export const ORDER_CLIENT_INFO_LABEL = {
 } as const;
 
 export const ORDER_CLIENT_INFO_KEYS = [
-  { key: "client", line: 1 },
+  { key: "clientName", line: 1 },
   { key: "phoneNumber", line: 1 },
   { key: "roadAddress", line: 2 },
   { key: "detailAddress", line: 1 },

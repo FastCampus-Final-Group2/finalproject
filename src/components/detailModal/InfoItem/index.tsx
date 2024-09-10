@@ -3,7 +3,7 @@ import { valueVariants } from "./index.variants";
 
 interface InfoItemProps {
   label?: string;
-  value: string | number;
+  value?: string | number;
   line: 1 | 2 | 3;
 }
 

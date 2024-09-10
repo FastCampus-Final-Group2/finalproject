@@ -1,5 +1,5 @@
 import Icon from "@/components/core/Icon";
-import { CAR_MODEL_MAP, TON_CODE_BUTTON_INFOS } from "./index.constants";
+import { TON_CODE_BUTTON_INFOS } from "./index.constants";
 import { CarModel } from "@/types/tonCode";
 import RestrictedTonCodeButton from "./RestrictedTonCodeButton";
 import { useDeliveryModalEditContext } from "@/contexts/DeliveryModalEditContext";
@@ -10,23 +10,23 @@ interface RestrictedTonCodeButtonsProps {
 }
 
 const RestrictedTonCodeButtons = ({ carModel }: RestrictedTonCodeButtonsProps) => {
-  const { restrictedTonCode, toggleRestrictedTonCode, setRestrictedTonCodeAllTrue, setRestrictedTonCodeAllFalse } =
-    useDeliveryModalEditContext();
+  const { restrictedTon, toggleRestrictedTon, setRestrictedTonAllTrue, setRestrictedTonAllFalse } =
+    useDeliveryModalEditContext()[carModel];
 
   const allState = useMemo(() => {
-    return Object.values(restrictedTonCode[carModel]).every((value) => value === true);
-  }, [carModel, restrictedTonCode]);
+    return Object.values(restrictedTon).every((value) => value === true);
+  }, [restrictedTon]);
 
   const handleClickAllButton = () => {
-    if (allState) setRestrictedTonCodeAllFalse(carModel);
-    else setRestrictedTonCodeAllTrue(carModel);
+    if (allState) setRestrictedTonAllFalse();
+    else setRestrictedTonAllTrue();
   };
 
   return (
     <div className="flex gap-[17px]">
       <div className="flex flex-col items-center gap-[7px] px-4 py-3">
         <div className="flex h-5 w-10 items-center justify-center overflow-hidden">
-          <Icon id={CAR_MODEL_MAP[carModel]} size={40} />
+          <Icon id={carModel} size={40} />
         </div>
         <span className="flex items-center justify-center text-gray-900 text-B-14-M">{carModel}</span>
       </div>
@@ -36,14 +36,14 @@ const RestrictedTonCodeButtons = ({ carModel }: RestrictedTonCodeButtonsProps) =
           {TON_CODE_BUTTON_INFOS.map((line, index) => {
             return (
               <div key={index} className="flex">
-                {line.map(({ label, position }) => {
+                {line.map(({ ton, position }) => {
                   return (
                     <RestrictedTonCodeButton
-                      key={label}
-                      tonCode={label}
+                      key={carModel + ton}
+                      tonCode={ton + "T"}
                       position={position}
-                      isActive={restrictedTonCode[carModel][label]}
-                      onClick={() => toggleRestrictedTonCode(carModel, label)}
+                      isActive={restrictedTon[ton]}
+                      onClick={() => toggleRestrictedTon(ton)}
                     />
                   );
                 })}

@@ -3,23 +3,25 @@
 import CalendarPicker from "@/components/CalendarPicker";
 import Icon from "@/components/core/Icon";
 import { cn } from "@/utils/cn";
-import { useMemo, useReducer, useState } from "react";
+import { useMemo, useReducer } from "react";
 import { buttonVariants } from "./index.variants";
+import { useRecoilState } from "recoil";
+import { loadingStartTimeState } from "@/atoms/excelData";
 
 const LoadingStartTimePicker = () => {
   const [isCalendarOpen, toggleCalendar] = useReducer((v) => !v, false);
-  const [startDate, setStartDate] = useState<string>("YYYY-MM-DD --:--");
+  const [loadingStartTime, setLoadingStartTime] = useRecoilState(loadingStartTimeState);
 
   const startDateText = useMemo(() => {
-    return startDate.split(" ");
-  }, [startDate]);
+    return loadingStartTime.split(" ");
+  }, [loadingStartTime]);
 
   const isError = useMemo(() => {
-    return startDate === "YYYY-MM-DD --:--";
-  }, [startDate]);
+    return loadingStartTime === "YYYY-MM-DD --:--";
+  }, [loadingStartTime]);
 
   const handleCalendarConfirm = (date: string) => {
-    setStartDate(date);
+    setLoadingStartTime(date);
     toggleCalendar();
   };
 
@@ -33,9 +35,9 @@ const LoadingStartTimePicker = () => {
         <span className="text-gray-900 text-B-14-M">{startDateText[0]}</span>
         <span className="text-gray-900 text-B-14-M">{`${startDateText[1]} 시작`}</span>
       </button>
-      {isError && <span className="text-C-12-B text-red-500">상차시작일시를 입력해주세요.</span>}
+      {isError && <span className="text-red-500 text-C-12-B">상차시작일시를 입력해주세요.</span>}
       {isCalendarOpen && (
-        <div className="absolute z-50">
+        <div className="absolute left-0 top-12 z-50">
           <CalendarPicker onSelectDate={handleCalendarConfirm} />
         </div>
       )}

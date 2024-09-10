@@ -1,6 +1,5 @@
 import WithAuthLayout from "@/components/WithAuthLayout";
 import { SNBStateContextProvider } from "@/contexts/SNBStateContext";
-import { TabStateContextProvider } from "@/contexts/TabStateContext";
 
 const Template = ({
   children,
@@ -8,11 +7,9 @@ const Template = ({
   children: React.ReactNode;
 }>) => {
   return (
-    <TabStateContextProvider>
-      <SNBStateContextProvider>
-        <WithAuthLayout>{children}</WithAuthLayout>
-      </SNBStateContextProvider>
-    </TabStateContextProvider>
+    <SNBStateContextProvider>
+      <WithAuthLayout>{children}</WithAuthLayout>
+    </SNBStateContextProvider>
   );
 };
 

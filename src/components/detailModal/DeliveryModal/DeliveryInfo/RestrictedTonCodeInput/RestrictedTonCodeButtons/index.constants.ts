@@ -1,20 +1,14 @@
-export const CAR_MODEL_MAP = {
-  윙바디: "wing",
-  탑차: "top",
-  카고: "cargo",
-} as const;
-
 export const TON_CODE_BUTTON_INFOS = [
   [
-    { label: "1T", position: "left" },
-    { label: "1.2T", position: "middle" },
-    { label: "1.4T", position: "middle" },
-    { label: "2.5T", position: "right" },
+    { ton: "1", position: "left" },
+    { ton: "1.2", position: "middle" },
+    { ton: "1.4", position: "middle" },
+    { ton: "2.5", position: "right" },
   ],
   [
-    { label: "3.5T", position: "left" },
-    { label: "5T", position: "middle" },
-    { label: "8T", position: "middle" },
-    { label: "11T", position: "right" },
+    { ton: "3.5", position: "left" },
+    { ton: "5", position: "middle" },
+    { ton: "8", position: "middle" },
+    { ton: "11", position: "right" },
   ],
 ] as const;

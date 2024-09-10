@@ -19,8 +19,8 @@ import {
 
 interface SideNavBarMenuProps {
   SideNavBarInfo: SideNavBarLink;
-  currentMenu: SideNavBarLink["name"];
-  setCurrentMenu: React.Dispatch<React.SetStateAction<SideNavBarLink["name"]>>;
+  currentMenu: SideNavBarLink["name"] | "";
+  setCurrentMenu: React.Dispatch<React.SetStateAction<SideNavBarLink["name"] | "">>;
 }
 
 const SideNavBarMenu = ({
@@ -33,14 +33,17 @@ const SideNavBarMenu = ({
   const { addTab } = useTabStateContext();
   const { isSNBOpened } = useSNBStateContext();
   const isPageOpened = href && pathname === href ? true : false;
-  const [isMenuOpened, toggleMenu] = useReducer((v) => !v, false);
 
-  const handleMenuToggleButton = useCallback(() => {
+  const handleMenuToggleButton = () => {
     if (!isSNBOpened) return;
+
+    if (currentMenu === name) {
+      setCurrentMenu("");
+      return;
+    }
 
     if (subMenu) {
       setCurrentMenu(name);
-      toggleMenu();
     } else {
       if (!href) return;
       if (name !== DEFAULT_TAB.name) {
@@ -49,7 +52,7 @@ const SideNavBarMenu = ({
 
       router.push(href);
     }
-  }, [addTab, href, isSNBOpened, name, router, setCurrentMenu, subMenu]);
+  };
 
   return (
     <div className={cn(snbMenuContainerVariants({ isSNBOpened }))}>
@@ -63,7 +66,7 @@ const SideNavBarMenu = ({
           <>
             <span className={cn(snbMenuNameVariants({ isPageOpened }))}>{name}</span>
             {subMenu ? (
-              <Icon id={isMenuOpened ? "arrowUp" : "arrowDown"} size={20} className="text-white" />
+              <Icon id={currentMenu === name ? "arrowUp" : "arrowDown"} size={20} className="text-white" />
             ) : (
               <div className="h-5 w-5" aria-hidden />
             )}
@@ -71,7 +74,7 @@ const SideNavBarMenu = ({
         )}
       </button>
       {isSNBOpened && currentMenu === name && (
-        <div className={cn(snbSubMenuContainerVariants({ isMenuOpened }))}>
+        <div className={cn(snbSubMenuContainerVariants({ isMenuOpened: currentMenu === name }))}>
           {subMenu?.map(({ name }) => {
             return <SideNavBarSubMenu key={name} subMenuName={name} />;
           })}

@@ -1,35 +1,20 @@
 "use client";
 
-import { useState } from "react";
 import { ORDER_VALIDATION_TABLE_TABS } from "./index.constants";
 import Item from "./Item";
-import { Entries, ObjectValues } from "@/types/util";
+import { Entries } from "@/types/util";
 import Buttons from "./Buttons";
+import { useRecoilValue } from "recoil";
+import { excelDataTabNum } from "@/atoms/excelData";
 
-interface OrderValidationTabListProps {
-  tabValue: {
-    total: number;
-    complete: number;
-    error: number;
-  };
-}
-
-const OrderValidationTabList = ({ tabValue }: OrderValidationTabListProps) => {
-  const [activeTab, setActiveTab] = useState<ObjectValues<typeof ORDER_VALIDATION_TABLE_TABS>>("전체");
+const OrderValidationTabList = () => {
+  const tabValue = useRecoilValue(excelDataTabNum);
 
   return (
     <div className="relative flex w-full gap-3 border-b border-gray-200">
       {(Object.entries(ORDER_VALIDATION_TABLE_TABS) as Entries<typeof ORDER_VALIDATION_TABLE_TABS>).map(
         ([key, tabName]) => {
-          return (
-            <Item
-              key={key}
-              tabName={tabName}
-              tabValue={tabValue[key]}
-              activeTab={activeTab}
-              setActiveTab={setActiveTab}
-            />
-          );
+          return <Item key={key} tabName={tabName} tabValue={tabValue[key]} />;
         },
       )}
       <div className="absolute right-0 top-0">

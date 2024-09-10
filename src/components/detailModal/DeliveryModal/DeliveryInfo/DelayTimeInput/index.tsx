@@ -11,7 +11,7 @@ const DelayTimeInput = () => {
     const num = parseInt(input, 10);
 
     if (num >= 0 && num <= 23) setHour(num);
-    if (num > 24) setHour(0);
+    if (num > 23) setHour(0);
     if (num < 0) setHour(23);
   };
 

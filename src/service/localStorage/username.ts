@@ -13,4 +13,9 @@ export const usernameService = {
       localStorage.setItem(USERNAME_KEY, JSON.stringify(username));
     }
   },
+  remove: () => {
+    if (typeof window !== "undefined") {
+      localStorage.removeItem(USERNAME_KEY);
+    }
+  },
 };

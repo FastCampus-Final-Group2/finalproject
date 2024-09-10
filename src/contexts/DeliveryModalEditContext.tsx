@@ -3,8 +3,15 @@
 import useDebouncedState from "@/hooks/useDebouncedState";
 import useEditTonCode from "@/hooks/useEditTonCode";
 import { DeliveryInfo } from "@/types/order";
-import { CarModel, Ton, TonCodeObject } from "@/types/tonCode";
+import { RestrictedTonObject, Ton } from "@/types/tonCode";
 import { createContext, useContext, useEffect, useState } from "react";
+
+interface RestrictedTonState {
+  restrictedTon: RestrictedTonObject;
+  toggleRestrictedTon: (ton: Ton) => void;
+  setRestrictedTonAllTrue: () => void;
+  setRestrictedTonAllFalse: () => void;
+}
 
 interface DeliveryModalEditContextProps {
   comment: DeliveryInfo["comment"];
@@ -14,10 +21,9 @@ interface DeliveryModalEditContextProps {
   setHour: React.Dispatch<React.SetStateAction<number>>;
   minute: number;
   setMinute: React.Dispatch<React.SetStateAction<number>>;
-  restrictedTonCode: TonCodeObject;
-  toggleRestrictedTonCode: (carModel: CarModel, ton: Ton) => void;
-  setRestrictedTonCodeAllTrue: (carModel: CarModel) => void;
-  setRestrictedTonCodeAllFalse: (carModel: CarModel) => void;
+  wing: RestrictedTonState;
+  top: RestrictedTonState;
+  cargo: RestrictedTonState;
   isEdited: boolean;
   setIsEdited: React.Dispatch<React.SetStateAction<boolean>>;
 }
@@ -25,7 +31,9 @@ interface DeliveryModalEditContextProps {
 interface DeliveryModalEditContextProviderProps {
   initialComment: DeliveryInfo["comment"];
   initialDelayTime: DeliveryInfo["delayTime"];
-  initialRestrictedTonCode: TonCodeObject;
+  initialRestrictedWing: RestrictedTonObject;
+  initialRestrictedTop: RestrictedTonObject;
+  initialRestrictedCargo: RestrictedTonObject;
   children: React.ReactNode;
 }
 
@@ -34,20 +42,26 @@ const DeliveryModalEditContext = createContext<DeliveryModalEditContextProps | n
 export const DeliveryModalEditContextProvider = ({
   initialComment,
   initialDelayTime,
-  initialRestrictedTonCode,
+  initialRestrictedWing,
+  initialRestrictedTop,
+  initialRestrictedCargo,
   children,
 }: DeliveryModalEditContextProviderProps) => {
   const [isEdited, setIsEdited] = useState(false);
   const [comment, setComment, debouncedComment] = useDebouncedState(initialComment, 500);
   const [hour, setHour] = useState(Math.floor(initialDelayTime / 60));
   const [minute, setMinute] = useState(initialDelayTime % 60);
-  const { restrictedTonCode, toggleRestrictedTonCode, setRestrictedTonCodeAllTrue, setRestrictedTonCodeAllFalse } =
-    useEditTonCode(initialRestrictedTonCode);
+  const [restrictedWing, toggleRestrictedWing, setRestrictedWingAllTrue, setRestrictedWingAllFalse] =
+    useEditTonCode(initialRestrictedWing);
+  const [restrictedTop, toggleRestrictedTop, setRestrictedTopAllTrue, setRestrictedTopAllFalse] =
+    useEditTonCode(initialRestrictedTop);
+  const [restrictedCargo, toggleRestrictedCargo, setRestrictedCargoAllTrue, setRestrictedCargoAllFalse] =
+    useEditTonCode(initialRestrictedCargo);
 
   useEffect(() => {
     if (debouncedComment !== initialComment) setIsEdited(true);
     else setIsEdited(false);
-  }, [debouncedComment, initialComment, setIsEdited]);
+  }, [debouncedComment, initialComment]);
 
   useEffect(() => {
     if (hour * 60 + minute !== initialDelayTime) setIsEdited(true);
@@ -55,9 +69,19 @@ export const DeliveryModalEditContextProvider = ({
   }, [hour, initialDelayTime, minute, setIsEdited]);
 
   useEffect(() => {
-    if (JSON.stringify(restrictedTonCode) !== JSON.stringify(initialRestrictedTonCode)) setIsEdited(true);
+    if (JSON.stringify(restrictedWing) !== JSON.stringify(initialRestrictedWing)) setIsEdited(true);
     else setIsEdited(false);
-  }, [initialRestrictedTonCode, restrictedTonCode]);
+  }, [initialRestrictedWing, restrictedWing]);
+
+  useEffect(() => {
+    if (JSON.stringify(restrictedTop) !== JSON.stringify(initialRestrictedTop)) setIsEdited(true);
+    else setIsEdited(false);
+  }, [initialRestrictedTop, restrictedTop]);
+
+  useEffect(() => {
+    if (JSON.stringify(restrictedCargo) !== JSON.stringify(initialRestrictedCargo)) setIsEdited(true);
+    else setIsEdited(false);
+  }, [initialRestrictedCargo, restrictedCargo]);
 
   return (
     <DeliveryModalEditContext.Provider
@@ -69,10 +93,24 @@ export const DeliveryModalEditContextProvider = ({
         setHour,
         minute,
         setMinute,
-        restrictedTonCode,
-        toggleRestrictedTonCode,
-        setRestrictedTonCodeAllTrue,
-        setRestrictedTonCodeAllFalse,
+        wing: {
+          restrictedTon: restrictedWing,
+          toggleRestrictedTon: toggleRestrictedWing,
+          setRestrictedTonAllTrue: setRestrictedWingAllTrue,
+          setRestrictedTonAllFalse: setRestrictedWingAllFalse,
+        },
+        top: {
+          restrictedTon: restrictedTop,
+          toggleRestrictedTon: toggleRestrictedTop,
+          setRestrictedTonAllTrue: setRestrictedTopAllTrue,
+          setRestrictedTonAllFalse: setRestrictedTopAllFalse,
+        },
+        cargo: {
+          restrictedTon: restrictedCargo,
+          toggleRestrictedTon: toggleRestrictedCargo,
+          setRestrictedTonAllTrue: setRestrictedCargoAllTrue,
+          setRestrictedTonAllFalse: setRestrictedCargoAllFalse,
+        },
         isEdited,
         setIsEdited,
       }}

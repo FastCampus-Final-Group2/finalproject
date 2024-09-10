@@ -1,6 +1,6 @@
 import _axios, { AxiosError, AxiosResponse } from "axios";
 
-type Error =
+export type Error =
   | {
       type: "AXIOS_ERROR";
       status?: number;

@@ -12,11 +12,32 @@
 /** 배차 변경 요청 정보 */
 export interface DispatchUpdateRequest {
   /**
+   * 기사id
+   * @format int64
+   * @example 1
+   */
+  smId: number;
+  /**
    * 상차 시작 시간
    * @format date-time
    */
   loadingStartTime: string;
   orderList?: Order[];
+}
+
+/**
+ * 예상작업 소요시간
+ * @example "00:30"
+ */
+export interface LocalTime {
+  /** @format int32 */
+  hour?: number;
+  /** @format int32 */
+  minute?: number;
+  /** @format int32 */
+  second?: number;
+  /** @format int32 */
+  nano?: number;
 }
 
 export interface Order {
@@ -43,6 +64,137 @@ export interface Order {
    * @example 60
    */
   expectedServiceDuration: number;
+  /**
+   * 희망 도착일
+   * @format date
+   * @example "2024-06-15"
+   */
+  serviceRequestDate: string;
+  /** 예상작업 소요시간 */
+  serviceRequestTime: LocalTime;
+}
+
+export interface ErrorResponse {
+  detailMessageArguments?: object[];
+  detailMessageCode?: string;
+  titleMessageCode?: string;
+  typeMessageCode?: string;
+  body?: ProblemDetail;
+  statusCode?: HttpStatusCode;
+  headers?: {
+    empty?: boolean;
+    /** @format uri */
+    location?: string;
+    host?: {
+      address?: {
+        hostAddress?: string;
+        /** @format byte */
+        address?: string;
+        hostName?: string;
+        linkLocalAddress?: boolean;
+        multicastAddress?: boolean;
+        anyLocalAddress?: boolean;
+        loopbackAddress?: boolean;
+        siteLocalAddress?: boolean;
+        mcglobal?: boolean;
+        mcnodeLocal?: boolean;
+        mclinkLocal?: boolean;
+        mcsiteLocal?: boolean;
+        mcorgLocal?: boolean;
+        canonicalHostName?: string;
+      };
+      /** @format int32 */
+      port?: number;
+      unresolved?: boolean;
+      hostName?: string;
+      hostString?: string;
+    };
+    all?: Record<string, string>;
+    /** @format int64 */
+    lastModified?: number;
+    /** @format int64 */
+    contentLength?: number;
+    /** @format int64 */
+    date?: number;
+    acceptLanguage?: {
+      range?: string;
+      /** @format double */
+      weight?: number;
+    }[];
+    basicAuth?: string;
+    acceptLanguageAsLocales?: {
+      language?: string;
+      script?: string;
+      variant?: string;
+      displayName?: string;
+      country?: string;
+      /** @uniqueItems true */
+      unicodeLocaleAttributes?: string[];
+      /** @uniqueItems true */
+      unicodeLocaleKeys?: string[];
+      displayLanguage?: string;
+      displayScript?: string;
+      displayCountry?: string;
+      displayVariant?: string;
+      /** @uniqueItems true */
+      extensionKeys?: string[];
+      iso3Language?: string;
+      iso3Country?: string;
+    }[];
+    accessControlAllowCredentials?: boolean;
+    accept?: MediaType[];
+    acceptPatch?: MediaType[];
+    accessControlAllowHeaders?: string[];
+    accessControlAllowMethods?: HttpMethod[];
+    accessControlAllowOrigin?: string;
+    accessControlExposeHeaders?: string[];
+    /** @format int64 */
+    accessControlMaxAge?: number;
+    accessControlRequestHeaders?: string[];
+    accessControlRequestMethod?: HttpMethod;
+    /** @format int64 */
+    ifUnmodifiedSince?: number;
+    acceptCharset?: string[];
+    /** @uniqueItems true */
+    allow?: HttpMethod[];
+    bearerAuth?: string;
+    connection?: string[];
+    contentLanguage?: {
+      language?: string;
+      script?: string;
+      variant?: string;
+      displayName?: string;
+      country?: string;
+      /** @uniqueItems true */
+      unicodeLocaleAttributes?: string[];
+      /** @uniqueItems true */
+      unicodeLocaleKeys?: string[];
+      displayLanguage?: string;
+      displayScript?: string;
+      displayCountry?: string;
+      displayVariant?: string;
+      /** @uniqueItems true */
+      extensionKeys?: string[];
+      iso3Language?: string;
+      iso3Country?: string;
+    };
+    etag?: string;
+    /** @format int64 */
+    expires?: number;
+    ifMatch?: string[];
+    ifNoneMatch?: string[];
+    origin?: string;
+    pragma?: string;
+    upgrade?: string;
+    vary?: string[];
+    contentDisposition?: ContentDisposition;
+    range?: HttpRange[];
+    contentType?: MediaType;
+    cacheControl?: string;
+    /** @format int64 */
+    ifModifiedSince?: number;
+    [key: string]: any;
+  };
 }
 
 export interface DispatchDetailResponse {
@@ -91,6 +243,11 @@ export interface DispatchDetailResponse {
    * @example 30.4
    */
   distance?: number;
+  /**
+   * 요청 시간 지연 여부
+   * @example true
+   */
+  delayRequestTime?: boolean;
 }
 
 export interface DispatchUpdateResponse {
@@ -106,6 +263,16 @@ export interface DispatchUpdateResponse {
    * @example 34
    */
   totalTime?: number;
+  /** 예상작업 소요시간 */
+  breakStartTime?: LocalTime;
+  /** 예상작업 소요시간 */
+  breakEndTime?: LocalTime;
+  /**
+   * 휴식경유지(해당경유지로 이동중)
+   * @format int32
+   * @example 3
+   */
+  restingStopover?: number;
   startStopover?: StartStopover;
   dispatchDetailList?: DispatchDetailResponse[];
   /** 경로 좌표 리스트 */
@@ -144,127 +311,27 @@ export interface StartStopover {
   delayTime?: number;
 }
 
-export interface ErrorResponse {
-  detailMessageArguments?: object[];
-  detailMessageCode?: string;
-  titleMessageCode?: string;
-  typeMessageCode?: string;
-  body?: ProblemDetail;
-  statusCode?: HttpStatusCode;
-  headers?: {
-    empty?: boolean;
-    /** @format uri */
-    location?: string;
-    host?: {
-      address?: {
-        hostAddress?: string;
-        /** @format byte */
-        address?: string;
-        hostName?: string;
-        linkLocalAddress?: boolean;
-        multicastAddress?: boolean;
-        anyLocalAddress?: boolean;
-        loopbackAddress?: boolean;
-        siteLocalAddress?: boolean;
-        mcglobal?: boolean;
-        mcnodeLocal?: boolean;
-        mclinkLocal?: boolean;
-        mcsiteLocal?: boolean;
-        mcorgLocal?: boolean;
-        canonicalHostName?: string;
-      };
-      /** @format int32 */
-      port?: number;
-      unresolved?: boolean;
-      hostName?: string;
-      hostString?: string;
-    };
-    all?: Record<string, string>;
-    /** @format int64 */
-    lastModified?: number;
-    /** @format int64 */
-    contentLength?: number;
-    /** @format int64 */
-    date?: number;
-    acceptLanguageAsLocales?: {
-      language?: string;
-      script?: string;
-      variant?: string;
-      displayName?: string;
-      country?: string;
-      /** @uniqueItems true */
-      unicodeLocaleAttributes?: string[];
-      /** @uniqueItems true */
-      unicodeLocaleKeys?: string[];
-      displayLanguage?: string;
-      displayScript?: string;
-      displayCountry?: string;
-      displayVariant?: string;
-      /** @uniqueItems true */
-      extensionKeys?: string[];
-      iso3Language?: string;
-      iso3Country?: string;
-    }[];
-    accessControlAllowCredentials?: boolean;
-    accessControlAllowHeaders?: string[];
-    accessControlAllowMethods?: HttpMethod[];
-    accessControlAllowOrigin?: string;
-    accessControlExposeHeaders?: string[];
-    /** @format int64 */
-    accessControlMaxAge?: number;
-    accessControlRequestHeaders?: string[];
-    accessControlRequestMethod?: HttpMethod;
-    accept?: MediaType[];
-    acceptPatch?: MediaType[];
-    acceptCharset?: string[];
-    /** @uniqueItems true */
-    allow?: HttpMethod[];
-    bearerAuth?: string;
-    connection?: string[];
-    contentLanguage?: {
-      language?: string;
-      script?: string;
-      variant?: string;
-      displayName?: string;
-      country?: string;
-      /** @uniqueItems true */
-      unicodeLocaleAttributes?: string[];
-      /** @uniqueItems true */
-      unicodeLocaleKeys?: string[];
-      displayLanguage?: string;
-      displayScript?: string;
-      displayCountry?: string;
-      displayVariant?: string;
-      /** @uniqueItems true */
-      extensionKeys?: string[];
-      iso3Language?: string;
-      iso3Country?: string;
-    };
-    etag?: string;
-    /** @format int64 */
-    expires?: number;
-    ifMatch?: string[];
-    ifNoneMatch?: string[];
-    /** @format int64 */
-    ifUnmodifiedSince?: number;
-    origin?: string;
-    pragma?: string;
-    upgrade?: string;
-    vary?: string[];
-    acceptLanguage?: {
-      range?: string;
-      /** @format double */
-      weight?: number;
-    }[];
-    basicAuth?: string;
-    contentDisposition?: ContentDisposition;
-    cacheControl?: string;
-    range?: HttpRange[];
-    contentType?: MediaType;
-    /** @format int64 */
-    ifModifiedSince?: number;
-    [key: string]: any;
-  };
+export interface RegisterSuperAdminRequest {
+  /**
+   * 관리자 이름
+   * @example "John Doe"
+   */
+  name: string;
+  /**
+   * 관리자 ID
+   * @example "superAdmin"
+   */
+  username: string;
+  /**
+   * 관리자 PW
+   * @example "password"
+   */
+  password: string;
+  /**
+   * 관리자 전화번호
+   * @example "010-1234-5678"
+   */
+  phoneNumber: string;
 }
 
 export interface RegisterDriverRequest {
@@ -287,7 +354,7 @@ export interface RegisterDriverRequest {
   name: string;
   /**
    * 기사 ID
-   * @example "driver123"
+   * @example "driver"
    */
   username: string;
   /**
@@ -316,7 +383,7 @@ export interface RegisterAdminRequest {
   name: string;
   /**
    * 관리자 ID
-   * @example "admin123"
+   * @example "admin"
    */
   username: string;
   /**
@@ -334,7 +401,7 @@ export interface RegisterAdminRequest {
 export interface LoginRequest {
   /**
    * 사용자 ID
-   * @example "asdasd123"
+   * @example "admin"
    */
   username: string;
   /**
@@ -344,32 +411,9 @@ export interface LoginRequest {
   password: string;
 }
 
-export interface LoginResponse {
-  /**
-   * 로그인한 사용자 이름
-   * @example "John Doe"
-   */
-  name?: string;
-}
-
-/**
- * 예상작업 소요시간
- * @example "00:30"
- */
-export interface LocalTime {
-  /** @format int32 */
-  hour?: number;
-  /** @format int32 */
-  minute?: number;
-  /** @format int32 */
-  second?: number;
-  /** @format int32 */
-  nano?: number;
-}
-
 /**
  * 주문 목록
- * @example [{"deliveryType":"택배","smId":123,"smName":"홍길동","shipmentNum":"1234567890","clientOrderKey":"A123456789","orderType":"배송","receivedDate":"2024-05-01","serviceRequestDate":"2024-05-02","serviceRequestTime":"14:00","clientName":"김철수","contact":"010-1234-5678","address":"서울특별시 강남구 테헤란로 123","detailAddress":"아파트 101호","zipcode":"06101","volume":2.5,"weight":10,"note":"문 앞에 놔주세요","expectedServiceDuration":30,"productName":"전자제품","productCode":"P123456","productQuantity":5},{"deliveryType":"지입","smId":124,"smName":"이영희","shipmentNum":"0987654321","clientOrderKey":"B987654321","orderType":"수거","receivedDate":"2024-06-01","serviceRequestDate":"2024-06-03","serviceRequestTime":"10:00","clientName":"박영수","contact":"010-9876-5432","address":"서울특별시 서초구 반포대로 200","detailAddress":"빌라 203호","zipcode":"06500","volume":3,"weight":15,"note":"빠른 수거 부탁드립니다","expectedServiceDuration":20,"productName":"가전제품","productCode":"G987654","productQuantity":2}]
+ * @example [{"deliveryType":"택배","smId":123,"smName":"홍길동","shipmentNumber":"1234567890","clientOrderKey":"A123456789","orderType":"배송","receivedDate":"2024-05-01","serviceRequestDate":"2024-05-02","serviceRequestTime":"14:00","clientName":"김철수","contact":"010-1234-5678","address":"서울특별시 강남구 테헤란로 123","detailAddress":"아파트 101호","zipcode":"06101","volume":2.5,"weight":10,"note":"문 앞에 놔주세요","expectedServiceDuration":30,"productName":"전자제품","productCode":"P123456","productQuantity":5},{"deliveryType":"지입","smId":124,"smName":"이영희","shipmentNumber":"0987654321","clientOrderKey":"B987654321","orderType":"수거","receivedDate":"2024-06-01","serviceRequestDate":"2024-06-03","serviceRequestTime":"10:00","clientName":"박영수","contact":"010-9876-5432","address":"서울특별시 서초구 반포대로 200","detailAddress":"빌라 203호","zipcode":"06500","volume":3,"weight":15,"note":"빠른 수거 부탁드립니다","expectedServiceDuration":20,"productName":"가전제품","productCode":"G987654","productQuantity":2}]
  */
 export interface OrderRequest {
   /**
@@ -496,9 +540,77 @@ export interface TransportOrderRequest {
   dispatchName: string;
   /**
    * 주문 목록
-   * @example [{"deliveryType":"택배","smId":123,"smName":"홍길동","shipmentNum":"1234567890","clientOrderKey":"A123456789","orderType":"배송","receivedDate":"2024-05-01","serviceRequestDate":"2024-05-02","serviceRequestTime":"14:00","clientName":"김철수","contact":"010-1234-5678","address":"서울특별시 강남구 테헤란로 123","detailAddress":"아파트 101호","zipcode":"06101","volume":2.5,"weight":10,"note":"문 앞에 놔주세요","expectedServiceDuration":30,"productName":"전자제품","productCode":"P123456","productQuantity":5},{"deliveryType":"지입","smId":124,"smName":"이영희","shipmentNum":"0987654321","clientOrderKey":"B987654321","orderType":"수거","receivedDate":"2024-06-01","serviceRequestDate":"2024-06-03","serviceRequestTime":"10:00","clientName":"박영수","contact":"010-9876-5432","address":"서울특별시 서초구 반포대로 200","detailAddress":"빌라 203호","zipcode":"06500","volume":3,"weight":15,"note":"빠른 수거 부탁드립니다","expectedServiceDuration":20,"productName":"가전제품","productCode":"G987654","productQuantity":2}]
+   * @example [{"deliveryType":"택배","smId":123,"smName":"홍길동","shipmentNumber":"1234567890","clientOrderKey":"A123456789","orderType":"배송","receivedDate":"2024-05-01","serviceRequestDate":"2024-05-02","serviceRequestTime":"14:00","clientName":"김철수","contact":"010-1234-5678","address":"서울특별시 강남구 테헤란로 123","detailAddress":"아파트 101호","zipcode":"06101","volume":2.5,"weight":10,"note":"문 앞에 놔주세요","expectedServiceDuration":30,"productName":"전자제품","productCode":"P123456","productQuantity":5},{"deliveryType":"지입","smId":124,"smName":"이영희","shipmentNumber":"0987654321","clientOrderKey":"B987654321","orderType":"수거","receivedDate":"2024-06-01","serviceRequestDate":"2024-06-03","serviceRequestTime":"10:00","clientName":"박영수","contact":"010-9876-5432","address":"서울특별시 서초구 반포대로 200","detailAddress":"빌라 203호","zipcode":"06500","volume":3,"weight":15,"note":"빠른 수거 부탁드립니다","expectedServiceDuration":20,"productName":"가전제품","productCode":"G987654","productQuantity":2}]
    */
   orderReuquestList: OrderRequest[];
+}
+
+export interface ContentDisposition {
+  type?: string;
+  name?: string;
+  filename?: string;
+  charset?: string;
+  /**
+   * @deprecated
+   * @format int64
+   */
+  size?: number;
+  /**
+   * @deprecated
+   * @format date-time
+   */
+  creationDate?: string;
+  /**
+   * @deprecated
+   * @format date-time
+   */
+  modificationDate?: string;
+  /**
+   * @deprecated
+   * @format date-time
+   */
+  readDate?: string;
+  attachment?: boolean;
+  formData?: boolean;
+  inline?: boolean;
+}
+
+export type HttpMethod = object;
+
+export type HttpRange = object;
+
+export interface HttpStatusCode {
+  error?: boolean;
+  is4xxClientError?: boolean;
+  is5xxServerError?: boolean;
+  is1xxInformational?: boolean;
+  is2xxSuccessful?: boolean;
+  is3xxRedirection?: boolean;
+}
+
+export interface MediaType {
+  type?: string;
+  subtype?: string;
+  parameters?: Record<string, string>;
+  /** @format double */
+  qualityValue?: number;
+  wildcardType?: boolean;
+  wildcardSubtype?: boolean;
+  subtypeSuffix?: string;
+  concrete?: boolean;
+  charset?: string;
+}
+
+export interface ProblemDetail {
+  /** @format uri */
+  type?: string;
+  title?: string;
+  /** @format int32 */
+  status?: number;
+  detail?: string;
+  /** @format uri */
+  instance?: string;
+  properties?: Record<string, object>;
 }
 
 /** 경로의 좌표 리스트 */
@@ -520,10 +632,15 @@ export interface CoordinatesResponse {
 /** 경로의 상세 정보 리스트 */
 export interface CourseDetailResponse {
   /**
-   * 진입 조건
+   * 톤코드 오류 여부
    * @example false
    */
-  errorYn?: boolean;
+  restrictedTonCode?: boolean;
+  /**
+   * 요청 시간 지연 여부
+   * @example false
+   */
+  delayRequestTime?: boolean;
   /**
    * 예상 이동 시간 (분)
    * @format int32
@@ -706,16 +823,16 @@ export interface CourseResponse {
    */
   smPhoneNumber?: string;
   /**
-   * 차량 톤 코드
-   * @example "5T"
+   * 차량 종류
+   * @example "WING_BODY"
    */
-  tonCode?: string;
+  vehicleType?: string;
   /**
    * 차량 톤
    * @format double
-   * @example 5
+   * @example 2.5
    */
-  ton?: number;
+  vehicleTon?: number;
   /**
    * 주문 수
    * @format int32
@@ -832,74 +949,6 @@ export interface StartStopoverResponse {
   departureTime?: string;
 }
 
-export interface ContentDisposition {
-  type?: string;
-  name?: string;
-  filename?: string;
-  charset?: string;
-  /**
-   * @deprecated
-   * @format int64
-   */
-  size?: number;
-  /**
-   * @deprecated
-   * @format date-time
-   */
-  creationDate?: string;
-  /**
-   * @deprecated
-   * @format date-time
-   */
-  modificationDate?: string;
-  /**
-   * @deprecated
-   * @format date-time
-   */
-  readDate?: string;
-  inline?: boolean;
-  attachment?: boolean;
-  formData?: boolean;
-}
-
-export type HttpMethod = object;
-
-export type HttpRange = object;
-
-export interface HttpStatusCode {
-  error?: boolean;
-  is4xxClientError?: boolean;
-  is5xxServerError?: boolean;
-  is1xxInformational?: boolean;
-  is2xxSuccessful?: boolean;
-  is3xxRedirection?: boolean;
-}
-
-export interface MediaType {
-  type?: string;
-  subtype?: string;
-  parameters?: Record<string, string>;
-  /** @format double */
-  qualityValue?: number;
-  wildcardSubtype?: boolean;
-  subtypeSuffix?: string;
-  wildcardType?: boolean;
-  concrete?: boolean;
-  charset?: string;
-}
-
-export interface ProblemDetail {
-  /** @format uri */
-  type?: string;
-  title?: string;
-  /** @format int32 */
-  status?: number;
-  detail?: string;
-  /** @format uri */
-  instance?: string;
-  properties?: Record<string, object>;
-}
-
 /**
  * 기사 이름과 ID 검증 요청 목록
  * @example [{"smName":"홍길동"},{"smName":"이영희"}]
@@ -921,17 +970,23 @@ export interface ValidationListRequest {
 }
 
 export interface SmNameAndSmIdResponse {
+  /** 기사 검증 리스트 */
+  validList: ValidList[];
+}
+
+/** 기사 검증 리스트 */
+export interface ValidList {
   /**
    * 기사명 검증
    * @example true
    */
-  smNameValid?: boolean;
+  smNameValid: boolean;
   /**
    * 기사 ID
    * @format int32
    * @example 1
    */
-  smId?: number;
+  smId: number;
 }
 
 /**
@@ -968,21 +1023,10 @@ export interface DispatchConfirmRequest {
 /** 배송 상세 리스트 */
 export interface DispatchDetailList {
   /**
-   * 상차율
-   * @format int32
-   * @example 80
-   */
-  loadingRate?: number;
-  /**
    * 기사 이름
    * @example "홍길동"
    */
   smName?: string;
-  /**
-   * 진입 조건 여부
-   * @example false
-   */
-  errorYn?: boolean;
   /**
    * 예상 이동 시간 (분)
    * @format int32
@@ -1006,12 +1050,7 @@ export interface DispatchDetailList {
    */
   deliveryDestinationId?: number;
   /**
-   * 담당자 이름
-   * @example "김매니저"
-   */
-  managerName?: string;
-  /**
-   * 담당자 전화번호
+   * 고객 전화번호
    * @example "010-1234-5678"
    */
   phoneNumber?: string;
@@ -1055,21 +1094,10 @@ export interface DispatchDetailList {
    */
   shipmentNumber?: string;
   /**
-   * 업체 주문 번호
-   * @example "240812_공동구매"
-   */
-  clientOrderKey?: string;
-  /**
    * 주문 유형 (배송, 수거)
    * @example "배송"
    */
   orderType?: string;
-  /**
-   * 주문 접수일
-   * @format date
-   * @example "2023-08-25"
-   */
-  receivedDate?: string;
   /**
    * 작업 희망일
    * @format date
@@ -1083,11 +1111,6 @@ export interface DispatchDetailList {
    * @example "홍길동"
    */
   clientName?: string;
-  /**
-   * 고객 연락처
-   * @example "010-9876-5432"
-   */
-  contact?: string;
   /**
    * 주소
    * @example "서울특별시 강남구 강남동 37"
@@ -1157,29 +1180,16 @@ export interface DispatchList {
    * @example 1
    */
   smId?: number;
+  /** 예상작업 소요시간 */
+  breakStartTime?: LocalTime;
+  /** 예상작업 소요시간 */
+  breakEndTime?: LocalTime;
   /**
-   * 주문 수
-   * @format int64
-   * @example 5
-   */
-  orderNum?: number;
-  /**
-   * 주행 거리 (km)
+   * 휴식 경유지 위치 (해당 경유지의 바로 앞)
    * @format int32
-   * @example 150
+   * @example 4
    */
-  mileage?: number;
-  /**
-   * 총 주행 시간 (분)
-   * @format int32
-   * @example 180
-   */
-  totalTime?: number;
-  /**
-   * 출발 시간
-   * @format date-time
-   */
-  departureTime?: string;
+  restingStopover?: number;
   /** 배송 상세 리스트 */
   dispatchDetailList?: DispatchDetailList[];
   /**
@@ -1202,10 +1212,15 @@ export interface DeliveryDestinationRequest {
    */
   destinationName?: string;
   /**
-   * 주소
+   * 도로명 주소
    * @example "충남 논산시 중앙대로 374번길 41-11"
    */
-  address?: string;
+  roadAddress?: string;
+  /**
+   * 지번 주소
+   * @example "충남 논산시 중앙동 41"
+   */
+  lotNumberAddress?: string;
   /**
    * 상세주소
    * @example "1층 물류센터"
@@ -1239,10 +1254,20 @@ export interface DeliveryDestinationRequest {
    */
   longitude?: number;
   /**
-   * 진입불가 톤 코드
-   * @example "example"
+   * 윙바디 진입 불가
+   * @example "1,2.5,5"
    */
-  restrictedTonCode?: string;
+  restrictedWingBody?: string;
+  /**
+   * 탑차 진입 불가
+   * @example "1"
+   */
+  restrictedBox?: string;
+  /**
+   * 카고 진입 불가
+   * @example "2.5,5"
+   */
+  restrictedCargo?: string;
   /**
    * 비고
    * @example "윙바디 진입 불가"
@@ -1310,10 +1335,20 @@ export interface CenterRequest {
    */
   longitude?: number;
   /**
-   * 진입불가 톤 코드
-   * @example "example"
+   * 윙바디 진입 불가
+   * @example "1,2.5,5"
    */
-  restrictedTonCode?: string;
+  restrictedWingBody?: string;
+  /**
+   * 탑차 진입 불가
+   * @example "1"
+   */
+  restrictedBox?: string;
+  /**
+   * 카고 진입 불가
+   * @example "2.5,5"
+   */
+  restrictedCargo?: string;
   /**
    * 비고
    * @example "윙바디 진입 불가"
@@ -1330,13 +1365,8 @@ export interface CenterRequest {
 /** 배차 취소 요청 정보 */
 export interface DispatchCancelRequest {
   /**
-   * 배차 상태가 주행 중인지 여부
-   * @example true
-   */
-  isInTransit: boolean;
-  /**
    * 배차 번호 id 목록
-   * @example ["1","2"]
+   * @example [1,2]
    */
   dispatchNumberIds: number[];
 }
@@ -1351,10 +1381,20 @@ export interface IssueRequest {
 
 export interface UpdateDeliveryDestinationRequest {
   /**
-   * 진입불가 톤 코드
-   * @example "윙바디 8T"
+   * 윙바디 진입 불가
+   * @example "1,2.5,5"
    */
-  restrictedTonCode?: string;
+  restrictedWingBody?: string;
+  /**
+   * 탑차 진입 불가
+   * @example "1"
+   */
+  restrictedBox?: string;
+  /**
+   * 카고 진입 불가
+   * @example "2.5,5"
+   */
+  restrictedCargo?: string;
   /**
    * 비고
    * @example "윙바디 진입 불가"
@@ -1370,10 +1410,20 @@ export interface UpdateDeliveryDestinationRequest {
 
 export interface UpdateCenterRequest {
   /**
-   * 진입불가 톤 코드
-   * @example "윙바디 8T"
+   * 윙바디 진입 불가
+   * @example "1,2.5,5"
    */
-  restrictedTonCode?: string;
+  restrictedWingBody?: string;
+  /**
+   * 탑차 진입 불가
+   * @example "1"
+   */
+  restrictedBox?: string;
+  /**
+   * 카고 진입 불가
+   * @example "2.5,5"
+   */
+  restrictedCargo?: string;
   /**
    * 비고
    * @example "윙바디 진입 불가"
@@ -1387,32 +1437,95 @@ export interface UpdateCenterRequest {
   delayTime?: number;
 }
 
-export interface TransportOrderResponse {
+export interface ClientInfo {
   /**
-   * 운송장 번호
-   * @example "20240808274985"
+   * 고객명
+   * @example "홍길동"
    */
-  shipmentNumber?: string;
+  clientName?: string;
+  /**
+   * 연락처
+   * @example "01012345678"
+   */
+  phoneNumber?: string;
+  /**
+   * 도로명 주소
+   * @example "충남 논산시 중앙대로 374번길 41-11"
+   */
+  roadAddress?: string;
+  /**
+   * 상세주소
+   * @example "1층 물류센터"
+   */
+  detailAddress?: string;
+  /**
+   * 고객 전달 사항
+   * @example "조심히 다뤄주세요."
+   */
+  note?: string;
+}
+
+export interface DestinationInfo {
+  /**
+   * 담당자명
+   * @example "유관순"
+   */
+  managerName?: string;
+  /**
+   * 담당자 연락처
+   * @example "010-1111-2222"
+   */
+  phoneNumber?: string;
+  /**
+   * 배송처 코드
+   * @format int64
+   * @example 4
+   */
+  deliveryDestinationCode?: number;
+}
+
+export interface TransportOrderResponse {
   /**
    * 배송 유형
    * @example "지입"
    */
   deliveryType?: string;
   /**
+   * SM명
+   * @example "홍길동"
+   */
+  smName?: string;
+  /**
+   * 운송장 번호
+   * @example "20240808274985"
+   */
+  shipmentNumber?: string;
+  /**
+   * 업체주문번호
+   * @example "240812_공동구매"
+   */
+  orderNumber?: string;
+  /**
+   * 주문 유형(배송/수거)
+   * @example "배송"
+   */
+  orderType?: string;
+  /**
    * 작업희망일
    * @format date
    * @example "2024-08-19"
    */
   requestedWorkDate?: string;
+  /**
+   * 주문 접수일
+   * @format date
+   * @example "2024-08-18"
+   */
+  orderDate?: string;
   /** 예상작업 소요시간 */
   requestedArrivalTime?: LocalTime;
   /** 예상작업 소요시간 */
   estimatedWorkTime?: LocalTime;
-  /**
-   * 기사명
-   * @example "홍길동"
-   */
-  smName?: string;
   /**
    * 상품명
    * @example "사과"
@@ -1436,22 +1549,8 @@ export interface TransportOrderResponse {
    * @example 80.1
    */
   weight?: number;
-  /**
-   * 담당자명
-   * @example "유관순"
-   */
-  managerName?: string;
-  /**
-   * 담당자 연락처
-   * @example "010-1111-2222"
-   */
-  phoneNumber?: string;
-  /**
-   * 배송처 코드
-   * @format int64
-   * @example 4
-   */
-  deliveryDestinationCode?: number;
+  destinationInfo?: DestinationInfo;
+  clientInfo?: ClientInfo;
 }
 
 export interface DispatchNumberSearchRequest {
@@ -1467,10 +1566,9 @@ export interface DispatchNumberSearchRequest {
   isManager: boolean;
   /**
    * 검색 시작일
-   * @format date
-   * @example "2024-06-01"
+   * @format date-time
    */
-  startDate: string;
+  startDateTime: string;
   /**
    * 검색 종료일
    * @format date-time
@@ -1676,6 +1774,205 @@ export interface Issue {
   issue?: string;
 }
 
+export interface DeliveryDestinationResponse {
+  /**
+   * 배송처 ID
+   * @format int64
+   * @example 1
+   */
+  deliveryDestinationId?: number;
+  /**
+   * 센터 코드
+   * @example "C001"
+   */
+  centerCode?: string;
+  /**
+   * 센터이름
+   * @example "충남정보센터"
+   */
+  centerName?: string;
+  /**
+   * 센터 도로명 주소
+   * @example "충남 논산시 중앙대로 374번길 41-11"
+   */
+  centerRoadAddress?: string;
+  /**
+   * 센터 지번 주소
+   * @example "충남 논산시 중앙동 41"
+   */
+  centerLotNumberAddress?: string;
+  /**
+   * 배송처 이름
+   * @example "충남정보센터"
+   */
+  destinationName?: string;
+  /**
+   * 도로명 주소
+   * @example "충남 논산시 중앙대로 374번길 41-11"
+   */
+  roadAddress?: string;
+  /**
+   * 지번 주소
+   * @example "충남 논산시 중앙동 41"
+   */
+  lotNumberAddress?: string;
+  /**
+   * 상세주소
+   * @example "1층 물류센터"
+   */
+  detailAddress?: string;
+  /**
+   * 우편번호
+   * @example "32934"
+   */
+  zipCode?: string;
+  /**
+   * 담당자명
+   * @example "김물류"
+   */
+  adminName?: string;
+  /**
+   * 연락처
+   * @example "01012345678"
+   */
+  phoneNumber?: string;
+  /**
+   * 위도
+   * @format double
+   * @example 36.3214
+   */
+  latitude?: number;
+  /**
+   * 경도
+   * @format double
+   * @example 127.1724
+   */
+  longitude?: number;
+  /**
+   * 윙바디 진입 불가
+   * @example "1,2.5,5"
+   */
+  restrictedWingBody?: string;
+  /**
+   * 탑차 진입 불가
+   * @example "1"
+   */
+  restrictedBox?: string;
+  /**
+   * 카고 진입 불가
+   * @example "2.5,5"
+   */
+  restrictedCargo?: string;
+  /**
+   * 비고
+   * @example "윙바디 진입 불가"
+   */
+  comment?: string;
+  /**
+   * 작업추가 소요시간
+   * @format int32
+   * @example 70
+   */
+  delayTime?: number;
+  /**
+   * 최종 수정 일시
+   * @format date-time
+   */
+  updateAt?: string;
+}
+
+export interface CenterResponse {
+  /**
+   * 센터 ID
+   * @format int64
+   * @example 1
+   */
+  centerId?: number;
+  /**
+   * 센터 코드
+   * @example "C001"
+   */
+  centerCode?: string;
+  /**
+   * 센터이름
+   * @example "충남정보센터"
+   */
+  centerName?: string;
+  /**
+   * 도로명 주소
+   * @example "충남 논산시 중앙대로 374번길 41-11"
+   */
+  roadAddress?: string;
+  /**
+   * 지번 주소
+   * @example "충남 논산시 중앙동 41"
+   */
+  lotNumberAddress?: string;
+  /**
+   * 상세주소
+   * @example "1층 물류센터"
+   */
+  detailAddress?: string;
+  /**
+   * 우편번호
+   * @example "32934"
+   */
+  zipCode?: string;
+  /**
+   * 담당자명
+   * @example "김물류"
+   */
+  adminName?: string;
+  /**
+   * 연락처
+   * @example "01012345678"
+   */
+  phoneNumber?: string;
+  /**
+   * 위도
+   * @format double
+   * @example 36.3214
+   */
+  latitude?: number;
+  /**
+   * 경도
+   * @format double
+   * @example 127.1724
+   */
+  longitude?: number;
+  /**
+   * 윙바디 진입 불가
+   * @example "1,2.5,5"
+   */
+  restrictedWingBody?: string;
+  /**
+   * 탑차 진입 불가
+   * @example "1"
+   */
+  restrictedBox?: string;
+  /**
+   * 카고 진입 불가
+   * @example "2.5,5"
+   */
+  restrictedCargo?: string;
+  /**
+   * 비고
+   * @example "윙바디 진입 불가"
+   */
+  comment?: string;
+  /**
+   * 작업추가 소요시간
+   * @format int32
+   * @example 70
+   */
+  delayTime?: number;
+  /**
+   * 최종 수정 일시
+   * @format date-time
+   */
+  updateAt?: string;
+}
+
 export type UpdateDispatchData = DispatchUpdateResponse;
 
 export type UpdateDispatchError = ErrorResponse;
@@ -1684,11 +1981,15 @@ export type ConfirmDispatchData = any;
 
 export type CancelDispatchData = any;
 
+export type CancelDispatchError = ErrorResponse;
+
+export type RegisterSuperAdminData = any;
+
 export type RegisterDriverData = any;
 
 export type RegisterAdminData = any;
 
-export type LoginData = LoginResponse;
+export type LoginData = any;
 
 export type TransportOrderToDispatchData = DispatchResponse;
 
@@ -1714,9 +2015,17 @@ export type CancelDispatchDetailData = any;
 
 export type CancelDispatchDetailError = ErrorResponse;
 
+export type GetDeliveryDestinationData = DeliveryDestinationResponse;
+
+export type GetDeliveryDestinationError = ErrorResponse;
+
 export type UpdateDeliveryDestinationData = object;
 
 export type UpdateDeliveryDestinationError = ErrorResponse;
+
+export type GetCenterData = CenterResponse;
+
+export type GetCenterError = ErrorResponse;
 
 export type UpdateCenterData = object;
 
@@ -1725,13 +2034,6 @@ export type UpdateCenterError = CenterRequest | ErrorResponse;
 export type WithdrawData = any;
 
 export type LogoutData = any;
-
-export interface GetTransportOrderByIdParams {
-  /** @format int64 */
-  destinationId?: number;
-  /** @format int64 */
-  transportOrderId: number;
-}
 
 export type GetTransportOrderByIdData = TransportOrderResponse;
 
@@ -1746,6 +2048,8 @@ export interface SearchDispatchesParams {
 
 export type SearchDispatchesData = DispatchNumberSearchResponse;
 
+export type SearchDispatchesError = ErrorResponse;
+
 export type GetDispatchListData = DispatchListResponse;
 
 export type GetDispatchListError = ErrorResponse;
@@ -1753,11 +2057,3 @@ export type GetDispatchListError = ErrorResponse;
 export type GetDispatchDetailData = DispatchDetailResponse;
 
 export type GetDispatchDetailError = ErrorResponse;
-
-export interface GetCenterOrDeliveryDestinationInfoParams {
-  "is-center": boolean;
-  /** @format int64 */
-  placeId: number;
-}
-
-export type GetCenterOrDeliveryDestinationInfoData = object;

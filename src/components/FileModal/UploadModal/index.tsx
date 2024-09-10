@@ -4,6 +4,8 @@ import Icon from "@/components/core/Icon";
 import FileInput from "./FileInput.tsx";
 import Dimmed from "@/components/core/Dimmed";
 import { TransportAPI } from "@/apis/transportOrder";
+import axios from "@/utils/axios";
+import downloadExampleFile from "@/utils/downloadExampleFile";
 
 interface UploadModalProps {
   setModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -13,33 +15,41 @@ interface UploadModalProps {
 const UploadModal = ({ setModalOpen, setIsError }: UploadModalProps) => {
   // TODO
   const handleExcelExampleBtn = async () => {
-    const [error, data] = await TransportAPI.excelExample();
-
-    console.log(data);
-    console.log(error);
+    downloadExampleFile();
+    // const [error, data] = await TransportAPI.excelExample();
     // await axios
     //   .get("/transport-order/excel-example", {
-    //     responseType: "arraybuffer", // 바이너리 데이터를 받기 위해 설정
+    //     responseType: "arraybuffer",
     //     headers: {
     //       "Content-Type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    //       "Content-Length": 12000,
     //     },
-    //     withCredentials: true,
     //   })
     //   .then((response) => {
-    //     // Blob을 생성하여 파일 다운로드
+    //     console.log("response");
     //     const blob = new Blob([response.data], {
     //       type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
     //     });
     //     const url = window.URL.createObjectURL(blob);
     //     const link = document.createElement("a");
     //     link.href = url;
-    //     link.setAttribute("download", "filename.xlsx"); // 원하는 파일 이름으로 설정
+    //     link.setAttribute("download", "filename.xlsx");
     //     document.body.appendChild(link);
     //     link.click();
     //     link.remove();
     //   })
     //   .catch((error) => {
-    //     console.error("Error downloading the file:", error);
+    //     console.error("Error", error);
+    //     const blob = new Blob([error.response.data], {
+    //       type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    //     });
+    //     const url = window.URL.createObjectURL(blob);
+    //     const link = document.createElement("a");
+    //     link.href = url;
+    //     link.setAttribute("download", "filename.xlsx");
+    //     document.body.appendChild(link);
+    //     link.click();
+    //     link.remove();
     //   });
   };
 

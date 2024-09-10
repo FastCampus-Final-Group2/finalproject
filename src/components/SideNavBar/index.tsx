@@ -15,7 +15,7 @@ const SideNavBar = () => {
       <div className={cn(logoVariants({ isSNBOpened }))}>
         <div className="flex items-center justify-center">
           {isSNBOpened ? (
-            <Image src="/logo_snb_open.png" alt="GLT Korea Logo" width={144} height={48} />
+            <Image src="/logo_snb_open.png" alt="GLT Korea Logo" width={144} height={48} priority />
           ) : (
             <Image src="/logo_snb_close.png" alt="GLT Korea Logo" width={32} height={32} />
           )}
