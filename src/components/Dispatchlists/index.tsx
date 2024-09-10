@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import ListHeader from "./ListHeader";
 import Lists from "./Lists";
 import { DispatchResult } from "@/models/ApiTypes";
@@ -36,19 +36,19 @@ const DispatchLists = ({ results, onSelectedItemsCountChange }: DispatchListsPro
     perPage,
   );
 
-  const initializeCheckStatus = () => {
+  const initializeCheckStatus = useCallback(() => {
     setCheckedItems(new Array(results.length).fill(false));
     setIsAllChecked(false);
-  };
+  }, [results.length]);
 
   useEffect(() => {
     initializeCheckStatus();
-  }, []);
+  }, [initializeCheckStatus]);
 
   // 페이지가 변경될 때 체크박스 초기화
   useEffect(() => {
     initializeCheckStatus();
-  }, [currentPage, results.length]);
+  }, [currentPage, results.length, initializeCheckStatus]);
 
   const updateAllCheckedStatus = (updatedCheckedItems: boolean[]) => {
     // 현재 페이지의 모든 항목이 체크되었는지 확인

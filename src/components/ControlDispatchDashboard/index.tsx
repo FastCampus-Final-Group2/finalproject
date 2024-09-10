@@ -8,6 +8,16 @@ import DeliveryProgressSideTab from "./DeliveryProgressSideTab";
 import { DispatchListResponse } from "@/models/ApiTypes";
 
 type ColorType = "lime" | "sky" | "violet" | "redwood" | "peanut" | "brown" | "forest" | "yale" | "olive";
+type VehicleStatusType =
+  | "DELIVERY_DELAY"
+  | "WORK_COMPLETED"
+  | "CANCELED"
+  | "WORK_WAITING"
+  | "WORK_START"
+  | "MOVING"
+  | "RESTING"
+  | "RESTING_TIME"
+  | "default";
 
 const ControlDispatchDashboard = ({ fetchedData }: { fetchedData: DispatchListResponse }) => {
   const smColors: ColorType[] = ["lime", "sky", "violet", "redwood", "peanut", "brown", "forest", "yale", "olive"];
@@ -42,7 +52,7 @@ const ControlDispatchDashboard = ({ fetchedData }: { fetchedData: DispatchListRe
               onClickToggle={openSideTap}
               drivers={fetchedData.dispatchList ?? []}
               smColors={smColors}
-              dispatchStatus={fetchedData.dispatchList?.[0]?.dispatchStatus ?? []}
+              dispatchStatus={fetchedData.dispatchList?.map((item) => item.dispatchStatus as VehicleStatusType) ?? []}
             />
           </div>
           <div className="mt-[20px] flex max-h-[364px] min-h-[64px] w-[524px] justify-center">

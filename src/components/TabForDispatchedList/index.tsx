@@ -7,8 +7,8 @@ interface TabForDispatchedListProps {
     waiting: number;
     completed: number;
   };
-  onStateChange: (state: string) => void;
-  initialState: string;
+  onStateChange: (state: "IN_TRANSIT" | "WAITING" | "COMPLETED") => void;
+  initialState: "IN_TRANSIT" | "WAITING" | "COMPLETED";
 }
 
 const TabForDispatchedList = ({ data, onStateChange, initialState }: TabForDispatchedListProps) => {
@@ -29,9 +29,9 @@ const TabForDispatchedList = ({ data, onStateChange, initialState }: TabForDispa
     reverseStateMapping[initialState as keyof typeof reverseStateMapping],
   );
 
-  const handleStateChange = (state: string) => {
+  const handleStateChange = (state: keyof typeof stateMapping) => {
     setSelectedState(state);
-    onStateChange(stateMapping[state as keyof typeof stateMapping]);
+    onStateChange(stateMapping[state] as "IN_TRANSIT" | "WAITING" | "COMPLETED");
   };
 
   return (
@@ -39,7 +39,7 @@ const TabForDispatchedList = ({ data, onStateChange, initialState }: TabForDispa
       <TabForDispatchedListChange
         states={drivingStates}
         numbers={numbersState}
-        onStateChange={handleStateChange}
+        onStateChange={handleStateChange as (state: string) => void}
         selectedState={selectedState}
       />
     </div>

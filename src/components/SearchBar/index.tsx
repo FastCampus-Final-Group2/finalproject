@@ -25,7 +25,7 @@ const SearchBars = ({ data, onSearch }: SearchBarsProps) => {
 
       const searchParams = {
         request: {
-          status: "IN_TRANSIT", // 기본값 설정
+          status: "IN_TRANSIT" as const, // 'as const'를 추가하여 리터럴 타입으로 지정
           isManager: false,
           startDateTime: formattedStartDate,
           endDateTime: formattedEndDate,

@@ -33,8 +33,8 @@ const DeliveryIssue = ({ issue, dispatchId }: { issue: string; dispatchId: numbe
   useEffect(() => {
     let timer: NodeJS.Timeout;
     if (memo !== savedIssue) {
-      timer = setTimeout(() => {
-        fetchIssue(memo);
+      timer = setTimeout(async () => {
+        await fetchIssue(memo);
       }, 1000);
     }
     return () => clearTimeout(timer);
@@ -45,10 +45,10 @@ const DeliveryIssue = ({ issue, dispatchId }: { issue: string; dispatchId: numbe
     setMemo(newText);
   };
 
-  const handleDelete = () => {
+  const handleDelete = async () => {
     setMemo("");
     setSavedIssue("");
-    fetchIssue("");
+    await fetchIssue("");
     setIsModalOpen(false);
   };
 

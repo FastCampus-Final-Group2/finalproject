@@ -1,7 +1,7 @@
-import Button from "@/components/core/Button";
 import { useState } from "react";
 import ConfirmModal from "@/components/ConfirmModal";
 import Icon from "@/components/core/Icon";
+import { DeliveryRoutineDetailStatusItem } from "@/components/DeliveryRoutine/DeliveryRoutineDetail";
 
 const SelectedDelivery = ({ selectedOrders }: { selectedOrders: DeliveryRoutineDetailStatusItem[] }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);

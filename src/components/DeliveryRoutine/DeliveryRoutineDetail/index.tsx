@@ -6,7 +6,7 @@ import React from "react";
 import IAmMoving from "./IAmMoving";
 
 // DeliveryRoutineDetailStatusItem 정의 추가
-interface DeliveryRoutineDetailStatusItem {
+export interface DeliveryRoutineDetailStatusItem {
   dispatchDetailStatus:
     | "DELIVERY_DELAY"
     | "WORK_COMPLETED"
@@ -30,10 +30,17 @@ interface DeliveryRoutineDetailStatusItem {
 interface DeliveryRoutineDetailProps {
   selectedOrders: DeliveryRoutineDetailStatusItem[];
   setSelectedOrders: React.Dispatch<React.SetStateAction<DeliveryRoutineDetailStatusItem[]>>;
+  fetchData: {
+    dispatchDetailList: DeliveryRoutineDetailStatusItem[];
+    ett?: number;
+  };
 }
 
 const DeliveryRoutineDetail = ({ selectedOrders, setSelectedOrders, fetchData }: DeliveryRoutineDetailProps) => {
   let orderCounter = 0;
+
+  // fetchListItems의 타입을 명시적으로 지정
+  const fetchListItems: DeliveryRoutineDetailStatusItem[] = fetchData.dispatchDetailList;
 
   const formatTime = (dateTimeString: string | undefined): string => {
     if (!dateTimeString) return "";
@@ -67,7 +74,6 @@ const DeliveryRoutineDetail = ({ selectedOrders, setSelectedOrders, fetchData }:
     };
   };
 
-  const fetchListItems = fetchData.dispatchDetailList;
   const handleCheckboxChange = (order: number, checked: boolean, item: DeliveryRoutineDetailStatusItem) => {
     setSelectedOrders((prevSelectedOrders) =>
       checked ? [...prevSelectedOrders, item] : prevSelectedOrders.filter((o) => o !== item),
@@ -114,7 +120,7 @@ const DeliveryRoutineDetail = ({ selectedOrders, setSelectedOrders, fetchData }:
 
         return (
           <React.Fragment key={index}>
-            {index === 0 && item.dispatchDetailStatus === "WORK_WAITING" && <IAmMoving />}
+            {index === 0 && item.dispatchDetailStatus === "WORK_WAITING" && <IAmMoving ett={fetchData.ett ?? 0} />}
             <div className="flex w-[430px] justify-between">
               <CircleCheckbox
                 status={item.dispatchDetailStatus}
@@ -168,7 +174,7 @@ const DeliveryRoutineDetail = ({ selectedOrders, setSelectedOrders, fetchData }:
             </div>
             {item.dispatchDetailStatus === "WORK_COMPLETED" &&
               fetchListItems[index + 1]?.dispatchDetailStatus === "WORK_WAITING" && (
-                <IAmMoving ett={fetchListItems.ett} />
+                <IAmMoving ett={fetchData.ett ?? 0} />
               )}
           </React.Fragment>
         );

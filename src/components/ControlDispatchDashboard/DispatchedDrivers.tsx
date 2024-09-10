@@ -18,7 +18,7 @@ export interface DispatchedDriversProps {
   onClickToggle: (color: ColorType, dispatchId: number) => void; // ColorType으로 변경
   smColors: ColorType[];
   drivers: DispatchSimpleResponse[];
-  dispatchStatus: VehicleStatusType;
+  dispatchStatus: VehicleStatusType[];
 }
 
 const DispatchedDrivers = ({ onClickToggle, smColors, drivers, dispatchStatus }: DispatchedDriversProps) => {
@@ -37,13 +37,13 @@ const DispatchedDrivers = ({ onClickToggle, smColors, drivers, dispatchStatus }:
           {drivers.map((driver, index) => (
             <EachDriver
               key={driver.dispatchId}
-              dispatchId={driver.dispatchId}
+              dispatchId={driver.dispatchId ?? 0}
               dispatchStatus={(driver.dispatchStatus as VehicleStatusType) ?? "default"}
               smName={driver.smName ?? ""}
               orderNum={driver.orderNum ?? 0}
               completedOrderNum={driver.completedOrderNum ?? 0}
               deliveryProgress={driver.progressionRate ?? 0}
-              onClickToggle={() => onClickToggle(smColors[index % smColors.length], driver.dispatchId)}
+              onClickToggle={() => onClickToggle(smColors[index % smColors.length], driver.dispatchId ?? 0)}
               smColor={smColors[index % smColors.length]}
             />
           ))}

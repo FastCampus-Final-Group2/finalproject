@@ -1,9 +1,20 @@
 import React, { useState } from "react";
 import Icon from "@/components/core/Icon";
 import SelectedDelivery from "@/components/SelectedDelivery";
-import DeliveryRoutineDetail from "@/components/DeliveryRoutine/DeliveryRoutineDetail";
+import DeliveryRoutineDetail, {
+  DeliveryRoutineDetailStatusItem,
+} from "@/components/DeliveryRoutine/DeliveryRoutineDetail";
 import DeliveryStopoverListCard from "@/components/DeliveryRoutine/DeliveryStopoverListCard";
 import { CourseDetailResponse } from "@/models/ApiTypes";
+
+interface FetchData extends CourseDetailResponse {
+  startStopover: {
+    centerName: string;
+    departureTime: string;
+  };
+  dispatchDetailList: DeliveryRoutineDetailStatusItem[];
+  ett?: number;
+}
 
 const formatTime = (dateTimeString: string): string => {
   const date = new Date(dateTimeString);
@@ -12,7 +23,7 @@ const formatTime = (dateTimeString: string): string => {
   return `${hours}:${minutes}`;
 };
 
-const DeliveryRoutine = ({ fetchData }: { fetchData: CourseDetailResponse }) => {
+const DeliveryRoutine = ({ fetchData }: { fetchData: FetchData }) => {
   // todo: 운송 종료 데이터 나중에 추가하기
   const startEnd = [
     {

@@ -3,7 +3,7 @@
 import Icon from "@/components/core/Icon";
 import ToggleExpandSwitch from "@/components/core/ToggleExpandSwitch";
 import { useMemo } from "react";
-import DeliveryModal from "@/components/detailModal/DeliveryModal";
+// import DeliveryModal from "@/components/detailModal/DeliveryModal";
 import { Issue } from "@/models/ApiTypes";
 
 const IssuesList = ({ fetchedIssues }: { fetchedIssues: Issue[] }) => {
@@ -52,7 +52,7 @@ const IssuesList = ({ fetchedIssues }: { fetchedIssues: Issue[] }) => {
                 <p className="h-[20px] w-[0px] border-l border-gray-200"></p>
                 <p
                   className="h-fit cursor-pointer whitespace-nowrap border-b border-blue-500 text-blue-500 text-C-12-M"
-                  onClick={(e) => handleAddressClick(e, issue.dispatchId)}
+                  onClick={(e) => issue.dispatchId && handleAddressClick(e, issue.dispatchId.toString())}
                 >
                   {issue.address}
                 </p>
