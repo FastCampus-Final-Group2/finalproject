@@ -167,7 +167,9 @@ const DeliveryRoutineDetail = ({ selectedOrders, setSelectedOrders, fetchData }:
               </DeliveryStopoverListCard>
             </div>
             {item.dispatchDetailStatus === "WORK_COMPLETED" &&
-              fetchListItems[index + 1]?.dispatchDetailStatus === "WORK_WAITING" && <IAmMoving />}
+              fetchListItems[index + 1]?.dispatchDetailStatus === "WORK_WAITING" && (
+                <IAmMoving ett={fetchListItems.ett} />
+              )}
           </React.Fragment>
         );
       })}

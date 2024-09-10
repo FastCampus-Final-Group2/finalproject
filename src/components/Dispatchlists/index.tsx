@@ -11,7 +11,7 @@ interface DispatchListsProps {
   onSelectedItemsCountChange: (count: number) => void;
 }
 
-const DispatchLists = ({ results, onSelectedItemsCountChange, onCheckBoxChange }: DispatchListsProps) => {
+const DispatchLists = ({ results, onSelectedItemsCountChange }: DispatchListsProps) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [checkedItems, setCheckedItems] = useState<boolean[]>(new Array(results.length).fill(false));
   const [isAllChecked, setIsAllChecked] = useState(false);

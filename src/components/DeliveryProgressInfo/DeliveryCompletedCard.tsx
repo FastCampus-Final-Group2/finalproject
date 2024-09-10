@@ -5,8 +5,19 @@ interface DeliveryCompletedCardProps {
   selectedColor: keyof typeof BG_100;
   completedOrderCount: number;
   deliveryOrderCount: number;
-  totalTime: number;
+  totalTime: string;
 }
+
+const formatTotalTime = (totalTime: string): { hours: number; minutes: number } => {
+  const [hours, minutes] = totalTime.split(":").map(Number);
+
+  if (isNaN(hours) || isNaN(minutes)) {
+    return { hours: 0, minutes: 0 };
+  }
+
+  return { hours, minutes };
+};
+
 // todo: 주행 거리의 count는 api 연동 후 변경
 const DeliveryCompletedCard = ({
   selectedColor,
@@ -14,7 +25,15 @@ const DeliveryCompletedCard = ({
   deliveryOrderCount,
   totalTime,
 }: DeliveryCompletedCardProps) => {
-  const progressData: { title: string; count: number; unit: string | number; iconId: IconId; devide: string }[] = [
+  const { hours, minutes } = formatTotalTime(totalTime);
+
+  const progressData: {
+    title: string;
+    count: number | string | JSX.Element;
+    unit: string | number;
+    iconId: IconId;
+    devide: string;
+  }[] = [
     {
       title: "완료 주문",
       count: completedOrderCount,
@@ -23,9 +42,35 @@ const DeliveryCompletedCard = ({
       devide: "/",
     },
     { title: "주행 거리", count: 23, unit: "km", iconId: "truck", devide: "" },
-    { title: "주행 시간", count: totalTime ?? 0, unit: "시간", iconId: "clock", devide: "" },
+    {
+      title: "주행 시간",
+      count: (
+        <>
+          <span className={`${TEXT_650[selectedColor]} text-T-20-B`}>
+            {hours > 0 && (
+              <>
+                {hours}
+                <span className="text-gray-700 text-T-16-B">시간</span>
+              </>
+            )}
+            {minutes > 0 && (
+              <>
+                {hours > 0 && " "}
+                {minutes}
+                <span className="text-gray-700 text-T-16-B">분</span>
+              </>
+            )}
+            {hours === 0 && minutes === 0 && "0분"}
+          </span>
+        </>
+      ),
+      unit: "",
+      iconId: "clock",
+      devide: "",
+    },
   ];
-  const progressRate = completedOrderCount / deliveryOrderCount;
+  const progressRate = Math.round((completedOrderCount / deliveryOrderCount) * 100);
+
   return (
     <div className="flex flex-col gap-[12px] px-[12px] pt-[12px]">
       <ul className="flex items-center justify-between gap-[20px] text-gray-700 text-B-14-M">
@@ -37,8 +82,7 @@ const DeliveryCompletedCard = ({
           </p>
         </li>
         <li className={`h-[12px] w-[80px] rounded-full ${BG_100[selectedColor]}`}>
-          {/* progressRate를 인라인 스타일로 적용 */}
-          <p className={`h-[12px] rounded-full ${BG_650[selectedColor]}`} style={{ width: `${progressRate}px` }}></p>
+          <p className={`h-[12px] rounded-full ${BG_650[selectedColor]}`} style={{ width: `${progressRate}%` }}></p>
         </li>
       </ul>
       <div className="text-gray-700 text-B-14-M">

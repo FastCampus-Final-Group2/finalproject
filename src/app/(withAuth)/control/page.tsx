@@ -16,7 +16,7 @@ const fetchDispatchData = async ({ queryKey }: { queryKey: [string, "IN_TRANSIT"
   try {
     const { error, results } = await DispatchNumberApi.search({
       request: {
-        status: status, // 상태에 따라 다른 데이터를 가져옴
+        status: status,
         isManager: false,
         startDateTime: "1900-01-01T23:59:59",
         endDateTime: "3000-12-31T23:59:59",
@@ -26,12 +26,36 @@ const fetchDispatchData = async ({ queryKey }: { queryKey: [string, "IN_TRANSIT"
     });
 
     if (error) {
-      console.log("access denied"); // 실패 시 메시지 출력
+      console.log("access denied");
       throw new Error(error.type || "An error occurred while fetching data");
     }
 
-    console.log("access success"); // 성공 시 메시지 출력
-    console.log("results?.results", results); // 성공 시 메시지 출력
+    console.log("access success");
+    console.log("results?.results", results);
+
+    // results의 내용에 따라 status 결정
+    let updatedStatus = status;
+    if (results && Array.isArray(results.results)) {
+      const firstResult = results.results[0];
+      if (firstResult && firstResult.status) {
+        updatedStatus = firstResult.status;
+      }
+    }
+
+    // 업데이트된 status로 다시 API 호출
+    if (updatedStatus !== status) {
+      const updatedResponse = await DispatchNumberApi.search({
+        request: {
+          ...request,
+          status: updatedStatus,
+        },
+      });
+      if (updatedResponse.error) {
+        throw new Error(updatedResponse.error.type || "An error occurred while fetching updated data");
+      }
+      return updatedResponse.results as DispatchData;
+    }
+
     return (
       (results as DispatchData) ||
       ({
@@ -42,7 +66,7 @@ const fetchDispatchData = async ({ queryKey }: { queryKey: [string, "IN_TRANSIT"
       } as DispatchData)
     );
   } catch (err) {
-    console.log("access denied"); // 에러 발생 시 메시지 출력
+    console.log("access denied");
     throw err;
   }
 };
@@ -60,7 +84,6 @@ const ControlPage = () => {
   const [selectedItemsCount, setSelectedItemsCount] = useState(0);
   const [searchResults, setSearchResults] = useState<DispatchResult[]>([]);
 
-  // useQuery를 사용하여 데이터를 가져옴
   const {
     data: fetchedData = {
       inProgress: 0,
@@ -70,13 +93,23 @@ const ControlPage = () => {
     } as DispatchData,
     isLoading,
     error,
+    refetch,
   } = useQuery({
-    queryKey: ["dispatchData", selectedState], // Query key, selectedState가 변경될 때마다 새로 데이터 요청
-    queryFn: fetchDispatchData, // fetch 함수
-    // keepPreviousData: true, // 이전 데이터를 유지하면서 새로운 데이터를 불러옴
-    refetchOnWindowFocus: false, // 창을 다시 포커스할 때 데이터를 다시 가져오지 않음
+    queryKey: ["dispatchData", selectedState],
+    queryFn: fetchDispatchData,
+    refetchOnWindowFocus: false,
     retry: 3,
   });
+
+  useEffect(() => {
+    if (fetchedData && fetchedData.results && fetchedData.results.length > 0) {
+      const firstResult = fetchedData.results[0];
+      if (firstResult && firstResult.status && firstResult.status !== selectedState) {
+        setSelectedState(firstResult.status);
+        refetch();
+      }
+    }
+  }, [fetchedData, selectedState, refetch]);
 
   // 로딩 중이거나 에러 발생 시 처리
   if (isLoading) return <div>Loading...</div>;
