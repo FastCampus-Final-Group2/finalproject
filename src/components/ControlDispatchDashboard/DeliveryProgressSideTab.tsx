@@ -23,7 +23,7 @@ interface FetchData extends DispatchDetailResponse {
   deliveryOrderCount?: number;
   totalTime?: number;
   issue?: string;
-  startStopover: { centerName: string; departureTime: string };
+  startStopover: { centerName: string; departureTime: string; centerId: number };
   dispatchDetailList: [];
 }
 
@@ -42,6 +42,7 @@ const DeliveryProgressSideTab = ({ isExpanded, onClose, selectedColor, dispatchI
     data: fetchData,
     isLoading,
     error,
+    refetch,
   } = useQuery({
     queryKey: ["vehicle-control", dispatchId],
     queryFn: () => fetchDispatchIdData(dispatchId),
@@ -62,6 +63,9 @@ const DeliveryProgressSideTab = ({ isExpanded, onClose, selectedColor, dispatchI
             selectedColor={selectedColor}
             fetchData={fetchData as Required<FetchData>}
             dispatchId={dispatchId ?? 0}
+            refreshData={async () => {
+              await refetch();
+            }}
           />
         </div>
         <div className="flex h-[556px] w-fit flex-col gap-[4px] rounded-[8px] bg-white pl-[12px] pr-[16px] pt-[20px]">

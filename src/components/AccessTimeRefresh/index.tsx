@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import Icon from "@/components/core/Icon";
 import dayjs from "dayjs";
 
-const AccessTimeRefresh = () => {
+const AccessTimeRefresh = ({ onClick }: { onClick: () => Promise<void> }) => {
   const [accessTime, setAccessTime] = useState("");
 
   useEffect(() => {
@@ -12,10 +12,10 @@ const AccessTimeRefresh = () => {
     setAccessTime(currentTime);
   }, []);
 
-  const handleRefresh = () => {
+  const handleRefresh = async () => {
     const currentTime = dayjs().format("HH:mm:ss");
     setAccessTime(currentTime);
-    alert("AccessTimeRefresh.tsx에서 새로고침 발생");
+    await onClick();
     console.log("AccessTimeRefresh.tsx에서 새로고침 발생");
   };
 

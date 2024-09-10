@@ -6,6 +6,7 @@ interface DeliveryTotalOrdersProps {
   totalOrders: number;
   completedOrder: number;
   issueOrder: number;
+  refreshData: () => Promise<void>;
 }
 
 const DeliveryTotalOrders = ({
@@ -13,11 +14,12 @@ const DeliveryTotalOrders = ({
   completedOrder,
   totalOrders,
   issueOrder,
+  refreshData,
 }: DeliveryTotalOrdersProps) => {
   return (
     <div className="flex h-[116px] w-[460px] flex-col rounded-[8px] bg-white px-[20px] pb-[4px] pt-[12px] text-gray-500 text-B-14-M">
       <div className="pl-[12px]">
-        <AccessTimeRefresh />
+        <AccessTimeRefresh onClick={refreshData} />
       </div>
 
       <div className="flex h-[80px] items-center justify-between px-[13px]">

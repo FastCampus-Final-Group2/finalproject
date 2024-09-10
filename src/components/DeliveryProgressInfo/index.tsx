@@ -19,9 +19,10 @@ interface DeliveryProgressInfoProps {
     issue: string;
   };
   dispatchId: number;
+  refreshData: () => Promise<void>;
 }
 
-const DeliveryProgressInfo = ({ selectedColor, fetchData, dispatchId }: DeliveryProgressInfoProps) => {
+const DeliveryProgressInfo = ({ selectedColor, fetchData, dispatchId, refreshData }: DeliveryProgressInfoProps) => {
   return (
     <div className="flex flex-col gap-[12px]">
       <div className="flex justify-between">
@@ -42,9 +43,9 @@ const DeliveryProgressInfo = ({ selectedColor, fetchData, dispatchId }: Delivery
         {/* todo: deliveryProgressRate={50} 수정하기 */}
       </div>
       <div className="flex justify-end">
-        <AccessTimeRefresh />
+        <AccessTimeRefresh onClick={refreshData} />
       </div>
-      <DeliveryIssues issue={fetchData.issue ?? []} dispatchId={dispatchId} />
+      <DeliveryIssues issue={fetchData.issue ?? ""} dispatchId={dispatchId} />
     </div>
   );
 };

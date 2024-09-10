@@ -19,7 +19,13 @@ type VehicleStatusType =
   | "RESTING_TIME"
   | "default";
 
-const ControlDispatchDashboard = ({ fetchedData }: { fetchedData: DispatchListResponse }) => {
+const ControlDispatchDashboard = ({
+  fetchedData,
+  refreshData,
+}: {
+  fetchedData: DispatchListResponse;
+  refreshData: () => Promise<void>;
+}) => {
   const smColors: ColorType[] = ["lime", "sky", "violet", "redwood", "peanut", "brown", "forest", "yale", "olive"];
   const [selectedColor, setSelectedColor] = useState(smColors[0]);
   const [selectedDispatchId, setSelectedDispatchId] = useState<number | null>(null);
@@ -44,6 +50,7 @@ const ControlDispatchDashboard = ({ fetchedData }: { fetchedData: DispatchListRe
               completedOrder={fetchedData.totalCompletedOrderNum ?? 0}
               issueOrder={fetchedData.issueOrderNum ?? 0}
               deliveryProgress={fetchedData.totalProgressionRate ?? 0}
+              refreshData={refreshData}
             />
           </div>
           <div className="flex h-[344px] w-[524px] justify-center">

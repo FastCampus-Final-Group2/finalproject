@@ -23,7 +23,7 @@ const FloorAreaRatioCard = ({
   const getIconId = (type: string, tone: number): IconId => {
     const typeMap: { [key: string]: string } = {
       WING_BODY: "wing",
-      BOX: "box",
+      BOX: "top",
       CARGO: "cargo",
     };
     const formattedType = typeMap[type] || "default";
@@ -31,7 +31,6 @@ const FloorAreaRatioCard = ({
   };
 
   const iconId = getIconId(vehicleType, vehicleTon);
-  console.log("iconId", iconId);
 
   return (
     <div

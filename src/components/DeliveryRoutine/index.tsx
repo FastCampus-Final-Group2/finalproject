@@ -6,11 +6,13 @@ import DeliveryRoutineDetail, {
 } from "@/components/DeliveryRoutine/DeliveryRoutineDetail";
 import DeliveryStopoverListCard from "@/components/DeliveryRoutine/DeliveryStopoverListCard";
 import { CourseDetailResponse } from "@/models/ApiTypes";
+import DeliveryModal from "@/components/detailModal/DeliveryModal";
 
 interface FetchData extends CourseDetailResponse {
   startStopover: {
     centerName: string;
     departureTime: string;
+    centerId: number;
   };
   dispatchDetailList: DeliveryRoutineDetailStatusItem[];
   ett?: number;
@@ -24,6 +26,10 @@ const formatTime = (dateTimeString: string): string => {
 };
 
 const DeliveryRoutine = ({ fetchData }: { fetchData: FetchData }) => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const handleModalOpen = () => {
+    setIsModalOpen(true);
+  };
   // todo: 운송 종료 데이터 나중에 추가하기
   const startEnd = [
     {
@@ -49,7 +55,10 @@ const DeliveryRoutine = ({ fetchData }: { fetchData: FetchData }) => {
               <DeliveryStopoverListCard border="deliveryStartEnd">
                 <ul className="flex items-end gap-[8px]">
                   <li>{data.status}</li>
-                  <li className="cursor-pointer border-b border-blue-500 text-blue-500 text-T-16-M">
+                  <li
+                    className="cursor-pointer border-b border-blue-500 text-blue-500 text-T-16-M"
+                    onClick={handleModalOpen}
+                  >
                     {data.centerName}
                   </li>
                 </ul>
@@ -69,6 +78,9 @@ const DeliveryRoutine = ({ fetchData }: { fetchData: FetchData }) => {
           </React.Fragment>
         ))}
       </div>
+      {isModalOpen && (
+        <DeliveryModal id={fetchData.startStopover.centerId} isCenter={true} onClose={() => setIsModalOpen(false)} />
+      )}
     </>
   );
 };

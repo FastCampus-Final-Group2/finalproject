@@ -45,11 +45,6 @@ interface DispatchData {
   results: DispatchResult[];
 }
 
-// interface DispatchResult {
-
-//   // ... 기존 속성들
-// }
-
 const ControlPage = () => {
   const [selectedState, setSelectedState] = useState<"IN_TRANSIT" | "WAITING" | "COMPLETED">("IN_TRANSIT");
   const [page, setPage] = useState(1);
