@@ -13,7 +13,7 @@ const EXPECTED_SERVICE_DURATION_REG_EXP = /^\d+$/;
 const PRODUCT_QUANTITY_REG_EXP = /^\d+$/;
 
 const validDeliveryType = (value: string): boolean => {
-  return value === "지입" || value === "택배";
+  return value === "지입" || value === "택배" || value === "용차";
 };
 
 const validSmName = (value: string, smInfos?: SmInfos): { id: number; isValid: boolean } => {
@@ -27,7 +27,7 @@ const validSmName = (value: string, smInfos?: SmInfos): { id: number; isValid: b
   }
 
   return {
-    id: 0,
+    id: -1,
     isValid: false,
   };
 };

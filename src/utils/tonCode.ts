@@ -1,46 +1,28 @@
-import { CarModel, Ton } from "@/types/tonCode";
+import { RestrictedTonObject, Ton } from "@/types/tonCode";
 
-export const parseRestrictedTonCode = (restrictedTonCode: string) => {
-  const tonCodes = restrictedTonCode.split(", ");
+export const parseRestrictedTonString = (restrictedTonCode: string): RestrictedTonObject => {
+  const tonCodes = restrictedTonCode.split(",");
 
-  const tonCodesObject = {
-    윙바디: {
-      "1T": false,
-      "1.2T": false,
-      "1.4T": false,
-      "2.5T": false,
-      "3.5T": false,
-      "5T": false,
-      "8T": false,
-      "11T": false,
-    },
-    탑차: {
-      "1T": false,
-      "1.2T": false,
-      "1.4T": false,
-      "2.5T": false,
-      "3.5T": false,
-      "5T": false,
-      "8T": false,
-      "11T": false,
-    },
-    카고: {
-      "1T": false,
-      "1.2T": false,
-      "1.4T": false,
-      "2.5T": false,
-      "3.5T": false,
-      "5T": false,
-      "8T": false,
-      "11T": false,
-    },
+  const restrictedTonObject = {
+    "1": false,
+    "1.2": false,
+    "1.4": false,
+    "2.5": false,
+    "3.5": false,
+    "5": false,
+    "8": false,
+    "11": false,
   };
 
   tonCodes.forEach((tonCode) => {
-    const [carModel, ton] = tonCode.split(" ") as [CarModel, Ton];
-
-    tonCodesObject[carModel][ton] = true;
+    restrictedTonObject[tonCode as Ton] = true;
   });
 
-  return tonCodesObject;
+  return restrictedTonObject;
+};
+
+export const formatRestrictedTonObject = (restrictedTonObject: RestrictedTonObject): string => {
+  return Object.keys(restrictedTonObject)
+    .filter((key) => restrictedTonObject[key as Ton])
+    .join(",");
 };

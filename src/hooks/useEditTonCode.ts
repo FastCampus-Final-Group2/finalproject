@@ -1,42 +1,50 @@
-import { CarModel, Ton, TonCodeObject } from "@/types/tonCode";
+import { RestrictedTonObject, Ton } from "@/types/tonCode";
 import { useState } from "react";
 
-const useEditTonCode = (initialState: TonCodeObject) => {
+const useEditTonCode = (
+  initialState: RestrictedTonObject,
+): [
+  restrictedTonCode: RestrictedTonObject,
+  toggleRestrictedTonCode: (ton: Ton) => void,
+  setRestrictedTonCodeAllTrue: () => void,
+  setRestrictedTonCodeAllFalse: () => void,
+] => {
   const [restrictedTonCode, setRestrictedTonCode] = useState(initialState);
 
-  const toggleRestrictedTonCode = (carModel: CarModel, ton: Ton) => {
+  const toggleRestrictedTonCode = (ton: Ton) => {
     setRestrictedTonCode((prev) => ({
       ...prev,
-      [carModel]: {
-        ...prev[carModel],
-        [ton]: !prev[carModel][ton],
-      },
+      [ton]: !prev[ton],
     }));
   };
 
-  const setRestrictedTonCodeAllTrue = (carModel: CarModel) => {
-    setRestrictedTonCode((prev) => ({
-      ...prev,
-      [carModel]: Object.fromEntries(
-        Object.entries(prev[carModel]).map(([key]) => {
-          return [key, true];
-        }),
-      ),
-    }));
+  const setRestrictedTonCodeAllTrue = () => {
+    setRestrictedTonCode({
+      "1": true,
+      "1.2": true,
+      "1.4": true,
+      "2.5": true,
+      "3.5": true,
+      "5": true,
+      "8": true,
+      "11": true,
+    });
   };
 
-  const setRestrictedTonCodeAllFalse = (carModel: CarModel) => {
-    setRestrictedTonCode((prev) => ({
-      ...prev,
-      [carModel]: Object.fromEntries(
-        Object.entries(prev[carModel]).map(([key]) => {
-          return [key, false];
-        }),
-      ),
-    }));
+  const setRestrictedTonCodeAllFalse = () => {
+    setRestrictedTonCode({
+      "1": false,
+      "1.2": false,
+      "1.4": false,
+      "2.5": false,
+      "3.5": false,
+      "5": false,
+      "8": false,
+      "11": false,
+    });
   };
 
-  return { restrictedTonCode, toggleRestrictedTonCode, setRestrictedTonCodeAllTrue, setRestrictedTonCodeAllFalse };
+  return [restrictedTonCode, toggleRestrictedTonCode, setRestrictedTonCodeAllTrue, setRestrictedTonCodeAllFalse];
 };
 
 export default useEditTonCode;

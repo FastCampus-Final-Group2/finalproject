@@ -2,91 +2,51 @@
 
 import { excelDataState } from "@/atoms/excelData";
 import Icon from "@/components/core/Icon";
-import { useRouter } from "next/navigation";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import { useSetRecoilState } from "recoil";
-import * as XLSX from "xlsx";
-import { EXCEL_HEADERS } from "@/components/FileModal/UploadModal/index.constants";
-import { ExcelData } from "@/types/excel";
-import { validExcelData } from "@/utils/validation/excel";
-import dayjs from "dayjs";
-import getSmInfos from "@/utils/getSmInfos";
+import { handleExcelFile } from "@/utils/validation/excel";
+import ProgressBar from "@/components/core/ProgressBar";
+import { cn } from "@/utils/cn";
+import { fileInputVariants } from "./index.variants";
 
 interface FileInputProps {
   setIsError: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const FileInput = ({ setIsError }: FileInputProps) => {
-  const router = useRouter();
   const [excelFile, setExcelFile] = useState<File | null>(null);
   const setExcelData = useSetRecoilState(excelDataState);
 
-  useEffect(() => {
-    if (excelFile) {
-      if (!excelFile.type.includes("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")) {
-        setIsError(true);
-        return;
-      }
+  const handleFileInput = useCallback(() => {
+    return new Promise<void>((resolve, reject) => {
+      if (!excelFile) return reject(new Error("No file"));
 
       const reader = new FileReader();
 
       reader.onload = async (event) => {
-        const arrayBuffer = event.target?.result as ArrayBuffer;
-        const workbook = XLSX.read(arrayBuffer, { type: "array", cellDates: true });
+        try {
+          const arrayBuffer = event.target?.result as ArrayBuffer;
 
-        const sheetName = workbook.SheetNames[0];
-        const worksheet = workbook.Sheets[sheetName];
-        const excelData = (XLSX.utils.sheet_to_json(worksheet, { header: 1, defval: "" }) as unknown[][])
-          .filter((row) => row.some((cell) => cell !== ""))
-          .map((row) =>
-            row.map((cell) => {
-              if (cell instanceof Date) {
-                return dayjs(cell).format("HH:mm");
-              }
+          const validedExcelData = await handleExcelFile(arrayBuffer);
 
-              return cell;
-            }),
-          )
-          .map((row) => {
-            return row.slice(0, 20);
-          }) as string[][];
+          if (!validedExcelData) {
+            throw new Error("Invalid Excel Data");
+          }
 
-        const isExcelHeaderCorrect = excelData[0].every((header, index) => {
-          return header === EXCEL_HEADERS[index];
-        });
+          setTimeout(() => {
+            setExcelData(validedExcelData);
+          }, 1000);
 
-        if (!isExcelHeaderCorrect) {
+          resolve();
+        } catch (err) {
           setIsError(true);
-          return;
+          reject(err);
         }
-
-        const hasData = excelData.some((row, index) => {
-          if (index < 4) return true;
-          return row.length > 0;
-        });
-
-        if (!hasData) {
-          setIsError(true);
-          return;
-        }
-
-        const [error, smInfos] = await getSmInfos(excelData.slice(4));
-
-        if (error) {
-          setIsError(true);
-          return;
-        }
-
-        const validedExcelData: ExcelData[] = excelData.slice(4).map((row, index) => {
-          return validExcelData(row, index, smInfos);
-        });
-
-        setExcelData(validedExcelData);
       };
 
       reader.readAsArrayBuffer(excelFile);
-    }
-  }, [excelFile, router, setIsError, setExcelData]);
+    });
+  }, [excelFile, setExcelData, setIsError]);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const uploadedFile = e.target.files?.[0] || null;
@@ -112,20 +72,26 @@ const FileInput = ({ setIsError }: FileInputProps) => {
   return (
     <div
       role="input"
-      className="flex w-[456px] flex-col items-center justify-center gap-4 rounded-xl border border-dashed border-gray-400 bg-gray-30 px-4 py-8"
+      className={cn(fileInputVariants({ hasFile: excelFile !== null }))}
       onDrop={handleDrop}
       onDragOver={handleDragOver}
     >
       <Icon id="upload" size={32} className="text-gray-600" />
       <p className="text-gray-600 text-B-14-R">{excelFile ? excelFile.name : "여기로 파일을 끌어오세요."}</p>
       <label className="relative">
-        <button
-          className="rounded border border-gray-600 bg-white px-2 py-1 text-gray-600 text-B-14-R"
-          type="button"
-          onClick={handleUploadButton}
-        >
-          파일 선택
-        </button>
+        {excelFile ? (
+          <div className="w-[276px]">
+            <ProgressBar awaitFn={handleFileInput} barColor="bg-blue-500" bgColor="bg-white" />
+          </div>
+        ) : (
+          <button
+            className="rounded border border-gray-600 bg-white px-2 py-1 text-gray-600 text-B-14-R"
+            type="button"
+            onClick={handleUploadButton}
+          >
+            파일 선택
+          </button>
+        )}
         <input
           ref={fileRef}
           type="file"

@@ -1,11 +1,7 @@
-export type CarModel = "윙바디" | "탑차" | "카고";
+export type Ton = "1" | "1.2" | "1.4" | "2.5" | "3.5" | "5" | "8" | "11";
 
-export type Ton = "1T" | "1.2T" | "1.4T" | "2.5T" | "3.5T" | "5T" | "8T" | "11T";
+export type CarModel = "wing" | "top" | "cargo";
 
-export type TonCode = `${CarModel} ${Ton}`;
-
-export type TonCodeObject = {
-  [Model in CarModel]: {
-    [T in Ton]: boolean;
-  };
+export type RestrictedTonObject = {
+  [T in Ton]: boolean;
 };

@@ -36,23 +36,26 @@ const Item = ({ rowIndex, header }: ItemProps) => {
     if (header !== "smName") return;
 
     const validDebouncedSmName = async () => {
-      console.log(rowIndex, header, debouncedValue);
       const [error, smInfo] = await TransportAPI.valid({ requests: [{ smName: debouncedValue }] });
 
       if (error) {
         throw Error(error.data?.statusText);
-      } else {
+      }
+
+      if (smInfo.validList && smInfo.validList[0].smId && smInfo.validList[0].smNameValid) {
         setSelectedExcelDataCell({
-          id: smInfo[0].smId,
+          id: smInfo.validList[0].smId,
           value: selectedExcelDataCell.value,
-          isValid: smInfo[0].smNameValid,
+          isValid: smInfo.validList[0].smNameValid,
         });
+      } else {
+        throw Error();
       }
     };
 
     validDebouncedSmName().catch(() => {
       setSelectedExcelDataCell({
-        id: 0,
+        id: -1,
         value: selectedExcelDataCell.value,
         isValid: false,
       });

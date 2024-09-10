@@ -1,27 +1,3 @@
-export interface Order {
-  deliveryType: "지입" | "택배";
-  smId: number;
-  smName: string;
-  shipmentNumber: string;
-  clientOrderKey?: string;
-  orderType: "배송" | "수거";
-  receivedDate: Date;
-  serviceRequestDate: Date;
-  serviceRequestTime: Date;
-  clientName: string;
-  contact: string;
-  address: string;
-  detailAddress: string;
-  zipcode: string;
-  volume: number;
-  weight: number;
-  note?: string;
-  expectedServiceDuration?: number;
-  productName: string;
-  productCode?: string;
-  productQuantity: number;
-}
-
 export interface OrderInfo {
   receivedDate: string; // 주문 접수일
   transportOrderNumber: string; // 운송장 번호

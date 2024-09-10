@@ -1,5 +1,3 @@
-"use server";
-
 import { DownloadOrderFormExcelData } from "@/models/ApiTypes";
 import axios from "@/utils/axios";
 import { TRANSPORT_ORDER_API_PATH } from "@/apis/path";

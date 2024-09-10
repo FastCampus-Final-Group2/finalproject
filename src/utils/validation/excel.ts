@@ -1,88 +1,78 @@
-import { ExcelData, SmInfos } from "@/types/excel";
-import { OrderValidationFunc } from "./order";
+import { ExcelData } from "@/types/excel";
+import * as XLSX from "xlsx";
+import dayjs from "dayjs";
+import getSmInfos from "@/utils/getSmInfos";
+import { formatExcelDataRow } from "@/utils/format/excelData";
 
-export const validExcelData = (row: string[], rowId: number, smInfos: SmInfos): ExcelData => {
-  return {
-    rowId: rowId,
-    deliveryType: {
-      value: row[0],
-      isValid: OrderValidationFunc.deliveryType(row[0]),
-    },
-    smName: {
-      value: row[1],
-      ...OrderValidationFunc.smName(row[1], smInfos),
-    },
-    shipmentNumber: {
-      value: row[2],
-      isValid: OrderValidationFunc.shipmentNumber(row[2]),
-    },
-    clientOrderKey: {
-      value: row[3],
-      isValid: OrderValidationFunc.clientOrderKey(row[3]),
-    },
-    orderType: {
-      value: row[4],
-      isValid: OrderValidationFunc.orderType(row[4]),
-    },
-    receivedDate: {
-      value: String(row[5]),
-      isValid: OrderValidationFunc.receivedDate(String(row[5])),
-    },
-    serviceRequestDate: {
-      value: String(row[6]),
-      isValid: OrderValidationFunc.serviceRequestDate(String(row[6])),
-    },
-    serviceRequestTime: {
-      value: row[7],
-      isValid: OrderValidationFunc.serviceRequestTime(row[7]),
-    },
-    clientName: {
-      value: row[8],
-      isValid: OrderValidationFunc.clientName(row[8]),
-    },
-    contact: {
-      value: String(row[9]).charAt(0) === "0" ? String(row[9]) : "0" + String(row[9]),
-      isValid: OrderValidationFunc.contact(String(row[9]).charAt(0) === "0" ? String(row[9]) : "0" + String(row[9])),
-    },
-    address: {
-      value: row[10],
-      isValid: OrderValidationFunc.address(row[10]),
-    },
-    detailAddress: {
-      value: row[11],
-      isValid: OrderValidationFunc.detailAddress(row[11]),
-    },
-    zipcode: {
-      value: String(row[12]).padStart(5, "0"),
-      isValid: OrderValidationFunc.zipcode(String(row[12]).padStart(5, "0")),
-    },
-    volume: {
-      value: String(row[13]),
-      isValid: OrderValidationFunc.volume(String(row[13])),
-    },
-    weight: {
-      value: String(row[14]),
-      isValid: OrderValidationFunc.weight(String(row[14])),
-    },
-    note: {
-      value: row[15],
-      isValid: OrderValidationFunc.note(row[15]),
-    },
-    expectedServiceDuration: {
-      value: row[16] ? String(row[16]) : "1",
-      isValid: OrderValidationFunc.expectedServiceDuration(String(row[16])),
-    },
-    productName: {
-      value: row[17],
-      isValid: OrderValidationFunc.productName(row[17]),
-    },
-    productCode: {
-      value: row[18],
-      isValid: OrderValidationFunc.productCode(row[18]),
-    },
-    productQuantity: {
-      value: row[19] ? String(row[19]) : "1",
-      isValid: OrderValidationFunc.productQuantity(String(row[19])),
-    },
-  };
+const EXCEL_HEADERS = [
+  "배송유형 (지입/용차/택배)",
+  "SM명",
+  "운송장번호",
+  "업체주문번호",
+  "주문유형",
+  "주문접수일",
+  "작업희망일",
+  "희망도착시간",
+  "고객명",
+  "고객연락처",
+  "주소",
+  "상세주소",
+  "우편번호",
+  "볼륨",
+  "중량",
+  "고객전달사항",
+  "예상작업시간",
+  "상품명",
+  "상품 코드",
+  "상품 수량",
+];
+
+export const isExcelHeaderCorrect = (row: string[]) => {
+  return row.every((header, index) => {
+    return header === EXCEL_HEADERS[index];
+  });
+};
+
+export const isExcelDataEmpty = (excelData: string[][]) => {
+  return !excelData.some((row, index) => {
+    if (index < 4) return true;
+    return row.length > 0;
+  });
+};
+
+export const handleExcelFile = async (arrayBuffer: ArrayBuffer) => {
+  const workbook = XLSX.read(arrayBuffer, { type: "array", cellDates: true });
+
+  const sheetName = workbook.SheetNames[0];
+  const worksheet = workbook.Sheets[sheetName];
+  const excelData = (XLSX.utils.sheet_to_json(worksheet, { header: 1, defval: "" }) as unknown[][])
+    .filter((row) => row.some((cell) => cell !== ""))
+    .map((row) =>
+      row.map((cell) => {
+        if (cell instanceof Date) {
+          return dayjs(cell).format("HH:mm");
+        }
+
+        return cell;
+      }),
+    )
+    .map((row) => {
+      return row.slice(0, 20);
+    }) as string[][];
+
+  if (!isExcelHeaderCorrect(excelData[0]) || isExcelDataEmpty(excelData)) {
+    return null;
+  }
+
+  const [error, smInfos] = await getSmInfos(excelData.slice(4));
+
+  if (error) {
+    return null;
+  }
+
+  const validedExcelData: ExcelData[] = excelData.slice(4).map((row, index) => {
+    return formatExcelDataRow(row, index, smInfos);
+  });
+
+  return validedExcelData;
 };

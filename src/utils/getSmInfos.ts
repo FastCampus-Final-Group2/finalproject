@@ -7,9 +7,7 @@ const getSmInfos = async (excelData: string[][]): Promise<[Error, null] | [null,
   const smNamesSet = new Set();
 
   excelData.forEach((row) => {
-    row.forEach((value) => {
-      smNamesSet.add(String(value));
-    });
+    smNamesSet.add(String(row[1]));
   });
 
   const smNames = Array.from(smNamesSet) as string[];
@@ -21,18 +19,18 @@ const getSmInfos = async (excelData: string[][]): Promise<[Error, null] | [null,
   const [error, data] = await TransportAPI.valid(validationListRequest);
 
   if (error) {
-    return [error, data];
+    return [error, null];
   } else {
     const smInfos = {} as SmInfos;
 
-    data.forEach(({ smId, smNameValid }, index) => {
+    data.validList.forEach(({ smId, smNameValid }, index) => {
       smInfos[smNames[index]] = {
         smId,
         smNameValid,
       };
     });
 
-    return [error, smInfos];
+    return [null, smInfos];
   }
 };
 

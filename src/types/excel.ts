@@ -1,7 +1,7 @@
-import { SmNameAndSmIdResponse } from "@/models/ApiTypes";
+import { ValidList } from "@/models/ApiTypes";
 
 export interface SmInfos {
-  [key: string]: SmNameAndSmIdResponse;
+  [key: string]: ValidList;
 }
 
 export type ExcelDataHeader =
