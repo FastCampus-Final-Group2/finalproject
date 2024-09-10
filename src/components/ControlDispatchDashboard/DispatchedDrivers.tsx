@@ -21,7 +21,7 @@ export interface DispatchedDriversProps {
   dispatchStatus: VehicleStatusType;
 }
 
-const DispatchedDrivers = ({ onClickToggle, smColors, drivers }: DispatchedDriversProps) => {
+const DispatchedDrivers = ({ onClickToggle, smColors, drivers, dispatchStatus }: DispatchedDriversProps) => {
   const { isExpanded, toggleExpand } = ToggleExpandSwitch();
 
   return (

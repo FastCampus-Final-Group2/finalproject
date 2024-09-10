@@ -11,6 +11,7 @@ import ListSelection from "@/components/ListSelection";
 import Pagination from "@/components/core/Pagination";
 
 // API를 통해 데이터를 가져오는 함수
+
 const fetchDispatchData = async ({ queryKey }: { queryKey: [string, "IN_TRANSIT" | "WAITING" | "COMPLETED"] }) => {
   const status = queryKey[1];
   try {

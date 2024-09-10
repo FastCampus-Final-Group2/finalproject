@@ -14,8 +14,10 @@ const SearchTextInput = ({ onKeywordChange, onSearch }: SearchTextInputProps) =>
     onKeywordChange(e.target.value);
   };
 
-  const handleSearch = () => {
-    onSearch();
+  const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      onSearch();
+    }
   };
 
   return (
@@ -25,10 +27,11 @@ const SearchTextInput = ({ onKeywordChange, onSearch }: SearchTextInputProps) =>
           type="text"
           value={inputValue}
           onChange={handleInputChange}
+          onKeyPress={handleKeyPress}
           placeholder="배차코드, 배차명, 배차담당자명 등을 입력해주세요."
           className="h-[20px] w-[490px] text-SB-14-B focus:bg-blue-50 focus:outline-none"
         />
-        <button onClick={handleSearch}>
+        <button onClick={onSearch}>
           <Icon id="search" />
         </button>
       </div>
