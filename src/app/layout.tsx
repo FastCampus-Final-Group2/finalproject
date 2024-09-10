@@ -20,8 +20,8 @@ const RootLayout = ({
       <body>
         <RecoilRootProvider>
           <QueryProvider>
-          <TabStateContextProvider>{children}</QueryProvider>
-        </TabStateContextProvider>
+            <TabStateContextProvider>{children}</TabStateContextProvider>
+          </QueryProvider>
         </RecoilRootProvider>
       </body>
     </html>
