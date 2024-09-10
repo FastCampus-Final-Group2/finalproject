@@ -5,6 +5,7 @@ import FileInput from "./FileInput.tsx";
 import Dimmed from "@/components/core/Dimmed";
 import { TransportAPI } from "@/apis/transportOrder";
 import axios from "@/utils/axios";
+import downloadExampleFile from "@/utils/downloadExampleFile";
 
 interface UploadModalProps {
   setModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -14,8 +15,8 @@ interface UploadModalProps {
 const UploadModal = ({ setModalOpen, setIsError }: UploadModalProps) => {
   // TODO
   const handleExcelExampleBtn = async () => {
-    const [error, data] = await TransportAPI.excelExample();
-
+    downloadExampleFile();
+    // const [error, data] = await TransportAPI.excelExample();
     // await axios
     //   .get("/transport-order/excel-example", {
     //     responseType: "arraybuffer",
