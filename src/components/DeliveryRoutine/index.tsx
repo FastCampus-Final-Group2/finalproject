@@ -45,10 +45,10 @@ const DeliveryRoutine = ({ fetchData }: { fetchData: FetchData }) => {
   return (
     <>
       <SelectedDelivery selectedOrders={selectedOrders} />
-      <div className="flex h-[500px] flex-col gap-[6px] py-[8px] text-T-18-B">
+      <div className="flex h-fit max-h-[500px] flex-col gap-[6px] py-[8px] text-T-18-B">
         {startEnd.map((data, index) => (
           <React.Fragment key={data.status}>
-            <div className="flex h-[60px] w-[430px] justify-between">
+            <div className="flex justify-between">
               <div className="flex w-[46px] justify-center pt-[18px]">
                 <Icon id="circleFill" size={16} className="text-gray-400" />
               </div>

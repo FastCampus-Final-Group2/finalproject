@@ -43,8 +43,8 @@ const ControlDispatchDashboard = ({
   return (
     <div className="flex">
       <div>
-        <div className="h-[884px] w-[524px] bg-blue-30">
-          <div className="flex h-[156px] w-[524px] items-center justify-center">
+        <div className="h-[calc(100vh-196px)] overflow-y-auto bg-blue-30 scrollbar-hide">
+          <div className="flex h-[156px] items-center justify-center">
             <DeliveryTotalOrders
               totalOrders={fetchedData.totalOrderNum ?? 0}
               completedOrder={fetchedData.totalCompletedOrderNum ?? 0}

@@ -57,7 +57,9 @@ const DeliveryProgressSideTab = ({ isExpanded, onClose, selectedColor, dispatchI
   console.log("dispatchIdFetchData", fetchData);
   return (
     <div className="transition-width relative z-50 duration-300 ease-in-out">
-      <div className={`${BG_50[selectedColor]} flex h-[884px] w-fit flex-col gap-[24px] px-[32px] pb-[15px] pt-[20px]`}>
+      <div
+        className={`${BG_50[selectedColor]} flex h-[calc(100vh-196px)] w-fit flex-col gap-[24px] overflow-y-auto px-[32px] pb-[15px] pt-[20px] scrollbar-hide`}
+      >
         <div className="flex w-fit flex-col gap-[4px] rounded-[8px] bg-white p-[20px]">
           <DeliveryProgressInfo
             selectedColor={selectedColor}
@@ -68,7 +70,7 @@ const DeliveryProgressSideTab = ({ isExpanded, onClose, selectedColor, dispatchI
             }}
           />
         </div>
-        <div className="flex h-[556px] w-fit flex-col gap-[4px] rounded-[8px] bg-white pl-[12px] pr-[16px] pt-[20px]">
+        <div className="flex max-h-[556px] w-fit flex-col gap-[4px] rounded-[8px] bg-white pl-[12px] pr-[16px] pt-[20px]">
           <DeliveryRoutine fetchData={fetchData} />
         </div>
       </div>
