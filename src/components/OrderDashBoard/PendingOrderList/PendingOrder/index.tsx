@@ -14,7 +14,7 @@ const PendingOrder = ({ address, meter, kilogram }: PendingOrderProps) => {
       <div className="flex items-center justify-start gap-[14px]">
         <div className="flex items-center justify-start gap-2 px-2 py-1.5">
           <div className="flex w-[113px] items-center justify-center py-0.5">
-            <div className="text-gray-900 text-B-14-R">{address}</div>
+            <div className="truncate text-gray-900 text-B-14-R">{address}</div>
           </div>
           <div className="h-[20px] w-[0px] border border-gray-200"></div>
           <div className="flex w-[108px] items-center justify-start">
