@@ -31,6 +31,8 @@ const ControlDetailPage = ({ params }: { params: { dispatchCodeId: number } }) =
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>Error: {(error as Error).message}</div>;
 
+  // console.log("fetchedData", fetchedData);
+
   return (
     <>
       <ControlDispatchHeader fetchedData={fetchedData!} />

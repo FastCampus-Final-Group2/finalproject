@@ -11,7 +11,6 @@ interface DeliveryProgressSideTabProps {
   onClose: () => void;
   selectedColor: keyof typeof BG_50 | keyof typeof TEXT_650;
   dispatchId: number | null;
-  dispatchData: DispatchDetailResponse;
 }
 
 const fetchDispatchIdData = async (dispatchId: number | null): Promise<DispatchDetailResponse | null> => {
@@ -25,29 +24,29 @@ const fetchDispatchIdData = async (dispatchId: number | null): Promise<DispatchD
 
 const DeliveryProgressSideTab = ({ isExpanded, onClose, selectedColor, dispatchId }: DeliveryProgressSideTabProps) => {
   const {
-    data: dispatchData,
+    data: fetchData,
     isLoading,
     error,
   } = useQuery({
     queryKey: ["vehicle-control", dispatchId],
     queryFn: () => fetchDispatchIdData(dispatchId),
     retry: 3,
-    enabled: !!dispatchId,
+    enabled: !!dispatchId && isExpanded,
   });
 
   if (!isExpanded) return null;
   if (isLoading) return <div>dispatchId: {dispatchId} 로딩 중...</div>;
   if (error) return <div>오류: {(error as Error).message}</div>;
-  if (!dispatchData) return <div>데이터가 없습니다.</div>;
-
+  if (!fetchData) return <div>데이터가 없습니다.</div>;
+  console.log("dispatchIdFetchData", fetchData);
   return (
     <div className="transition-width relative z-50 duration-300 ease-in-out">
       <div className={`${BG_50[selectedColor]} flex h-[884px] w-fit flex-col gap-[24px] px-[32px] pb-[15px] pt-[20px]`}>
         <div className="flex w-fit flex-col gap-[4px] rounded-[8px] bg-white p-[20px]">
-          <DeliveryProgressInfo selectedColor={selectedColor} dispatchData={dispatchData} />
+          <DeliveryProgressInfo selectedColor={selectedColor} fetchData={fetchData} dispatchId={dispatchId} />
         </div>
         <div className="flex h-[556px] w-fit flex-col gap-[4px] rounded-[8px] bg-white pl-[12px] pr-[16px] pt-[20px]">
-          <DeliveryRoutine dispatchData={dispatchData} />
+          <DeliveryRoutine fetchData={fetchData} />
         </div>
       </div>
       <button

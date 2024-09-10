@@ -1,10 +1,10 @@
 
 import dispatchCancel from "./dispatchCancel";
-import issues from "./issues";
+import issue from "./issue";
 
 export const dispatchApi = {
   dispatchCancel: dispatchCancel,
-  issues: issues,
+  issue: issue,
 }
 
 // 배차 강제 종료(PATCH)(/control)

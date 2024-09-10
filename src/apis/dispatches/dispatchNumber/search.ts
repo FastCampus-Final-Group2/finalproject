@@ -13,7 +13,7 @@ const search = async (searchDispatchesParams: SearchDispatchesParams) => {
   const {
     status,
     isManager,
-    startDate,
+    startDateTime,
     endDateTime,
     searchOption,
     searchKeyword,
@@ -22,7 +22,7 @@ const search = async (searchDispatchesParams: SearchDispatchesParams) => {
   const dispatchNumberRequest: dispatchNumberRequest = {
     status,
     isManager,
-    startDate,
+    startDateTime,
     endDateTime,
     searchOption,
     searchKeyword,

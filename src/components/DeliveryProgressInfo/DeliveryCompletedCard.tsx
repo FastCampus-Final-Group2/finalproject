@@ -1,35 +1,44 @@
 import Icon, { IconId } from "@/components/core/Icon";
 import { BG_100, BG_650, TEXT_650 } from "@/styles/smColor";
 
-// todo: 완료 주문의 unit은 api 연동 후 변경
-const progressData: { title: string; count: number; unit: string | number; iconId: IconId; devide: string }[] = [
-  { title: "완료 주문", count: 10, unit: 20, iconId: "order", devide: "/" },
-  { title: "주행 거리", count: 23, unit: "km", iconId: "truck", devide: "" },
-  { title: "주행 시간", count: 16, unit: "시간", iconId: "clock", devide: "" },
-];
-
 interface DeliveryCompletedCardProps {
-  deliveryProgressRate: number;
-  selectedColor: keyof typeof BG_100 | keyof typeof TEXT_650;
+  selectedColor: keyof typeof BG_100;
+  completedOrderCount: number;
+  deliveryOrderCount: number;
+  totalTime: number;
 }
-
-const DeliveryCompletedCard = ({ deliveryProgressRate, selectedColor }: DeliveryCompletedCardProps) => {
+// todo: 주행 거리의 count는 api 연동 후 변경
+const DeliveryCompletedCard = ({
+  selectedColor,
+  completedOrderCount,
+  deliveryOrderCount,
+  totalTime,
+}: DeliveryCompletedCardProps) => {
+  const progressData: { title: string; count: number; unit: string | number; iconId: IconId; devide: string }[] = [
+    {
+      title: "완료 주문",
+      count: completedOrderCount,
+      unit: deliveryOrderCount,
+      iconId: "order",
+      devide: "/",
+    },
+    { title: "주행 거리", count: 23, unit: "km", iconId: "truck", devide: "" },
+    { title: "주행 시간", count: totalTime ?? 0, unit: "시간", iconId: "clock", devide: "" },
+  ];
+  const progressRate = completedOrderCount / deliveryOrderCount;
   return (
     <div className="flex flex-col gap-[12px] px-[12px] pt-[12px]">
       <ul className="flex items-center justify-between gap-[20px] text-gray-700 text-B-14-M">
         <li className="flex items-center gap-[4px]">
           <p>진행률</p>
           <p>
-            <span className={`${TEXT_650[selectedColor]} text-T-20-B`}>{deliveryProgressRate}</span>
+            <span className={`${TEXT_650[selectedColor]} text-T-20-B`}>{progressRate}</span>
             <span className="text-T-16-B">%</span>
           </p>
         </li>
         <li className={`h-[12px] w-[80px] rounded-full ${BG_100[selectedColor]}`}>
           {/* progressRate를 인라인 스타일로 적용 */}
-          <p
-            className={`h-[12px] rounded-full ${BG_650[selectedColor]}`}
-            style={{ width: `${deliveryProgressRate}px` }}
-          ></p>
+          <p className={`h-[12px] rounded-full ${BG_650[selectedColor]}`} style={{ width: `${progressRate}px` }}></p>
         </li>
       </ul>
       <div className="text-gray-700 text-B-14-M">

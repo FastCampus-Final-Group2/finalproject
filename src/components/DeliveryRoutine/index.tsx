@@ -3,13 +3,26 @@ import Icon from "@/components/core/Icon";
 import SelectedDelivery from "@/components/SelectedDelivery";
 import DeliveryRoutineDetail from "@/components/DeliveryRoutine/DeliveryRoutineDetail";
 import DeliveryStopoverListCard from "@/components/DeliveryRoutine/DeliveryStopoverListCard";
+import { CourseDetailResponse } from "@/models/ApiTypes";
 
-const startEnd = [
-  { status: "운송 시작", centerName: "마포센터", timetext: "시작", time: "14:00" },
-  { status: "운송 종료", centerName: "", timetext: "종료 예정", time: "20:00" },
-];
+const formatTime = (dateTimeString: string): string => {
+  const date = new Date(dateTimeString);
+  const hours = date.getHours().toString().padStart(2, "0");
+  const minutes = date.getMinutes().toString().padStart(2, "0");
+  return `${hours}:${minutes}`;
+};
 
-const DeliveryRoutine = () => {
+const DeliveryRoutine = ({ fetchData }: { fetchData: CourseDetailResponse }) => {
+  // todo: 운송 종료 데이터 나중에 추가하기
+  const startEnd = [
+    {
+      status: "운송 시작",
+      centerName: fetchData.startStopover?.centerName,
+      timetext: "시작",
+      time: fetchData.startStopover?.departureTime ? formatTime(fetchData.startStopover.departureTime) : "",
+    },
+    { status: "운송 종료", centerName: "", timetext: "종료 예정", time: "20:00" },
+  ];
   const [selectedOrders, setSelectedOrders] = useState<DeliveryRoutineDetailStatusItem[]>([]);
 
   return (
@@ -36,7 +49,11 @@ const DeliveryRoutine = () => {
               </DeliveryStopoverListCard>
             </div>
             {index === 0 && (
-              <DeliveryRoutineDetail selectedOrders={selectedOrders} setSelectedOrders={setSelectedOrders} />
+              <DeliveryRoutineDetail
+                selectedOrders={selectedOrders}
+                setSelectedOrders={setSelectedOrders}
+                fetchData={fetchData}
+              />
             )}
           </React.Fragment>
         ))}

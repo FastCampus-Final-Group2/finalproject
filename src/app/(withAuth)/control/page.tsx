@@ -18,7 +18,7 @@ const fetchDispatchData = async ({ queryKey }: { queryKey: [string, "IN_TRANSIT"
       request: {
         status: status, // 상태에 따라 다른 데이터를 가져옴
         isManager: false,
-        startDate: "1900-01-01",
+        startDateTime: "1900-01-01T23:59:59",
         endDateTime: "3000-12-31T23:59:59",
         searchOption: "",
         searchKeyword: "",
@@ -58,6 +58,7 @@ const ControlPage = () => {
   const [selectedState, setSelectedState] = useState("IN_TRANSIT");
   const [page, setPage] = useState(1);
   const [selectedItemsCount, setSelectedItemsCount] = useState(0);
+  const [searchResults, setSearchResults] = useState<DispatchResult[]>([]);
 
   // useQuery를 사용하여 데이터를 가져옴
   const {
@@ -102,11 +103,15 @@ const ControlPage = () => {
     }
   };
 
+  const handleSearch = (results: DispatchResult[]) => {
+    setSearchResults(results);
+  };
+
   return (
-    <>
-      <h1 className="text-H-28-B">차량 관제</h1>
+    <div className="p-[48px]">
+      <h1 className="mb-[24px] text-H-28-B">차량 관제</h1>
       <div className="flex flex-col gap-[28px] pl-[10px]">
-        <SearchBars data={fetchedData.results} />
+        <SearchBars data={fetchedData.results} onSearch={handleSearch} />
         <TabForDispatchedList
           data={{
             inProgress: fetchedData.inProgress,
@@ -121,12 +126,12 @@ const ControlPage = () => {
           inProgress={fetchedData.inProgress}
           waiting={fetchedData.waiting}
           completed={fetchedData.completed}
-          results={fetchedData.results} // 페이지에 맞는 결과 전달
+          results={searchResults.length > 0 ? searchResults : fetchedData.results}
           onSelectedItemsCountChange={handleSelectedItemsCountChange}
         />
         <Pagination currentPage={page} totalItems={fetchedData.results?.length} onPageChange={setPage} />
       </div>
-    </>
+    </div>
   );
 };
 
