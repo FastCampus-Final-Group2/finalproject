@@ -2,6 +2,8 @@ import Icon from "@/components/core/Icon";
 import { DriverListProps } from "@/components/OrderDashBoard/DriverList";
 import { IconId } from "@/components/core/Icon";
 import { BG_350 } from "@/styles/smColor";
+import { useRecoilState } from "recoil";
+import { bgColorState } from "@/atoms/bgColorState";
 
 interface DriverProps extends DriverListProps {
   checkOrWarning: "check" | "warning";
@@ -28,6 +30,15 @@ const Driver = ({
   const checkOrWarningBgColor = checkOrWarning === "check" ? "bg-green-50" : "bg-red-600";
   const checkOrWarningTextColor = checkOrWarning === "check" ? "text-green-500" : "text-white";
   const dynamicIconId = tonCode as IconId;
+
+  const [, setBgColor] = useRecoilState(bgColorState);
+
+  const handleButtonClick = () => {
+    setBgColor(bgColor); // 버튼 클릭 시 bgColor를 전역 상태로 설정
+    if (onClickToggle) {
+      onClickToggle(); // 기존의 onClickToggle 함수도 호출
+    }
+  };
 
   let capacityBgColor;
   if (capacityRate > 100) {
@@ -84,7 +95,7 @@ const Driver = ({
         <div
           className={`flex h-10 w-3 items-center rounded-br rounded-tr ${BG_350[bgColor]} px-[4px] transition-all duration-300 ease-in-out group-hover:w-[22px] group-hover:justify-center`}
         >
-          <button className="flex h-full w-full items-center justify-center" onClick={onClickToggle}>
+          <button className="flex h-full w-full items-center justify-center" onClick={handleButtonClick}>
             <Icon
               id="arrowLargeDoubleRight"
               size={14}

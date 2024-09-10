@@ -3,7 +3,7 @@ import Button from "@/components/core/Button";
 
 const DispatchInformationHeader = () => {
   return (
-    <div className="flex h-[92px] w-[1696px] items-center justify-between border-b px-[40px] pb-[24px] pt-[28px]">
+    <div className="flex h-[92px] items-center justify-between border-b px-[40px] pb-[24px] pt-[28px]">
       <div className="flex h-[36px] w-[535px] items-center gap-5">
         <div className="flex h-[36px] w-[172px] items-center justify-center gap-[6px] text-[20px] font-B leading-[24px]">
           <span>240808C001#1</span>

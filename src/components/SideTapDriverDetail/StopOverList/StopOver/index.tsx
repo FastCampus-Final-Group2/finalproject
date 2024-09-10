@@ -5,9 +5,10 @@ import { ColorProps } from "@/components/SideTapDriverDetail/StopOverList";
 interface StopOverProps extends ColorProps {
   warningCheck: boolean;
   errorMessage: string;
+  address: string;
 }
 
-const StopOver = ({ warningCheck, errorMessage, bgColor }: StopOverProps) => {
+const StopOver = ({ address, warningCheck, errorMessage, bgColor }: StopOverProps) => {
   return (
     <div className="inline-flex items-start justify-start gap-[20px] self-stretch">
       <div className="inline-flex flex-col items-center justify-start gap-[12px] self-stretch pt-[12px]">
@@ -21,9 +22,7 @@ const StopOver = ({ warningCheck, errorMessage, bgColor }: StopOverProps) => {
           <div className="flex flex-col items-start justify-start gap-[4px] self-stretch">
             <div className="inline-flex items-center justify-start gap-[8px] self-stretch">
               <button className="flex items-center justify-start gap-[4px] border-b border-blue-500 pt-[1px]">
-                <div className="text-center text-blue-500 text-T-16-M">서울시</div>
-                <div className="text-center text-blue-500 text-T-16-M">마포구</div>
-                <div className="text-center text-blue-500 text-T-16-M">신수동</div>
+                <div className="text-center text-blue-500 text-T-16-M">{address}</div>
               </button>
               <div className="shrink grow basis-0 text-gray-500 text-B-14-M">448-52</div>
             </div>
