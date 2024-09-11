@@ -11,25 +11,28 @@ import { GetTransportOrderByIdData } from "@/models/ApiTypes";
 
 interface OrderModalProps {
   id: number;
+  orderInfo?: GetTransportOrderByIdData;
   onClose: () => void;
 }
 
-const OrderModal = ({ id, onClose }: OrderModalProps) => {
-  const [info, setInfo] = useState<GetTransportOrderByIdData | null>(null);
+const OrderModal = ({ id, orderInfo, onClose }: OrderModalProps) => {
+  const [info, setInfo] = useState<GetTransportOrderByIdData | null>(orderInfo || null);
 
   useEffect(() => {
-    TransportAPI.getDetailInfo(id)
-      .then(([error, data]) => {
-        if (error) {
-          onClose();
-        }
+    if (!orderInfo) {
+      TransportAPI.getDetailInfo(id)
+        .then(([error, data]) => {
+          if (error) {
+            onClose();
+          }
 
-        setInfo(data);
-      })
-      .catch(() => {
-        onClose();
-      });
-  }, [id, onClose]);
+          setInfo(data);
+        })
+        .catch(() => {
+          onClose();
+        });
+    }
+  }, [id, onClose, orderInfo]);
 
   if (!info) return null;
 
