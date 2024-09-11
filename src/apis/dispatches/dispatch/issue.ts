@@ -7,7 +7,7 @@ import toAxios from '@/utils/toAxios'
 
 const issue = async (dispatchId: number, issueRequest: IssueRequest) => {
   const response = await toAxios(
-    axios.post(
+    axios.patch(
       `${DISPATCH_API_PATH.dispatch}/${dispatchId}/issue`,
       issueRequest
     )

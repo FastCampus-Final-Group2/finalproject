@@ -38,11 +38,12 @@ const ControlDetailPage = ({ params }: { params: { dispatchCodeId: number } }) =
     retry: 3,
   });
 
-  // refreshData 함수 제거
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>Error: {(error as Error).message}</div>;
 
   console.log("fetchedData in control detail page", fetchedData);
+
+  // 출발 센터 좌표와 도착지 좌표를 포함한 좌표 배열 생성
   const waypointGroups =
     fetchedData?.dispatchList?.map((dispatch) => {
       return [

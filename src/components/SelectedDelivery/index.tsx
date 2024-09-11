@@ -3,6 +3,11 @@ import ConfirmModal from "@/components/ConfirmModal";
 import Icon from "@/components/core/Icon";
 import { DeliveryRoutineDetailStatusItem } from "@/components/DeliveryRoutine/DeliveryRoutineDetail";
 import { DispatchDetailApi } from "@/apis/dispatches/dispatchDetail";
+import { DispatchCancelRequest } from "@/models/ApiTypes";
+
+interface DispatchCancel extends DispatchCancelRequest {
+  dispatchNumberIds: number[];
+}
 
 const SelectedDelivery = ({ selectedOrders }: { selectedOrders: DeliveryRoutineDetailStatusItem[] }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -20,17 +25,17 @@ const SelectedDelivery = ({ selectedOrders }: { selectedOrders: DeliveryRoutineD
     }
 
     try {
-      const dispatchDetailIds = selectedOrders.map((order) => order.dispatchDetailId);
-      const [error, response] = await DispatchDetailApi.orderCancel({ dispatchNumberIds: dispatchDetailIds });
+      const dispatchCancel: DispatchCancel = {
+        dispatchNumberIds: selectedOrders.map((order) => order.dispatchDetailId),
+      };
+      console.log("dispatchCancel", dispatchCancel);
+      const [error, response] = await DispatchDetailApi.orderCancel(dispatchCancel);
 
       if (error) {
         console.error("API 오류:", error);
         alert(`배송 취소 중 오류가 발생했습니다: ${error.type || "알 수 없는 오류"}`);
       } else if (response) {
         alert("배송 취소가 완료되었습니다.");
-        // 여기에 성공 후 추가 작업을 수행할 수 있습니다 (예: 상태 업데이트, 페이지 새로고침 등)
-      } else {
-        alert("예상치 못한 응답 형식입니다.");
       }
     } catch (error) {
       console.error("예외 발생:", error);
