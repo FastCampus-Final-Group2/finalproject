@@ -25,7 +25,7 @@ const SearchBars = ({ data, onSearch }: SearchBarsProps) => {
 
       const searchParams = {
         request: {
-          status: "IN_TRANSIT", // 기본값 설정, 필요에 따라 변경
+          status: "IN_TRANSIT" as const, // 'as const'를 추가하여 리터럴 타입으로 지정
           isManager: false,
           startDateTime: formattedStartDate,
           endDateTime: formattedEndDate,
@@ -41,7 +41,7 @@ const SearchBars = ({ data, onSearch }: SearchBarsProps) => {
         return;
       }
 
-      onSearch(results as DispatchResult[]);
+      onSearch(results as DispatchResult[]); // 검색 결과를 부모 컴포넌트로 전달
     } catch (err) {
       console.error("API 호출 중 오류 발생:", err);
     }

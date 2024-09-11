@@ -13,13 +13,28 @@ interface DeliveryProgressSideTabProps {
   dispatchId: number | null;
 }
 
-const fetchDispatchIdData = async (dispatchId: number | null): Promise<DispatchDetailResponse | null> => {
+interface FetchData extends DispatchDetailResponse {
+  smPhoneNumber?: string;
+  smName?: string;
+  floorAreaRatio?: number;
+  vehicleType?: string;
+  vehicleTon?: number;
+  completedOrderCount?: number;
+  deliveryOrderCount?: number;
+  totalTime?: number;
+  issue?: string;
+  startStopover: { centerName: string; departureTime: string; centerId: number };
+  dispatchDetailList: [];
+}
+
+const fetchDispatchIdData = async (dispatchId: number | null): Promise<FetchData | null> => {
   if (dispatchId === null) return null;
-  const data = await DispatchDetailApi.dispatchIdVehicleControl(dispatchId);
-  if (data.error) {
+  try {
+    const data = await DispatchDetailApi.dispatchIdVehicleControl(dispatchId);
+    return data as FetchData;
+  } catch (error) {
     throw new Error("dispatchId 데이터 불러오기 실패");
   }
-  return data;
 };
 
 const DeliveryProgressSideTab = ({ isExpanded, onClose, selectedColor, dispatchId }: DeliveryProgressSideTabProps) => {
@@ -27,6 +42,7 @@ const DeliveryProgressSideTab = ({ isExpanded, onClose, selectedColor, dispatchI
     data: fetchData,
     isLoading,
     error,
+    refetch,
   } = useQuery({
     queryKey: ["vehicle-control", dispatchId],
     queryFn: () => fetchDispatchIdData(dispatchId),
@@ -41,11 +57,20 @@ const DeliveryProgressSideTab = ({ isExpanded, onClose, selectedColor, dispatchI
   console.log("dispatchIdFetchData", fetchData);
   return (
     <div className="transition-width relative z-50 duration-300 ease-in-out">
-      <div className={`${BG_50[selectedColor]} flex h-[884px] w-fit flex-col gap-[24px] px-[32px] pb-[15px] pt-[20px]`}>
+      <div
+        className={`${BG_50[selectedColor]} flex h-[calc(100vh-196px)] w-fit flex-col gap-[24px] overflow-y-auto px-[32px] pb-[15px] pt-[20px] scrollbar-hide`}
+      >
         <div className="flex w-fit flex-col gap-[4px] rounded-[8px] bg-white p-[20px]">
-          <DeliveryProgressInfo selectedColor={selectedColor} fetchData={fetchData} dispatchId={dispatchId} />
+          <DeliveryProgressInfo
+            selectedColor={selectedColor}
+            fetchData={fetchData as Required<FetchData>}
+            dispatchId={dispatchId ?? 0}
+            refreshData={async () => {
+              await refetch();
+            }}
+          />
         </div>
-        <div className="flex h-[556px] w-fit flex-col gap-[4px] rounded-[8px] bg-white pl-[12px] pr-[16px] pt-[20px]">
+        <div className="flex max-h-[556px] w-fit flex-col gap-[4px] rounded-[8px] bg-white pl-[12px] pr-[16px] pt-[20px]">
           <DeliveryRoutine fetchData={fetchData} />
         </div>
       </div>

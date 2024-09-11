@@ -1,23 +1,41 @@
-import Button from "@/components/core/Button";
 import { useState } from "react";
 import ConfirmModal from "@/components/ConfirmModal";
 import Icon from "@/components/core/Icon";
+import { DeliveryRoutineDetailStatusItem } from "@/components/DeliveryRoutine/DeliveryRoutineDetail";
+import { DispatchDetailApi } from "@/apis/dispatches/dispatchDetail";
 
 const SelectedDelivery = ({ selectedOrders }: { selectedOrders: DeliveryRoutineDetailStatusItem[] }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const handleCancel = () => {
+  const handleCancel = async () => {
     if (selectedOrders.length === 0) {
       alert("선택된 항목이 없습니다.");
       return;
     }
-    // 선택된 항목들 중에 'WORK_WAITING'이 아닌 상태가 있는지 확인
+
     const hasNonWorkWaiting = selectedOrders.some((order) => order.dispatchDetailStatus !== "WORK_WAITING");
     if (hasNonWorkWaiting) {
       alert("선택된 항목이 잘못되었습니다. '작업 대기' 상태만 선택 가능합니다.");
-    } else {
-      alert("삭제 완료!");
-      console.log("SelectDelivery에서 배송취소 버튼 클릭");
+      return;
+    }
+
+    try {
+      const dispatchDetailIds = selectedOrders.map((order) => order.dispatchDetailId);
+      const [error, response] = await DispatchDetailApi.orderCancel({ dispatchNumberIds: dispatchDetailIds });
+
+      if (error) {
+        console.error("API 오류:", error);
+        alert(`배송 취소 중 오류가 발생했습니다: ${error.type || "알 수 없는 오류"}`);
+      } else if (response) {
+        alert("배송 취소가 완료되었습니다.");
+        // 여기에 성공 후 추가 작업을 수행할 수 있습니다 (예: 상태 업데이트, 페이지 새로고침 등)
+      } else {
+        alert("예상치 못한 응답 형식입니다.");
+      }
+    } catch (error) {
+      console.error("예외 발생:", error);
+      alert("서버 오류가 발생했습니다.");
+    } finally {
       setIsModalOpen(false);
     }
   };

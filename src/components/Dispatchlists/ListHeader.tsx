@@ -19,21 +19,21 @@ interface ListHeaderProps {
 
 const ListHeader = ({ isAllChecked, onAllCheck }: ListHeaderProps) => {
   return (
-    <ul className={cn(dispatchListClass({ backgroundColor: "header" }))}>
-      <li className={cn(dispatchListClass({ width: "extraSmall" }))}>
+    <div className={cn(dispatchListClass({ backgroundColor: "header" }))}>
+      <div className={cn(dispatchListClass({ width: "extraSmall" }))}>
         {/* 전체 선택 체크박스 */}
         <ListCheckbox isChecked={isAllChecked} onChange={() => onAllCheck(!isAllChecked)} />
-      </li>
+      </div>
       {tableHeader.map((header, index) => (
-        <li key={index} className={cn(dispatchListClass({ width: header.width, text: "medium" }))}>
+        <ul key={index} className={cn(dispatchListClass({ width: header.width, text: "medium" }))}>
           {header.text}
-          <span>
+          <li>
             <Icon id="triangleUp" size={14} className="text-gray-300" />
             <Icon id="triangleDown" size={14} className="text-gray-300" />
-          </span>
-        </li>
+          </li>
+        </ul>
       ))}
-    </ul>
+    </div>
   );
 };
 

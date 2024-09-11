@@ -1,7 +1,7 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { DispatchNumberApi } from "@/apis/dispatches/dispatchNumber";
 import { DispatchResult } from "@/models/ApiTypes";
 import DispatchLists from "@/components/Dispatchlists";
@@ -11,6 +11,7 @@ import ListSelection from "@/components/ListSelection";
 import Pagination from "@/components/core/Pagination";
 
 // API를 통해 데이터를 가져오는 함수
+
 const fetchDispatchData = async ({ queryKey }: { queryKey: [string, "IN_TRANSIT" | "WAITING" | "COMPLETED"] }) => {
   const status = queryKey[1];
   try {
@@ -26,52 +27,18 @@ const fetchDispatchData = async ({ queryKey }: { queryKey: [string, "IN_TRANSIT"
     });
 
     if (error) {
-      console.log("access denied");
-      throw new Error(error.type || "An error occurred while fetching data");
+      throw new Error(error.type || "데이터 가져오기 중 오류 발생");
     }
 
-    console.log("access success");
-    console.log("results?.results", results);
-
-    // results의 내용에 따라 status 결정
-    let updatedStatus = status;
-    if (results && Array.isArray(results.results)) {
-      const firstResult = results.results[0];
-      if (firstResult && firstResult.status) {
-        updatedStatus = firstResult.status;
-      }
-    }
-
-    // 업데이트된 status로 다시 API 호출
-    if (updatedStatus !== status) {
-      const updatedResponse = await DispatchNumberApi.search({
-        request: {
-          ...request,
-          status: updatedStatus,
-        },
-      });
-      if (updatedResponse.error) {
-        throw new Error(updatedResponse.error.type || "An error occurred while fetching updated data");
-      }
-      return updatedResponse.results as DispatchData;
-    }
-
-    return (
-      (results as DispatchData) ||
-      ({
-        inProgress: 0,
-        waiting: 0,
-        completed: 0,
-        results: [] as DispatchResult,
-      } as DispatchData)
-    );
+    return results as DispatchData;
   } catch (err) {
-    console.log("access denied");
+    console.log("접근 거부");
     throw err;
   }
 };
 
 interface DispatchData {
+  status?: "IN_TRANSIT" | "WAITING" | "COMPLETED";
   inProgress: number;
   waiting: number;
   completed: number;
@@ -79,7 +46,7 @@ interface DispatchData {
 }
 
 const ControlPage = () => {
-  const [selectedState, setSelectedState] = useState("IN_TRANSIT");
+  const [selectedState, setSelectedState] = useState<"IN_TRANSIT" | "WAITING" | "COMPLETED">("IN_TRANSIT");
   const [page, setPage] = useState(1);
   const [selectedItemsCount, setSelectedItemsCount] = useState(0);
   const [searchResults, setSearchResults] = useState<DispatchResult[]>([]);
@@ -93,7 +60,7 @@ const ControlPage = () => {
     } as DispatchData,
     isLoading,
     error,
-    refetch,
+    // refetch,
   } = useQuery({
     queryKey: ["dispatchData", selectedState],
     queryFn: fetchDispatchData,
@@ -101,21 +68,21 @@ const ControlPage = () => {
     retry: 3,
   });
 
-  useEffect(() => {
-    if (fetchedData && fetchedData.results && fetchedData.results.length > 0) {
-      const firstResult = fetchedData.results[0];
-      if (firstResult && firstResult.status && firstResult.status !== selectedState) {
-        setSelectedState(firstResult.status);
-        refetch();
-      }
-    }
-  }, [fetchedData, selectedState, refetch]);
+  // useEffect(() => {
+  //   if (fetchedData && fetchedData.results && fetchedData.results.length > 0) {
+  //     const firstResult = fetchedData.results[0];
+  //     if (firstResult && firstResult.status && firstResult.status !== selectedState) {
+  //       setSelectedState(firstResult.status);
+  //       refetch();
+  //     }
+  //   }
+  // }, [fetchedData, selectedState, refetch]);
 
   // 로딩 중이거나 에러 발생 시 처리
   if (isLoading) return <div>Loading...</div>;
   if (error instanceof Error) return <div>Error: {error.message}</div>;
 
-  const handleStateChange = (state: string) => {
+  const handleStateChange = (state: "IN_TRANSIT" | "WAITING" | "COMPLETED") => {
     setSelectedState(state);
   };
 
@@ -141,7 +108,7 @@ const ControlPage = () => {
   };
 
   return (
-    <div className="p-[48px]">
+    <div className="h-[calc(100vh-104px)] overflow-y-auto p-[48px]">
       <h1 className="mb-[24px] text-H-28-B">차량 관제</h1>
       <div className="flex flex-col gap-[28px] pl-[10px]">
         <SearchBars data={fetchedData.results} onSearch={handleSearch} />
@@ -154,6 +121,7 @@ const ControlPage = () => {
           onStateChange={handleStateChange}
           initialState={selectedState}
         />
+
         <ListSelection currentCount={getCurrentCount()} selectedCount={selectedItemsCount} />
         <DispatchLists
           inProgress={fetchedData.inProgress}

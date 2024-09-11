@@ -8,8 +8,24 @@ import DeliveryProgressSideTab from "./DeliveryProgressSideTab";
 import { DispatchListResponse } from "@/models/ApiTypes";
 
 type ColorType = "lime" | "sky" | "violet" | "redwood" | "peanut" | "brown" | "forest" | "yale" | "olive";
+type VehicleStatusType =
+  | "DELIVERY_DELAY"
+  | "WORK_COMPLETED"
+  | "CANCELED"
+  | "WORK_WAITING"
+  | "WORK_START"
+  | "MOVING"
+  | "RESTING"
+  | "RESTING_TIME"
+  | "default";
 
-const ControlDispatchDashboard = ({ fetchedData }: { fetchedData: DispatchListResponse }) => {
+const ControlDispatchDashboard = ({
+  fetchedData,
+  refreshData,
+}: {
+  fetchedData: DispatchListResponse;
+  refreshData: () => Promise<void>;
+}) => {
   const smColors: ColorType[] = ["lime", "sky", "violet", "redwood", "peanut", "brown", "forest", "yale", "olive"];
   const [selectedColor, setSelectedColor] = useState(smColors[0]);
   const [selectedDispatchId, setSelectedDispatchId] = useState<number | null>(null);
@@ -27,13 +43,14 @@ const ControlDispatchDashboard = ({ fetchedData }: { fetchedData: DispatchListRe
   return (
     <div className="flex">
       <div>
-        <div className="h-[884px] w-[524px] bg-blue-30">
-          <div className="flex h-[156px] w-[524px] items-center justify-center">
+        <div className="h-[calc(100vh-196px)] overflow-y-auto bg-blue-30 scrollbar-hide">
+          <div className="flex h-[156px] items-center justify-center">
             <DeliveryTotalOrders
               totalOrders={fetchedData.totalOrderNum ?? 0}
               completedOrder={fetchedData.totalCompletedOrderNum ?? 0}
               issueOrder={fetchedData.issueOrderNum ?? 0}
               deliveryProgress={fetchedData.totalProgressionRate ?? 0}
+              refreshData={refreshData}
             />
           </div>
           <div className="flex h-[344px] w-[524px] justify-center">
@@ -42,7 +59,7 @@ const ControlDispatchDashboard = ({ fetchedData }: { fetchedData: DispatchListRe
               onClickToggle={openSideTap}
               drivers={fetchedData.dispatchList ?? []}
               smColors={smColors}
-              dispatchStatus={fetchedData.dispatchList?.[0]?.dispatchStatus ?? []}
+              dispatchStatus={fetchedData.dispatchList?.map((item) => item.dispatchStatus as VehicleStatusType) ?? []}
             />
           </div>
           <div className="mt-[20px] flex max-h-[364px] min-h-[64px] w-[524px] justify-center">

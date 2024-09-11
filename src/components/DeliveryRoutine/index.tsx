@@ -1,9 +1,22 @@
 import React, { useState } from "react";
 import Icon from "@/components/core/Icon";
 import SelectedDelivery from "@/components/SelectedDelivery";
-import DeliveryRoutineDetail from "@/components/DeliveryRoutine/DeliveryRoutineDetail";
+import DeliveryRoutineDetail, {
+  DeliveryRoutineDetailStatusItem,
+} from "@/components/DeliveryRoutine/DeliveryRoutineDetail";
 import DeliveryStopoverListCard from "@/components/DeliveryRoutine/DeliveryStopoverListCard";
 import { CourseDetailResponse } from "@/models/ApiTypes";
+import DeliveryModal from "@/components/detailModal/DeliveryModal";
+
+interface FetchData extends CourseDetailResponse {
+  startStopover: {
+    centerName: string;
+    departureTime: string;
+    centerId: number;
+  };
+  dispatchDetailList: DeliveryRoutineDetailStatusItem[];
+  ett?: number;
+}
 
 const formatTime = (dateTimeString: string): string => {
   const date = new Date(dateTimeString);
@@ -12,7 +25,11 @@ const formatTime = (dateTimeString: string): string => {
   return `${hours}:${minutes}`;
 };
 
-const DeliveryRoutine = ({ fetchData }: { fetchData: CourseDetailResponse }) => {
+const DeliveryRoutine = ({ fetchData }: { fetchData: FetchData }) => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const handleModalOpen = () => {
+    setIsModalOpen(true);
+  };
   // todo: 운송 종료 데이터 나중에 추가하기
   const startEnd = [
     {
@@ -28,17 +45,20 @@ const DeliveryRoutine = ({ fetchData }: { fetchData: CourseDetailResponse }) => 
   return (
     <>
       <SelectedDelivery selectedOrders={selectedOrders} />
-      <div className="flex h-[500px] flex-col gap-[6px] py-[8px] text-T-18-B">
+      <div className="flex h-fit max-h-[500px] flex-col gap-[6px] py-[8px] text-T-18-B">
         {startEnd.map((data, index) => (
           <React.Fragment key={data.status}>
-            <div className="flex h-[60px] w-[430px] justify-between">
+            <div className="flex justify-between">
               <div className="flex w-[46px] justify-center pt-[18px]">
                 <Icon id="circleFill" size={16} className="text-gray-400" />
               </div>
               <DeliveryStopoverListCard border="deliveryStartEnd">
                 <ul className="flex items-end gap-[8px]">
                   <li>{data.status}</li>
-                  <li className="cursor-pointer border-b border-blue-500 text-blue-500 text-T-16-M">
+                  <li
+                    className="cursor-pointer border-b border-blue-500 text-blue-500 text-T-16-M"
+                    onClick={handleModalOpen}
+                  >
                     {data.centerName}
                   </li>
                 </ul>
@@ -58,6 +78,9 @@ const DeliveryRoutine = ({ fetchData }: { fetchData: CourseDetailResponse }) => 
           </React.Fragment>
         ))}
       </div>
+      {isModalOpen && (
+        <DeliveryModal id={fetchData.startStopover.centerId} isCenter={true} onClose={() => setIsModalOpen(false)} />
+      )}
     </>
   );
 };
