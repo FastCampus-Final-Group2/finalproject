@@ -1,6 +1,7 @@
 "use client";
 
 import { UsersAPI } from "@/apis/users";
+import { dispatchDataState } from "@/atoms/dipatchData";
 import { userState } from "@/atoms/user";
 import Icon from "@/components/core/Icon";
 import useOnlyClient from "@/hooks/useOnlyClient";
@@ -8,7 +9,7 @@ import useResetExcelDataAtoms from "@/hooks/useResetExcelDataAtoms";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
-import { useRecoilState } from "recoil";
+import { useRecoilState, useResetRecoilState } from "recoil";
 
 const ProfileBadge = () => {
   const isClient = useOnlyClient();
@@ -16,6 +17,7 @@ const ProfileBadge = () => {
   const router = useRouter();
   const [user, setUser] = useRecoilState(userState);
   const resetExcelDataAtoms = useResetExcelDataAtoms();
+  const resetDispatchData = useResetRecoilState(dispatchDataState);
 
   useEffect(() => {
     if (!user) {
@@ -28,6 +30,7 @@ const ProfileBadge = () => {
 
     if (!error) {
       resetExcelDataAtoms();
+      resetDispatchData();
       setUser(undefined);
       router.push("/");
     }
