@@ -2,8 +2,8 @@ import { atom } from "recoil";
 import { persistAtom } from "./persistAtom";
 import { DispatchResponse } from "@/models/ApiTypes";
 
-export const orderListState = atom<DispatchResponse | null>({
-  key: "orderListState",
+export const dispatchDataState = atom<DispatchResponse | null>({
+  key: "dispatchDataState",
   default: null,
   effects_UNSTABLE: [persistAtom],
 });

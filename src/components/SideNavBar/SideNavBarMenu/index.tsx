@@ -6,7 +6,6 @@ import { usePathname, useRouter } from "next/navigation";
 import { useTabStateContext } from "@/contexts/TabStateContext";
 import type { SideNavBarLink } from "@/components/SideNavBar/index.constants";
 import SideNavBarSubMenu from "@/components/SideNavBar/SideNavBarSubMenu";
-import { useCallback, useReducer } from "react";
 import { DEFAULT_TAB } from "@/components/GlobalNavBar/index.constants";
 import { cn } from "@/utils/cn";
 import {
@@ -32,7 +31,7 @@ const SideNavBarMenu = ({
   const pathname = usePathname();
   const { addTab } = useTabStateContext();
   const { isSNBOpened } = useSNBStateContext();
-  const isPageOpened = href && pathname === href ? true : false;
+  const isPageOpened = href && pathname === "/dispatch/manual" ? "/dispatch" === href : pathname === href;
 
   const handleMenuToggleButton = () => {
     if (!isSNBOpened) return;

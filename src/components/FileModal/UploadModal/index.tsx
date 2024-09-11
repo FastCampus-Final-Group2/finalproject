@@ -4,7 +4,6 @@ import Icon from "@/components/core/Icon";
 import FileInput from "./FileInput.tsx";
 import Dimmed from "@/components/core/Dimmed";
 import { TransportAPI } from "@/apis/transportOrder";
-import axios from "@/utils/axios";
 import downloadExampleFile from "@/utils/downloadExampleFile";
 
 interface UploadModalProps {
@@ -13,44 +12,24 @@ interface UploadModalProps {
 }
 
 const UploadModal = ({ setModalOpen, setIsError }: UploadModalProps) => {
-  // TODO
   const handleExcelExampleBtn = async () => {
-    downloadExampleFile();
-    // const [error, data] = await TransportAPI.excelExample();
-    // await axios
-    //   .get("/transport-order/excel-example", {
-    //     responseType: "arraybuffer",
-    //     headers: {
-    //       "Content-Type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-    //       "Content-Length": 12000,
-    //     },
-    //   })
-    //   .then((response) => {
-    //     console.log("response");
-    //     const blob = new Blob([response.data], {
-    //       type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-    //     });
-    //     const url = window.URL.createObjectURL(blob);
-    //     const link = document.createElement("a");
-    //     link.href = url;
-    //     link.setAttribute("download", "filename.xlsx");
-    //     document.body.appendChild(link);
-    //     link.click();
-    //     link.remove();
-    //   })
-    //   .catch((error) => {
-    //     console.error("Error", error);
-    //     const blob = new Blob([error.response.data], {
-    //       type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-    //     });
-    //     const url = window.URL.createObjectURL(blob);
-    //     const link = document.createElement("a");
-    //     link.href = url;
-    //     link.setAttribute("download", "filename.xlsx");
-    //     document.body.appendChild(link);
-    //     link.click();
-    //     link.remove();
-    //   });
+    const [error, data] = await TransportAPI.excelExample();
+
+    if (!error) {
+      const blob = new Blob([data], {
+        type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      });
+
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", "운송_주문_양식.xlsx");
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+    } else {
+      downloadExampleFile();
+    }
   };
 
   return (
