@@ -33,7 +33,7 @@ export default plugin(function ({ addUtilities, theme }) {
       letterSpacing: theme("letterSpacing.normal"),
     },
     ".text-T-16-B": {
-      fontSize: theme("fontSize.61"),
+      fontSize: theme("fontSize.16"),
       fontWeight: theme("fontWeight.B"),
       lineHeight: theme("lineHeight.120"),
       letterSpacing: theme("letterSpacing.normal"),
@@ -83,6 +83,12 @@ export default plugin(function ({ addUtilities, theme }) {
     ".text-C-12-M": {
       fontSize: theme("fontSize.12"),
       fontWeight: theme("fontWeight.M"),
+      lineHeight: theme("lineHeight.120"),
+      letterSpacing: theme("letterSpacing.normal"),
+    },
+    ".text-C-12-B": {
+      fontSize: theme("fontSize.12"),
+      fontWeight: theme("fontWeight.B"),
       lineHeight: theme("lineHeight.120"),
       letterSpacing: theme("letterSpacing.normal"),
     },
