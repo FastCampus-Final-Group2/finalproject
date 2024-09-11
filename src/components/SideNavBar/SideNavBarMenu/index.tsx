@@ -31,7 +31,7 @@ const SideNavBarMenu = ({
   const pathname = usePathname();
   const { addTab } = useTabStateContext();
   const { isSNBOpened } = useSNBStateContext();
-  const isPageOpened = href && pathname === href ? true : false;
+  const isPageOpened = href && pathname === "/dispatch/manual" ? "/dispatch" === href : pathname === href;
 
   const handleMenuToggleButton = () => {
     if (!isSNBOpened) return;
