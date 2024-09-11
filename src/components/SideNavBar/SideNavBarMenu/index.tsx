@@ -15,6 +15,7 @@ import {
   snbMenuVariants,
   snbSubMenuContainerVariants,
 } from "./index.variants";
+import { matchPathname } from "@/utils/validation/path";
 
 interface SideNavBarMenuProps {
   SideNavBarInfo: SideNavBarLink;
@@ -31,7 +32,7 @@ const SideNavBarMenu = ({
   const pathname = usePathname();
   const { addTab } = useTabStateContext();
   const { isSNBOpened } = useSNBStateContext();
-  const isPageOpened = href && pathname === "/dispatch/manual" ? "/dispatch" === href : pathname === href;
+  const isPageOpened = matchPathname(pathname, href);
 
   const handleMenuToggleButton = () => {
     if (!isSNBOpened) return;
