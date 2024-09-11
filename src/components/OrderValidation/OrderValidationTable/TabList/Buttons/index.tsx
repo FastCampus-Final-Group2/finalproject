@@ -1,7 +1,7 @@
 "use client";
 
 import { TransportAPI } from "@/apis/transportOrder";
-import { dispatchDataState } from "@/atoms/dipatchData";
+import { dispatchDataState } from "@/atoms/dispatchData";
 import { dispatchNameState, excelDataState, isValidExcelDataState, loadingStartTimeState } from "@/atoms/excelData";
 import ConfirmModal from "@/components/ConfirmModal";
 import Button from "@/components/core/Button";

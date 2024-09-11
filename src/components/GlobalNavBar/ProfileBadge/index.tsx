@@ -1,7 +1,7 @@
 "use client";
 
 import { UsersAPI } from "@/apis/users";
-import { dispatchDataState } from "@/atoms/dipatchData";
+import { dispatchDataState } from "@/atoms/dispatchData";
 import { userState } from "@/atoms/user";
 import Icon from "@/components/core/Icon";
 import useOnlyClient from "@/hooks/useOnlyClient";

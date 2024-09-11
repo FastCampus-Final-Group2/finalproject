@@ -1,6 +1,6 @@
 "use client";
 
-import { dispatchDataState } from "@/atoms/dipatchData";
+import { dispatchDataState } from "@/atoms/dispatchData";
 import { excelDataState } from "@/atoms/excelData";
 import Spinner from "@/components/core/Spinner";
 import DispatchSelector from "@/components/DispatchSelector";
