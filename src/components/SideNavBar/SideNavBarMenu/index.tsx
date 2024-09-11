@@ -15,7 +15,7 @@ import {
   snbMenuVariants,
   snbSubMenuContainerVariants,
 } from "./index.variants";
-import { matchPathname } from "@/utils/validation/path";
+import { matchPathname } from "@/utils/validation/pathname";
 
 interface SideNavBarMenuProps {
   SideNavBarInfo: SideNavBarLink;

@@ -10,7 +10,7 @@ import { useCallback } from "react";
 import type { MouseEventHandler } from "react";
 import { cn } from "@/utils/cn";
 import { gnbTabContentVariants, gnbTabToggleIconVariants, gnbTabVariants } from "./index.variants";
-import { matchPathname } from "@/utils/validation/path";
+import { matchPathname } from "@/utils/validation/pathname";
 
 interface GlobalNavBarTabItem {
   tabName: SideNavBarLink["name"];
