@@ -1,15 +1,18 @@
 "use client";
 
 import { TransportAPI } from "@/apis/transportOrder";
+import { dispatchDataState } from "@/atoms/dipatchData";
 import { dispatchNameState, excelDataState, isValidExcelDataState, loadingStartTimeState } from "@/atoms/excelData";
 import ConfirmModal from "@/components/ConfirmModal";
 import Button from "@/components/core/Button";
+import LoadingModal from "@/components/LoadingModal";
 import useResetExcelDataAtoms from "@/hooks/useResetExcelDataAtoms";
 import { formatTransportOrderRequest } from "@/utils/format/transportOrder";
 import { useState } from "react";
-import { useRecoilValue } from "recoil";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 
 const Buttons = () => {
+  const [loadingModalOpen, setLoadingModalOpen] = useState(false);
   const [cancelModalOpen, setCancelModalOpen] = useState(false);
 
   const resetExcelDataAtoms = useResetExcelDataAtoms();
@@ -19,17 +22,29 @@ const Buttons = () => {
   const excelData = useRecoilValue(excelDataState);
   const isValidExcelData = useRecoilValue(isValidExcelDataState);
 
+  const setDispatch = useSetRecoilState(dispatchDataState);
+
   const handleClickCancelBtn = () => {
     setCancelModalOpen(true);
   };
 
-  const handleClickDispathBtn = async () => {
+  const handleClickDispatchBtn = () => {
+    setLoadingModalOpen(true);
+  };
+
+  const calculateDispatch = async () => {
     const transportOrderRequest = formatTransportOrderRequest(loadingStartTime, dispatchName, excelData);
 
     const [error, data] = await TransportAPI.postOrder(transportOrderRequest);
 
-    console.log("error", error);
-    console.log("data", data);
+    if (error) {
+      setLoadingModalOpen(false);
+    }
+
+    setTimeout(() => {
+      setDispatch(data);
+      resetExcelDataAtoms();
+    }, 1000);
   };
 
   return (
@@ -41,7 +56,7 @@ const Buttons = () => {
         type="button"
         size="s"
         disabled={!(loadingStartTime !== "YYYY-MM-DD --:--" && isValidExcelData)}
-        onClick={handleClickDispathBtn}
+        onClick={handleClickDispatchBtn}
       >
         배차 진행
       </Button>
@@ -57,6 +72,15 @@ const Buttons = () => {
           }}
           leftButtonText="돌아가기"
           rightButtonText="업로드 취소"
+        />
+      )}
+      {loadingModalOpen && (
+        <LoadingModal
+          title="경로 최적화 진행 중"
+          text={["배차 계획을 만들고 있습니다.", "잠시만 기다려주세요."]}
+          awaitFn={calculateDispatch}
+          time={7000}
+          intervalTime={10}
         />
       )}
     </div>

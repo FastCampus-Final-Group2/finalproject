@@ -1,10 +1,11 @@
 import { BgColorType } from "@/types/color";
 import { useEffect, useState } from "react";
 
-interface ProgressBarProps {
+export interface ProgressBarProps {
   barColor?: BgColorType;
   bgColor?: BgColorType;
   time?: number;
+  intervalTime?: number;
   awaitFn?: () => Promise<void> | void;
   onLoadingEnd?: () => void;
   onError?: () => void;
@@ -14,6 +15,7 @@ const ProgressBar = ({
   bgColor = "bg-gray-900",
   barColor = "bg-gray-200",
   time = 3000,
+  intervalTime = 3,
   awaitFn,
   onLoadingEnd,
   onError,
@@ -25,9 +27,9 @@ const ProgressBar = ({
       const interval = setInterval(() => {
         setProgressWidth((prev) => {
           const currentWidth = parseInt(prev);
-          return `${Math.min(currentWidth + Math.floor(Math.random() * 31), 90)}%`;
+          return `${Math.min(currentWidth + Math.floor(Math.random() * Math.floor(90 / intervalTime + 1)), 90)}%`;
         });
-      }, time / 3);
+      }, time / intervalTime);
 
       if (awaitFn) {
         await awaitFn();
@@ -46,7 +48,7 @@ const ProgressBar = ({
     handleProgressWidth().catch(() => {
       if (onError) onError();
     });
-  }, [awaitFn, onError, onLoadingEnd, time]);
+  }, [awaitFn, intervalTime, onError, onLoadingEnd, time]);
 
   return (
     <div className={`${bgColor} relative h-3 w-full rounded-full`}>

@@ -6,7 +6,6 @@ import { usePathname, useRouter } from "next/navigation";
 import { useTabStateContext } from "@/contexts/TabStateContext";
 import type { SideNavBarLink } from "@/components/SideNavBar/index.constants";
 import SideNavBarSubMenu from "@/components/SideNavBar/SideNavBarSubMenu";
-import { useCallback, useReducer } from "react";
 import { DEFAULT_TAB } from "@/components/GlobalNavBar/index.constants";
 import { cn } from "@/utils/cn";
 import {
