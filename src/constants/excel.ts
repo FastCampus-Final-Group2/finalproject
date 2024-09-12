@@ -1,6 +1,5 @@
-export const ORDER_VALIDATION_LIST_ROW_HEADERS = [
-  "등록상태",
-  "배송유형",
+export const EXCEL_HEADERS = [
+  "배송유형 (지입/용차/택배)",
   "SM명",
   "고객명",
   "주소",

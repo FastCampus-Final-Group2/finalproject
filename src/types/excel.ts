@@ -7,24 +7,24 @@ export interface SmInfos {
 export type ExcelDataHeader =
   | "deliveryType" // 필수
   | "smName" // 필수
+  | "clientName" // 필수
+  | "address" // 필수
   | "shipmentNumber" // 필수
-  | "clientOrderKey"
+  | "clientOrderKey" // 선택
   | "orderType" // 필수
   | "receivedDate" // 필수
   | "serviceRequestDate" // 필수
-  | "serviceRequestTime" // 필수
-  | "clientName" // 필수
+  | "serviceRequestTime" // 선택
   | "contact" // 필수
-  | "address" // 필수
-  | "detailAddress" // 필수
+  | "detailAddress" // 선택
   | "zipcode" // 필수
   | "volume" // 필수
   | "weight" // 필수
-  | "note"
-  | "expectedServiceDuration"
-  | "productName" // 필수
-  | "productCode"
-  | "productQuantity"; // 필수
+  | "note" // 선택
+  | "expectedServiceDuration" // 선택: 1
+  | "productName" // 선택
+  | "productCode" // 선택
+  | "productQuantity"; // 선택: 1
 
 export interface DefaultExcelDataValue {
   value: string;

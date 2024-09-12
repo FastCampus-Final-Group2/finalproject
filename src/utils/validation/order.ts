@@ -7,7 +7,7 @@ const SERVICE_REQUEST_DATE_REG_EXP = /^\d{8}$/;
 const SERVICE_REQUEST_TIME_REG_EXP = /^([01]\d|2[0-3]):([0-5]\d)$/;
 const CONTACT_REG_EXP = /^\d{9,11}$/;
 const ZIPCODE_REG_EXP = /^\d{5}$/;
-const VOLUME_REG_EXP = /^\d+$/;
+const VOLUME_REG_EXP = /^(0|[1-9][0-9]*)(\.[0-9]+)?$/;
 const WEIGHT_REG_EXP = /^\d+$/;
 const EXPECTED_SERVICE_DURATION_REG_EXP = /^\d+$/;
 const PRODUCT_QUANTITY_REG_EXP = /^\d+$/;
@@ -32,11 +32,15 @@ const validSmName = (value: string, smInfos?: SmInfos): { id: number; isValid: b
   };
 };
 
+const validClientName = (value: string): boolean => {
+  return value !== "";
+};
+
 const validShipmentNum = (value: string): boolean => {
   return SHIPMENT_NUM_REG_EXP.test(value);
 };
 
-const validclientOrderKey = (value: string): boolean => {
+const validClientOrderKey = (value: string): boolean => {
   return true;
 };
 
@@ -65,11 +69,8 @@ const validServiceRequestDate = (value: string): boolean => {
 };
 
 const validServiceRequestTime = (value: string): boolean => {
+  if (value === "") return true;
   return SERVICE_REQUEST_TIME_REG_EXP.test(value);
-};
-
-const validClientName = (value: string): boolean => {
-  return value !== "";
 };
 
 const validContact = (value: string): boolean => {
@@ -81,7 +82,7 @@ const validAddress = (value: string): boolean => {
 };
 
 const validDetailAddress = (value: string): boolean => {
-  return value !== "";
+  return true;
 };
 
 const validZipcode = (value: string): boolean => {
@@ -106,7 +107,7 @@ const validExpectedServiceDuration = (value: string): boolean => {
 };
 
 const validProductName = (value: string): boolean => {
-  return value !== "";
+  return true;
 };
 
 const validProductCode = (value: string): boolean => {
@@ -114,6 +115,7 @@ const validProductCode = (value: string): boolean => {
 };
 
 const validProductQuantity = (value: string): boolean => {
+  if (value === "") return true;
   return PRODUCT_QUANTITY_REG_EXP.test(value);
 };
 
@@ -121,7 +123,7 @@ export const OrderValidationFunc = {
   deliveryType: validDeliveryType,
   smName: validSmName,
   shipmentNumber: validShipmentNum,
-  clientOrderKey: validclientOrderKey,
+  clientOrderKey: validClientOrderKey,
   orderType: validOrderType,
   receivedDate: validReceivedDate,
   serviceRequestDate: validServiceRequestDate,
