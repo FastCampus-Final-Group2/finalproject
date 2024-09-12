@@ -45,8 +45,20 @@ const EXCEL_HEADER_INFOS = [
     name: "SM명",
     required: "필수",
     comment:
-      "특정 주문을 작업할 담당 드라이버를 지정해주세요.\nGLT 코리아에 등록되지 않은 드라이버의 이름을 입력하면 오류가 발생합니다.",
+      "특정 주문을 작업할 담당 드라이버를 지정해주세요.\n\nGLT 코리아에 등록되지 않은 드라이버의 이름을 입력하면 오류가 발생합니다.",
     example: "예시) 이서원",
+  },
+  {
+    name: "고객명",
+    required: "필수",
+    comment: "고객님의 성함 또는 상호를 입력해주세요.",
+    example: "예시) 홍길동",
+  },
+  {
+    name: "주소",
+    required: "필수",
+    comment: "도로명 주소와 건물번호를 입력해주세요.\n주소정보누리집(www.juso.go.kr) 양식을 따릅니다.",
+    example: "예시) 테헤란로 11길 22",
   },
   {
     name: "운송장번호",
@@ -58,19 +70,19 @@ const EXCEL_HEADER_INFOS = [
     name: "업체주문번호",
     required: "선택",
     comment:
-      "운송장 번호가 할당된 주문번호를 입력해주세요.\n관리의 편리함을 위해 있는 입력칸으로,\n필수값이 아니며 임의로 작성해주셔도 됩니다.",
+      "운송장 번호가 할당된 주문번호를 입력해주세요.\n\n관리의 편리함을 위해 있는 입력칸으로,\n\n필수값이 아니며 임의로 작성해주셔도 됩니다.",
     example: "예시) 240812_공동구매",
   },
   {
     name: "주문유형",
-    required: "선택",
+    required: "필수",
     comment: "배송/수거",
     example: "예시) 수거",
   },
   {
     name: "주문접수일",
     required: "필수",
-    comment: "주문이 귀사에 접수된 날짜를 양식에 맞게 입력해주세요.\n미래의 날짜는 입력할 수 없습니다.",
+    comment: "주문이 귀사에 접수된 날짜를 양식에 맞게 입력해주세요.\n\n미래의 날짜는 입력할 수 없습니다.",
     example: "예시) YYYYMMDD",
   },
   {
@@ -81,27 +93,15 @@ const EXCEL_HEADER_INFOS = [
   },
   {
     name: "희망도착시간",
-    required: "필수",
-    comment: "희망 도착시간을 양식에 맞게 입력해 주세요.\n24시간제를 기준으로 작성 해주세요.",
+    required: "선택",
+    comment: "희망 도착시간을 양식에 맞게 입력해 주세요.\n\n24시간제를 기준으로 작성 해주세요.",
     example: "예시) 15:30",
-  },
-  {
-    name: "고객명",
-    required: "필수",
-    comment: "고객님의 성함 또는 상호를 입력해주세요.",
-    example: "예시) 홍길동",
   },
   {
     name: "고객연락처",
     required: "필수",
     comment: "고객님의 연락처를 입력해주세요.",
     example: "예시) 0212345678, 01000000000",
-  },
-  {
-    name: "주소",
-    required: "필수",
-    comment: "도로명 주소와 건물번호를 입력해주세요.\n주소정보누리집(www.juso.go.kr) 양식을 따릅니다.",
-    example: "예시) 테헤란로 11길 22",
   },
   {
     name: "상세주소",
@@ -118,13 +118,13 @@ const EXCEL_HEADER_INFOS = [
   {
     name: "볼륨",
     required: "필수",
-    comment: "볼륨을 숫자 형태로 입력해주세요.\n*가로 x 세로 x 높이 값을 m^3을 기준으로 작성해주세요.",
+    comment: "볼륨을 숫자 형태로 입력해주세요.\n\n*가로 x 세로 x 높이 값을 m^3을 기준으로 작성해주세요.",
     example: "예시) 600",
   },
   {
     name: "중량",
     required: "필수",
-    comment: "중량을 정수 형태로 입력해주세요.\n*kg을 기준으로 작성해주세요.",
+    comment: "중량을 정수 형태로 입력해주세요.\n\n*kg을 기준으로 작성해주세요.",
     example: "예시) 50",
   },
   {
@@ -137,13 +137,14 @@ const EXCEL_HEADER_INFOS = [
     name: "예상작업시간",
     required: "선택",
     comment:
-      "도착 후 작업 예상 작업 시간(분) 정수 형태로 입력해주세요.\n작업소요시간 셀이 비어있으면 기본값으로 1을 인식합니다.",
+      "도착 후 작업 예상 작업 시간(분) 정수 형태로 입력해주세요.\n\n작업소요시간 셀이 비어있으면 기본값으로 1을 인식합니다.",
     example: "예시) 30",
   },
   {
     name: "상품명",
-    required: "필수",
-    comment: "상품명을 모두 입력해주세요.\n상품이 여러개인 경우 운송장번호를 동일하게 사용하여 다음줄에 입력해주세요.",
+    required: "선택",
+    comment:
+      "상품명을 모두 입력해주세요.\n\n상품이 여러개인 경우 운송장번호를 동일하게 사용하여 다음줄에 입력해주세요.",
     example: "예시) 스탠리텀블러50",
   },
   {
@@ -154,8 +155,8 @@ const EXCEL_HEADER_INFOS = [
   },
   {
     name: "상품 수량",
-    required: "필수",
-    comment: "상품의 수량을 정수 형태로 입력해주세요.\n상품수량 셀이 비어있으면 기본값으로 1을 인식합니다.",
+    required: "선택",
+    comment: "상품의 수량을 정수 형태로 입력해주세요.\n\n상품수량 셀이 비어있으면 기본값으로 1을 인식합니다.",
     example: "예시) 5",
   },
 ];
@@ -166,10 +167,11 @@ const NAME_FONTSIZE = 14;
 const REQUIRED_FONTSIZE = 12;
 
 const REQUIRED_FONT_COLOR = "ff0000";
+const NOT_REQUIRED_FONT_COLOR = "000000";
 
 const NAME_BG_COLOR = "969696";
 const REQUIRED_BG_COLOR = "c0c0c0";
-const COMMENT_BG_COLOR = "ffffcc";
+const COMMENT_BG_COLOR = "FFF2CC";
 
 const COMMENT_HEIGHT = 100;
 
@@ -214,7 +216,19 @@ const createCellStyle = (options: CellStyleOptions = {}) => {
 };
 
 const createRow = (worksheet: XLSX.WorkSheet, rowIndex: number, cellStyle: CellStyle = {}) => {
-  EXCEL_HEADER_INFOS.forEach((_, colIndex) => {
+  EXCEL_HEADER_INFOS.forEach((col, colIndex) => {
+    if (rowIndex === 0 || rowIndex === 1) {
+      cellStyle = {
+        ...cellStyle,
+        font: {
+          ...cellStyle.font,
+          color: {
+            rgb: col.required === "필수" ? REQUIRED_FONT_COLOR : NOT_REQUIRED_FONT_COLOR,
+          },
+        },
+      };
+    }
+
     const cellAddress = XLSX.utils.encode_cell({ r: rowIndex, c: colIndex });
     worksheet[cellAddress].s = cellStyle;
   });
@@ -235,7 +249,7 @@ const downloadExampleFile = () => {
   });
   const requiredRowStyle = createCellStyle({
     backgroundColor: REQUIRED_BG_COLOR,
-    font: { fontSize: REQUIRED_FONTSIZE, bold: true, fontColor: REQUIRED_FONT_COLOR },
+    font: { fontSize: REQUIRED_FONTSIZE, bold: true },
     align: { hAlign: "center", vAlign: "center" },
     border: true,
   });
@@ -262,7 +276,7 @@ const downloadExampleFile = () => {
       }),
     );
 
-    return { width: maxWidth + COLUMN_PADDING };
+    return { width: maxWidth + 2 + COLUMN_PADDING };
   });
 
   XLSX.utils.book_append_sheet(workbook, worksheet, EXAMPLE_SHEETNAME);
