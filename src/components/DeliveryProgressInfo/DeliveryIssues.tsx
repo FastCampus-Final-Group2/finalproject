@@ -3,7 +3,7 @@
 import Icon from "@/components/core/Icon";
 import React, { useState, useEffect, useCallback, useMemo } from "react";
 import ConfirmModal from "@/components/ConfirmModal";
-import { dispatchApi } from "@/apis/dispatches/dispatch";
+import { DispatchApi } from "@/apis/dispatches/dispatch";
 import { IssueRequest } from "@/models/ApiTypes";
 import { debounce } from "@/utils/debounce";
 
@@ -18,7 +18,7 @@ const DeliveryIssue = ({ issue, dispatchId }: { issue: string; dispatchId: numbe
     async (text: string) => {
       try {
         const issueRequest: IssueRequest = { issue: text };
-        const [error, response] = await dispatchApi.issue(dispatchId, issueRequest);
+        const [error, response] = await DispatchApi.issue(dispatchId, issueRequest);
         if (error) {
           console.error("이슈 저장 중 오류 발생:", error);
         } else {

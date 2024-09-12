@@ -2,7 +2,7 @@
 
 import ControlDispatchHeader from "@/components/ControlDispatchHeader";
 import ControlDispatchDashboard from "@/components/ControlDispatchDashboard";
-import NaverMap from "@/components/core/NaverMap";
+import NaverMap from "@/components/NaverMapForControlDetail";
 import { DispatchNumberApi } from "@/apis/dispatches/dispatchNumber";
 import { DispatchListResponse } from "@/models/ApiTypes";
 import { useQuery } from "@tanstack/react-query";

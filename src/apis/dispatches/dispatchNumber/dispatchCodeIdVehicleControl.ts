@@ -3,6 +3,7 @@
 import axios from '@/utils/axios';
 import { DISPATCH_NUMBER_API_PATH } from '@/apis/path';
 import { DispatchListResponse } from '@/models/ApiTypes';
+import toAxios from '@/utils/toAxios'
 
 const dispatchCodeIdVehicleControl = async (dispatchCodeId: number): Promise<DispatchListResponse> => {
 

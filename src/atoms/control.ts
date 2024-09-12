@@ -65,18 +65,33 @@ export const controlCheckboxState = atom({
   effects_UNSTABLE: [persistAtom],
 });
 
-// 검색 결과 상태 유지하기
-// export const selectedStatusAndDataState = selector({
-//   key: "selectedStatusAndDataState",
-//   get: ({ get }) => {
-//     const activeTab = get(controlTabState);
-//     const data = get(searchDataState);
-//     return { activeTab, data };
-//   },
-//   switch(activeTab) {
+// todo: 검색 결과 상태 유지하기
+export const searchStatusAndDataState = selector({
+  key: "searchStatusAndDataState",
+  get: ({ get }) => {
+    const activeTab = get(controlTabState);
+    const data = get(searchDataState);
+    const startDate = get(searchStartTimeState);
+    const endDate = get(searchEndTimeState);
+    const page = get(controlPageState);
+    const searchText = get(searchTextInputState);
+    const searchOption = get(controlSearchOptionState);
+    const onlyClient = get(controlOnlyClientState);
+    const checkboxState = get(controlCheckboxState);
 
-//   }
-// });
+    return {
+      activeTab,
+      data,
+      startDate,
+      endDate,
+      page,
+      searchText,
+      searchOption,
+      onlyClient,
+      checkboxState,
+    };
+  },
+});
 
 // todo: 마지막 방문한 페이지 유지(for detail page)
 export const lastVisitedControlPageState = atom<{

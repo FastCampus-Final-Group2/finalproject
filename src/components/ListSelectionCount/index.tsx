@@ -1,14 +1,15 @@
 import Button from "@/components/core/Button";
 import { useState } from "react";
-import dispatchCancel from "@/apis/dispatches/dispatch/dispatchCancel";
 import ConfirmModal from "@/components/ConfirmModal";
+import { DispatchApi } from "@/apis/dispatches/dispatch";
 
-interface ListSelectionProps {
+interface ListSelectionCountProps {
   currentCount: number;
   selectedCount: number;
+  selectedDispatchIds: number[];
 }
 
-const ListSelection = ({ currentCount, selectedCount }: ListSelectionProps) => {
+const ListSelectionCount = ({ currentCount, selectedCount, selectedDispatchIds }: ListSelectionCountProps) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleCancelButtonClick = () => {
@@ -18,17 +19,22 @@ const ListSelection = ({ currentCount, selectedCount }: ListSelectionProps) => {
       setIsModalOpen(true);
     }
   };
-  const handleExcelDownloadButtonClick = () => {
-    alert("준비 중인 기능입니다!");
+
+  // 배차 강제 종료 로직
+  const handleDeletdDispatchCode = async () => {
+    try {
+      // 선택된 dispatchNumberId 배열을 서버로 전송
+      await DispatchApi.dispatchCancel({ dispatchNumberIds: selectedDispatchIds });
+      alert("배차가 성공적으로 강제 종료되었습니다.");
+      setIsModalOpen(false);
+    } catch (error) {
+      alert("배차 강제 종료에 실패했습니다.");
+      console.error(error);
+    }
   };
 
-  const handleDeletdDispatchCode = async () => {
-    // await dispatchCancel({
-    //   isInTransit: true,
-    //   dispatchNumberIds: [],
-    // });
-    alert("배차 강제 종료됨 ㅇㅇ");
-    setIsModalOpen(false);
+  const handleExcelDownloadButtonClick = () => {
+    alert("준비 중인 기능입니다!");
   };
 
   return (
@@ -54,7 +60,7 @@ const ListSelection = ({ currentCount, selectedCount }: ListSelectionProps) => {
           text={[{ type: "alert", value: "배차 강제 종료 시, 복구되지 않습니다." }]}
           leftButtonText="아니오"
           rightButtonText="네"
-          onConfirm={handleDeletdDispatchCode}
+          onConfirm={handleDeletdDispatchCode} // 삭제 처리 함수 호출
           onClickClose={() => setIsModalOpen(false)}
         />
       )}
@@ -62,4 +68,4 @@ const ListSelection = ({ currentCount, selectedCount }: ListSelectionProps) => {
   );
 };
 
-export default ListSelection;
+export default ListSelectionCount;

@@ -4,12 +4,15 @@ import Link from "next/link";
 import { DispatchListResponse } from "@/models/ApiTypes";
 import { useSetRecoilState } from "recoil";
 import { lastVisitedControlPageState } from "@/atoms/control";
+import useResetControlAtoms from "@/hooks/useResetControlAtoms";
 // todo: 날짜, 택배, 빠진 정보 추가하기
 const ControlDiapstchHeader = ({ fetchedData }: { fetchedData: DispatchListResponse }) => {
   const setLastVisitedControlPage = useSetRecoilState(lastVisitedControlPageState);
 
+  const resetControlAtoms = useResetControlAtoms();
   const handleBackToList = () => {
     setLastVisitedControlPage((prev) => ({ ...prev, detail: null }));
+    resetControlAtoms();
   };
 
   return (
