@@ -11,8 +11,6 @@ import type { MouseEventHandler } from "react";
 import { cn } from "@/utils/cn";
 import { gnbTabContentVariants, gnbTabToggleIconVariants, gnbTabVariants } from "./index.variants";
 import { matchPathname } from "@/utils/validation/pathname";
-import { useRecoilValue } from "recoil";
-import { lastVisitedControlPageState } from "@/atoms/control";
 
 interface GlobalNavBarTabItem {
   tabName: SideNavBarLink["name"];
@@ -26,7 +24,6 @@ const GlobalNavBarTabItem = ({ isMyMenu, href, tabName }: GlobalNavBarTabItem) =
   const pathname = usePathname();
   const isPageOpened = matchPathname(pathname, href);
   const { addMyMenu, removeMyMenu } = useMyMenus();
-  const lastVisitedControlPage = useRecoilValue(lastVisitedControlPageState);
 
   const handleToggleMyMenuButton: MouseEventHandler<HTMLButtonElement> = useCallback(
     (event) => {
@@ -42,11 +39,7 @@ const GlobalNavBarTabItem = ({ isMyMenu, href, tabName }: GlobalNavBarTabItem) =
       role="button"
       onClick={() => {
         if (!href) return;
-        if (href === "/control") {
-          router.push(lastVisitedControlPage);
-        } else {
-          router.push(href);
-        }
+        router.push(href);
       }}
       className={cn(gnbTabVariants({ isPageOpened }))}
     >
@@ -67,6 +60,8 @@ const GlobalNavBarTabItem = ({ isMyMenu, href, tabName }: GlobalNavBarTabItem) =
           onClick={(event) => {
             event.stopPropagation();
             removeTab(tabName);
+
+            // TODO
             if (tabStates.length === 1) router.push("/dispatch");
           }}
         >

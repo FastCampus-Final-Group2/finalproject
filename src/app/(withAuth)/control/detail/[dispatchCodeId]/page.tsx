@@ -32,7 +32,10 @@ const ControlDetailPage = ({ params }: { params: { dispatchCodeId: number } }) =
   const setLastVisitedControlPage = useSetRecoilState(lastVisitedControlPageState);
 
   useEffect(() => {
-    setLastVisitedControlPage(`/control/detail/${params.dispatchCodeId}`);
+    setLastVisitedControlPage((prev) => ({
+      ...prev,
+      detail: `/control/detail/${params.dispatchCodeId}`,
+    }));
   }, [params.dispatchCodeId, setLastVisitedControlPage]);
 
   const {

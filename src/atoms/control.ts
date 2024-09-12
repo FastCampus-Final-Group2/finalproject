@@ -10,7 +10,7 @@ export const searchDataState = atom({
   effects_UNSTABLE: [persistAtom],
 });
 
-// todo: 검색 기간 설정 유지
+// 검색 기간 설정 유지
 export const searchStartTimeState = atom({
   key: "searchStartTimeState",
   default: "YYYY-MM-DD --:--",
@@ -37,14 +37,14 @@ export const controlTabState = atom<TabForProgressStatus>({
   effects_UNSTABLE: [persistAtom],
 });
 
-// todo: 검색어 유지
+// 검색어 유지
 export const searchTextInputState = atom({
   key: "searchTextInputState",
   default: "",
   effects_UNSTABLE: [persistAtom],
 });
 
-// todo: 옵션 선택 유지
+// 옵션 선택 유지
 export const controlSearchOptionState = atom({
   key: "controlSearchOptionState",
   default: "[선택]",
@@ -65,12 +65,7 @@ export const controlCheckboxState = atom({
   effects_UNSTABLE: [persistAtom],
 });
 
-export const lastVisitedControlPageState = atom<string>({
-  key: "lastVisitedControlPageState",
-  default: "/control",
-  effects_UNSTABLE: [persistAtom],
-});
-
+// 검색 결과 상태 유지하기
 // export const selectedStatusAndDataState = selector({
 //   key: "selectedStatusAndDataState",
 //   get: ({ get }) => {
@@ -82,3 +77,54 @@ export const lastVisitedControlPageState = atom<string>({
 
 //   }
 // });
+
+// todo: 마지막 방문한 페이지 유지(for detail page)
+export const lastVisitedControlPageState = atom<{
+  general: string;
+  detail: string | null;
+}>({
+  key: "lastVisitedControlPageState",
+  default: {
+    general: "/control",
+    detail: null,
+  },
+  effects_UNSTABLE: [persistAtom],
+});
+
+// todo: detail page 대시보드 데이터 상태 유지하기
+export const controlDashboardDataState = atom({
+  key: "controlDashboardDataState",
+  default: {
+    smPhoneNumber: "",
+    smName: "",
+    floorAreaRatio: 0,
+    vehicleType: "",
+    vehicleTon: 0,
+    completedOrderCount: 0,
+    deliveryOrderCount: 0,
+    totalTime: 0,
+    issue: "",
+  },
+  effects_UNSTABLE: [persistAtom],
+});
+
+// todo: detail page 사이드탭 데이터 상태 유지하기
+export const controlSideTabDataState = atom({
+  key: "controlSideTabDataState",
+  default: [],
+  effects_UNSTABLE: [persistAtom],
+});
+
+// todo: 사이드탭 열린 상태 유지하기
+export const controlSideTabState = atom({
+  key: "controlSideTabState",
+  default: false,
+  effects_UNSTABLE: [persistAtom],
+});
+
+// todo: 이슈 선택 시 읽음 처리
+export const issueReadState = atom({
+  key: "issueReadState",
+  default: false,
+  effects_UNSTABLE: [persistAtom],
+});

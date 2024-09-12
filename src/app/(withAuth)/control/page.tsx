@@ -1,7 +1,7 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { DispatchNumberApi } from "@/apis/dispatches/dispatchNumber";
 import { DispatchResult } from "@/models/ApiTypes";
 import DispatchLists from "@/components/Dispatchlists";
@@ -9,6 +9,9 @@ import TabForDispatchedList from "@/components/TabForDispatchedList";
 import SearchBars from "@/components/SearchBar";
 import ListSelection from "@/components/ListSelection";
 import Pagination from "@/components/core/Pagination";
+import { useSetRecoilState, useRecoilValue } from "recoil";
+import { lastVisitedControlPageState } from "@/atoms/control";
+import { useRouter } from "next/navigation";
 
 // DeliveryProgressSideTab의 refetch가 DeliveryProgressSideTab, DeliveryRoutine을 통해 차례로 전달되고, SelectDelivery에서 '배송취소' 버튼을 클릭하면 api가 작동하면서 DeliveryProgressSideTab을 새로고침해야 해.
 /* todo: 
@@ -59,6 +62,18 @@ interface DispatchData {
 }
 
 const ControlPage = () => {
+  const setLastVisitedControlPage = useSetRecoilState(lastVisitedControlPageState);
+  const lastVisitedControlPage = useRecoilValue(lastVisitedControlPageState);
+  const router = useRouter();
+
+  useEffect(() => {
+    setLastVisitedControlPage((prev) => ({ ...prev, general: "/control" }));
+
+    if (lastVisitedControlPage.detail) {
+      router.push(lastVisitedControlPage.detail);
+    }
+  }, [setLastVisitedControlPage, lastVisitedControlPage.detail, router]);
+
   const [selectedState, setSelectedState] = useState<"IN_TRANSIT" | "WAITING" | "COMPLETED">("IN_TRANSIT");
   const [page, setPage] = useState(1);
   const [selectedItemsCount, setSelectedItemsCount] = useState(0);

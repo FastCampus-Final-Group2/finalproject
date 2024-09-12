@@ -2,8 +2,16 @@ import CopyButton from "@/components/core/CopyButton";
 import Icon from "@/components/core/Icon";
 import Link from "next/link";
 import { DispatchListResponse } from "@/models/ApiTypes";
+import { useSetRecoilState } from "recoil";
+import { lastVisitedControlPageState } from "@/atoms/control";
 // todo: 날짜, 택배, 빠진 정보 추가하기
 const ControlDiapstchHeader = ({ fetchedData }: { fetchedData: DispatchListResponse }) => {
+  const setLastVisitedControlPage = useSetRecoilState(lastVisitedControlPageState);
+
+  const handleBackToList = () => {
+    setLastVisitedControlPage((prev) => ({ ...prev, detail: null }));
+  };
+
   return (
     <div className="flex h-[92px] items-center justify-between border-b px-[40px] pb-[24px] pt-[28px]">
       <ul className="flex items-center gap-[16px]">
@@ -17,7 +25,7 @@ const ControlDiapstchHeader = ({ fetchedData }: { fetchedData: DispatchListRespo
           <p className="rounded-[4px] bg-gray-700 p-[8px] text-white text-B-14-M">택배</p>
         </li>
       </ul>
-      <Link href="/control" className="flex items-center gap-[4px] hover:text-blue-500">
+      <Link href="/control" className="flex items-center gap-[4px] hover:text-blue-500" onClick={handleBackToList}>
         <Icon id="list" className="hover:text-blue-500" />
         <p className="text-T-16-B">배차목록 보기</p>
       </Link>
