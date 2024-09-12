@@ -10,7 +10,7 @@ interface LoginFormInputProps {
   error?: FieldError;
 }
 
-const LoginFormInput = ({ form: { id, type, placeholder, required, pattern }, error }: LoginFormInputProps) => {
+const LoginFormInput = ({ form: { id, type, placeholder, required }, error }: LoginFormInputProps) => {
   const { register } = useFormContext();
 
   return (
@@ -21,7 +21,6 @@ const LoginFormInput = ({ form: { id, type, placeholder, required, pattern }, er
       state={error ? "error" : "default"}
       {...register(id, {
         required: required,
-        pattern: pattern,
       })}
     />
   );
