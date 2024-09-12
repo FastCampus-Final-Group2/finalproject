@@ -6,6 +6,9 @@ import NaverMap from "@/components/core/NaverMap";
 import { DispatchNumberApi } from "@/apis/dispatches/dispatchNumber";
 import { DispatchListResponse } from "@/models/ApiTypes";
 import { useQuery } from "@tanstack/react-query";
+import { useSetRecoilState } from "recoil";
+import { lastVisitedControlPageState } from "@/atoms/control";
+import { useEffect } from "react";
 
 interface FetchData extends DispatchListResponse {
   dispatchList: {
@@ -26,6 +29,11 @@ const fetchDispatchCodeIdData = async (dispatchCodeId: number): Promise<FetchDat
 
 const ControlDetailPage = ({ params }: { params: { dispatchCodeId: number } }) => {
   const { dispatchCodeId } = params;
+  const setLastVisitedControlPage = useSetRecoilState(lastVisitedControlPageState);
+
+  useEffect(() => {
+    setLastVisitedControlPage(`/control/detail/${params.dispatchCodeId}`);
+  }, [params.dispatchCodeId, setLastVisitedControlPage]);
 
   const {
     data: fetchedData,
@@ -41,7 +49,7 @@ const ControlDetailPage = ({ params }: { params: { dispatchCodeId: number } }) =
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>Error: {(error as Error).message}</div>;
 
-  console.log("fetchedData in control detail page", fetchedData);
+  console.log("대시보드 데이터", fetchedData);
 
   // 출발 센터 좌표와 도착지 좌표를 포함한 좌표 배열 생성
   const waypointGroups =

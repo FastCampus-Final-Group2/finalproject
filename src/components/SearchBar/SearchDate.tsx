@@ -1,6 +1,8 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
+import { useRecoilState } from "recoil";
+import { searchStartTimeState, searchEndTimeState } from "@/atoms/control";
 import CalendarPicker from "@/components/CalendarPicker";
 import Icon from "@/components/core/Icon";
 
@@ -10,8 +12,8 @@ interface SearchDateProps {
 }
 
 const SearchDate = ({ onStartDateChange, onEndDateChange }: SearchDateProps) => {
-  const [startDate, setStartDate] = useState<string>("YYYY-MM-DD --:--");
-  const [endDate, setEndDate] = useState<string>("YYYY-MM-DD --:--");
+  const [startDate, setStartDate] = useRecoilState(searchStartTimeState);
+  const [endDate, setEndDate] = useRecoilState(searchEndTimeState);
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
   const [dateType, setDateType] = useState<"start" | "end">("start"); // Track which date to set
   const [calendarPosition, setCalendarPosition] = useState({ top: 0, left: 0 });
@@ -19,13 +21,16 @@ const SearchDate = ({ onStartDateChange, onEndDateChange }: SearchDateProps) => 
   const startDateRef = useRef<HTMLParagraphElement>(null);
   const endDateRef = useRef<HTMLParagraphElement>(null);
 
+  useEffect(() => {
+    onStartDateChange(startDate);
+    onEndDateChange(endDate);
+  }, [startDate, endDate, onStartDateChange, onEndDateChange]);
+
   const handleDateConfirm = (date: string) => {
     if (dateType === "start") {
       setStartDate(date);
-      onStartDateChange(date);
     } else if (dateType === "end") {
       setEndDate(date);
-      onEndDateChange(date);
     }
     setIsCalendarOpen(false); // Close calendar after selecting a date
   };

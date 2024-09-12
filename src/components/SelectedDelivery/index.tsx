@@ -9,27 +9,32 @@ interface DispatchCancel extends DispatchCancelRequest {
   dispatchNumberIds: number[];
 }
 
-const SelectedDelivery = ({ selectedOrders }: { selectedOrders: DeliveryRoutineDetailStatusItem[] }) => {
+interface SelectedDeliveryProps {
+  selectedOrders: DeliveryRoutineDetailStatusItem[];
+  refreshData: () => void;
+}
+
+const SelectedDelivery = ({ selectedOrders, refreshData }: SelectedDeliveryProps) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleCancel = async () => {
     if (selectedOrders.length === 0) {
       alert("선택된 항목이 없습니다.");
+      setIsModalOpen(false);
       return;
     }
 
     const hasNonWorkWaiting = selectedOrders.some((order) => order.dispatchDetailStatus !== "WORK_WAITING");
     if (hasNonWorkWaiting) {
       alert("선택된 항목이 잘못되었습니다. '작업 대기' 상태만 선택 가능합니다.");
+      setIsModalOpen(false);
       return;
     }
 
     try {
-      const dispatchCancel: DispatchCancel = {
-        dispatchNumberIds: selectedOrders.map((order) => order.dispatchDetailId),
-      };
-      console.log("dispatchCancel", dispatchCancel);
-      const [error, response] = await DispatchDetailApi.orderCancel(dispatchCancel);
+      const dispatchNumberIds = selectedOrders.map((order) => order.dispatchDetailId);
+      console.log("dispatchNumberIds", dispatchNumberIds);
+      const [error, response] = await DispatchDetailApi.orderCancel(dispatchNumberIds as unknown as DispatchCancel);
 
       if (error) {
         console.error("API 오류:", error);
@@ -42,6 +47,7 @@ const SelectedDelivery = ({ selectedOrders }: { selectedOrders: DeliveryRoutineD
       alert("서버 오류가 발생했습니다.");
     } finally {
       setIsModalOpen(false);
+      refreshData();
     }
   };
 

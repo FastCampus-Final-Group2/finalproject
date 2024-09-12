@@ -54,7 +54,6 @@ const ControlDispatchDashboard = ({
             />
           </div>
           <div className="flex h-[344px] w-[524px] justify-center">
-            {/* todo: onClickToggle={openSideTap} 타입 정리할 것. 일단 동작은 함. */}
             <DispatchedDrivers
               onClickToggle={openSideTap}
               drivers={fetchedData.dispatchList ?? []}
@@ -73,6 +72,7 @@ const ControlDispatchDashboard = ({
           onClose={closeSideTap}
           selectedColor={selectedColor}
           dispatchId={selectedDispatchId}
+          refreshData={refreshData}
         />
       </div>
     </div>

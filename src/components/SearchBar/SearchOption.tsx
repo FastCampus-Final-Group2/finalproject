@@ -1,9 +1,11 @@
 "use client";
 
 import { useState } from "react";
+import { useRecoilState } from "recoil";
+import { controlSearchOptionState } from "@/atoms/control";
 import Icon from "@/components/core/Icon";
 
-const searchKeyword = [
+const searchMoreOptions = [
   {
     name: "배차 코드",
     value: "dispatchCode",
@@ -22,41 +24,33 @@ const searchKeyword = [
   },
 ];
 
-interface SearchCategoryProps {
-  onCategoryChange: (category: string) => void;
-}
-
-const SearchCategory = ({ onCategoryChange }: SearchCategoryProps) => {
+const SearchOption = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedCategory, setSelectedCategory] = useState("[선택]");
+  const [selectedOption, setSelectedOption] = useRecoilState(controlSearchOptionState);
 
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
   };
 
-  const handleCategorySelect = (category: string) => {
-    setSelectedCategory(category);
+  const handleCategorySelect = (option: string) => {
+    setSelectedOption(option);
     setIsOpen(false);
-    const selectedKeyword = searchKeyword.find((k) => k.name === category);
-    if (selectedKeyword) {
-      onCategoryChange(selectedKeyword.value);
-    }
   };
 
   return (
     <div className="relative">
       <p className="flex w-[124px] cursor-pointer items-center justify-between" onClick={toggleDropdown}>
-        {selectedCategory} <Icon id="arrowDown" />
+        {selectedOption} <Icon id="arrowDown" />
       </p>
       {isOpen && (
         <ul className="absolute left-[-12px] z-20 mt-[20px] flex w-[156px] flex-col gap-[7px] rounded-[8px] border border-gray-200 bg-white px-[16px] py-[10px]">
-          {searchKeyword.map((keyword, index) => (
+          {searchMoreOptions.map((option, index) => (
             <li
               key={index}
               className="cursor-pointer p-[4px] hover:bg-blue-100"
-              onClick={() => handleCategorySelect(keyword.name)}
+              onClick={() => handleCategorySelect(option.name)}
             >
-              {keyword.name}
+              {option.name}
             </li>
           ))}
         </ul>
@@ -65,4 +59,4 @@ const SearchCategory = ({ onCategoryChange }: SearchCategoryProps) => {
   );
 };
 
-export default SearchCategory;
+export default SearchOption;

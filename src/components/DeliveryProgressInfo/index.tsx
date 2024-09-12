@@ -39,8 +39,8 @@ const DeliveryProgressInfo = ({ selectedColor, fetchData, dispatchId, refreshDat
           completedOrderCount={fetchData.completedOrderCount ?? 0}
           deliveryOrderCount={fetchData.deliveryOrderCount ?? 0}
           totalTime={String(fetchData.totalTime ?? 0)}
+          refreshData={refreshData}
         />
-        {/* todo: deliveryProgressRate={50} 수정하기 */}
       </div>
       <div className="flex justify-end">
         <AccessTimeRefresh onClick={refreshData} />
