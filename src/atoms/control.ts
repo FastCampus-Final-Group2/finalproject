@@ -1,6 +1,7 @@
 import { atom, selector, selectorFamily } from "recoil";
 import { persistAtom } from "./persistAtom";
 import { CONTROL_TABS } from "@/components/TabForDispatchedList/index.constants";
+import { TabForProgressStatus } from "@/types/dispatchNumber";
 
 // todo: 검색 결과 데이터 유지
 export const searchDataState = atom({
@@ -30,7 +31,7 @@ export const controlPageState = atom({
 });
 
 // 탭(주행중, 주행대기, 주행완료) 전환 상태 유지
-export const controlTabState = atom<ObjectValues<typeof CONTROL_TABS>>({
+export const controlTabState = atom<TabForProgressStatus>({
   key: "controlTabState",
   default: "주행중",
   effects_UNSTABLE: [persistAtom],
@@ -70,14 +71,14 @@ export const lastVisitedControlPageState = atom<string>({
   effects_UNSTABLE: [persistAtom],
 });
 
-export const selectedStatusAndDataState = selector({
-  key: "selectedStatusAndDataState",
-  get: ({ get }) => {
-    const activeTab = get(controlTabState);
-    const data = get(searchDataState);
-    return { activeTab, data };
-  },
-  switch(activeTab) {
+// export const selectedStatusAndDataState = selector({
+//   key: "selectedStatusAndDataState",
+//   get: ({ get }) => {
+//     const activeTab = get(controlTabState);
+//     const data = get(searchDataState);
+//     return { activeTab, data };
+//   },
+//   switch(activeTab) {
 
-  }
-});
+//   }
+// });

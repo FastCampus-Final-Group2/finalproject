@@ -6,6 +6,7 @@ interface DeliveryCompletedCardProps {
   completedOrderCount: number;
   deliveryOrderCount: number;
   totalTime: string;
+  refreshData: () => Promise<void>; // 이 줄을 추가
 }
 
 const formatTotalTime = (totalTime: string): { hours: number; minutes: number } => {

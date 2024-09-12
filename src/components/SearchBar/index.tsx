@@ -10,6 +10,7 @@ import { DispatchNumberApi } from "@/apis/dispatches/dispatchNumber";
 import dayjs from "dayjs";
 
 interface SearchBarsProps {
+  data: DispatchResult[];
   onSearch: (results: DispatchResult[]) => void;
 }
 
