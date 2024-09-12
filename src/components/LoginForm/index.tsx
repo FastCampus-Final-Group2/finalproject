@@ -44,6 +44,7 @@ const LoginForm = () => {
     register,
     formState: { errors },
     setValue,
+    setError,
   } = useFormMethods;
 
   const onSubmit: SubmitHandler<typeof initialState> = async (formData) => {
@@ -51,6 +52,9 @@ const LoginForm = () => {
 
     if (!loginRequestValid(loginRequest)) {
       setErrorMessage(LOGIN_ERROR_MESSAGE);
+      setError("username", { message: LOGIN_ERROR_MESSAGE });
+      setError("password", { message: LOGIN_ERROR_MESSAGE });
+      return;
     }
 
     if (save) {
