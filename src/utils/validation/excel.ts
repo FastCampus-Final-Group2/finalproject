@@ -13,7 +13,7 @@ export const isExcelHeaderCorrect = (row: string[]) => {
 };
 
 export const isExcelDataEmpty = (excelData: string[][]) => {
-  return !excelData.some((row, index) => {
+  return !excelData.slice(4).some((row, index) => {
     if (index < 4) return true;
     return row.length > 0;
   });

@@ -8,7 +8,7 @@ const SERVICE_REQUEST_TIME_REG_EXP = /^([01]\d|2[0-3]):([0-5]\d)$/;
 const CONTACT_REG_EXP = /^\d{9,11}$/;
 const ZIPCODE_REG_EXP = /^\d{5}$/;
 const VOLUME_REG_EXP = /^(?!0(\.0+)?$)([1-9]\d*|0)(\.\d*[1-9])?$/;
-const WEIGHT_REG_EXP = /^[1-9]\d*$/;
+const WEIGHT_REG_EXP = /^(?!0(\.0+)?$)([1-9]\d*|0)(\.\d*[1-9])?$/;
 const EXPECTED_SERVICE_DURATION_REG_EXP = /^\d+$/;
 const PRODUCT_QUANTITY_REG_EXP = /^\d+$/;
 
