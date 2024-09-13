@@ -31,7 +31,13 @@ interface WaypointGroup {
   waypoints: Waypoint[];
 }
 
-const NaverMap = ({ waypointGroups }: { waypointGroups: WaypointGroup[] }) => {
+const NaverMapForControlDetail = ({
+  waypointGroups,
+  stopOverListPoint,
+}: {
+  waypointGroups: WaypointGroup[];
+  stopOverListPoint?: WaypointGroup[];
+}) => {
   const mapElement = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -65,67 +71,69 @@ const NaverMap = ({ waypointGroups }: { waypointGroups: WaypointGroup[] }) => {
 
         const map = new window.naver.maps.Map(mapElement.current as HTMLElement, mapOptions);
 
+        // waypointGroups 처리
         waypointGroups.forEach((group, groupIndex) => {
-          group.waypoints.forEach((waypoint, index) => {
-            let markerOptions;
-
-            if (index === 0) {
-              markerOptions = {
-                position: new window.naver.maps.LatLng(waypoint.lat, waypoint.lon),
-                map: map,
-                icon: {
-                  content: ReactDOMServer.renderToString(<StartMarkerIcon color={BG_COLOR_MAP[group.bgColor]} />),
-                  size: new naver.maps.Size(50, 50),
-                  anchor: new naver.maps.Point(20, 30),
-                },
-                title: `Group ${groupIndex + 1} - Waypoint ${index + 1}`,
-              };
-            } else if (index === group.waypoints.length - 1) {
-              markerOptions = {
-                position: new window.naver.maps.LatLng(waypoint.lat, waypoint.lon),
-                map: map,
-                icon: {
-                  content: ReactDOMServer.renderToString(<EndMarkerIcon color={BG_COLOR_MAP[group.bgColor]} />),
-                  size: new naver.maps.Size(50, 50),
-                  anchor: new naver.maps.Point(20, 30),
-                },
-                title: `Group ${groupIndex + 1} - Waypoint ${index + 1}`,
-              };
-            } else {
-              // TransitMarkerIcon을 사용하여 중간 경유지 아이콘을 렌더링
-              markerOptions = {
-                position: new window.naver.maps.LatLng(waypoint.lat, waypoint.lon),
-                map: map,
-                icon: {
-                  content: ReactDOMServer.renderToString(
-                    <TransitMarkerIcon color={BG_COLOR_MAP[group.bgColor]} index={index} />,
-                  ),
-                  size: new naver.maps.Size(50, 50),
-                  anchor: new naver.maps.Point(25, 50), // 앵커 포인트 조정
-                },
-                title: `Group ${groupIndex + 1} - Waypoint ${index + 1}`,
-              };
-            }
-
-            const marker = new window.naver.maps.Marker(markerOptions);
+          // 시작점 마커
+          const startMarker = new window.naver.maps.Marker({
+            position: new window.naver.maps.LatLng(group.waypoints[0].lat, group.waypoints[0].lon),
+            map: map,
+            icon: {
+              content: ReactDOMServer.renderToString(<StartMarkerIcon color={BG_COLOR_MAP[group.bgColor]} />),
+              size: new naver.maps.Size(50, 50),
+              anchor: new naver.maps.Point(20, 30),
+            },
+            title: `Group ${groupIndex + 1} - Start`,
           });
 
-          // Polyline을 추가하여 경유지 간의 경로를 표시
+          // 종료점 마커
+          const endMarker = new window.naver.maps.Marker({
+            position: new window.naver.maps.LatLng(
+              group.waypoints[group.waypoints.length - 1].lat,
+              group.waypoints[group.waypoints.length - 1].lon,
+            ),
+            map: map,
+            icon: {
+              content: ReactDOMServer.renderToString(<EndMarkerIcon color={BG_COLOR_MAP[group.bgColor]} />),
+              size: new naver.maps.Size(50, 50),
+              anchor: new naver.maps.Point(20, 30),
+            },
+            title: `Group ${groupIndex + 1} - End`,
+          });
+
+          // 경로 그리기
           const polyline = new window.naver.maps.Polyline({
             path: group.waypoints.map((wp) => new window.naver.maps.LatLng(wp.lat, wp.lon)),
             map: map,
-            strokeColor: BG_COLOR_MAP[group.bgColor], // 그룹별 bgColor 적용
-            strokeWeight: 4, // 선 두께
-            strokeStyle: "solid", // 선 스타일
+            strokeColor: BG_COLOR_MAP[group.bgColor],
+            strokeWeight: 8,
+            strokeStyle: "solid",
+          });
+        });
+
+        // stopOverListPoint 처리
+        stopOverListPoint?.forEach((stopOver) => {
+          stopOver.waypoints.forEach((waypoint, index) => {
+            const marker = new window.naver.maps.Marker({
+              position: new window.naver.maps.LatLng(waypoint.lat, waypoint.lon),
+              map: map,
+              icon: {
+                content: ReactDOMServer.renderToString(
+                  <TransitMarkerIcon color={BG_COLOR_MAP[stopOver.bgColor]} index={index + 1} />,
+                ),
+                size: new naver.maps.Size(50, 50),
+                anchor: new naver.maps.Point(25, 50),
+              },
+              title: `StopOver ${stopOver.id} - Waypoint ${index + 1}`,
+            });
           });
         });
       })
       .catch((err) => {
         console.error("네이버 지도 API를 불러오는 중 오류가 발생했습니다:", err);
       });
-  }, [waypointGroups]); // waypointGroups가 변경될 때마다 재실행
+  }, [waypointGroups, stopOverListPoint]);
 
   return <div ref={mapElement} id="map" className="h-[884px] w-full" />;
 };
 
-export default NaverMap;
+export default NaverMapForControlDetail;

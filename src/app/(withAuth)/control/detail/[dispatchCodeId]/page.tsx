@@ -2,7 +2,7 @@
 
 import ControlDispatchHeader from "@/components/ControlDispatchHeader";
 import ControlDispatchDashboard from "@/components/ControlDispatchDashboard";
-import NaverMap from "@/components/NaverMapForControlDetail";
+import NaverMapForControlDetail from "@/components/NaverMapForControlDetail";
 import { DispatchNumberApi } from "@/apis/dispatches/dispatchNumber";
 import { DispatchListResponse } from "@/models/ApiTypes";
 import { useQuery } from "@tanstack/react-query";
@@ -14,9 +14,13 @@ type ColorType = "lime" | "sky" | "violet" | "redwood" | "peanut" | "brown" | "f
 
 interface FetchData extends DispatchListResponse {
   dispatchList: {
+    stopoverList: {
+      lon: number;
+      lat: number;
+    }[];
     coordinates: {
       lat: number;
-      lng: number;
+      lon: number;
     }[];
   }[];
 }
@@ -57,10 +61,7 @@ const ControlDetailPage = ({ params }: { params: { dispatchCodeId: number } }) =
   if (error) return <div>Error: {(error as Error).message}</div>;
 
   console.log("대시보드 데이터", fetchedData);
-  // 출발 센터 좌표와 도착지 좌표를 포함한 좌표 배열 생성
-  // coordinates는 경로 -> 선으로 표시
-  // fetchedData?.startStopover는 출발지 -> 깃발 아이콘을 달 것
-  // fetchedData?.stopoverList는 경유지 -> 마커 아이콘을 달 것
+
   const waypointGroups =
     fetchedData?.dispatchList?.map((dispatch, index) => {
       return {
@@ -72,8 +73,21 @@ const ControlDetailPage = ({ params }: { params: { dispatchCodeId: number } }) =
         ],
       };
     }) ?? [];
-
   console.log("waypointGroups", waypointGroups);
+
+  const stopOverListPoint =
+    fetchedData?.dispatchList?.map((dispatch, index) => {
+      return {
+        id: index + 1,
+        bgColor: ColorTypes[index % ColorTypes.length],
+        waypoints: dispatch.stopoverList.map((stopover) => ({
+          lon: stopover.lon,
+          lat: stopover.lat,
+        })),
+      };
+    }) ?? [];
+  console.log("stopOverListPoint", stopOverListPoint);
+
   return (
     <>
       <ControlDispatchHeader fetchedData={fetchedData!} />
@@ -85,7 +99,7 @@ const ControlDetailPage = ({ params }: { params: { dispatchCodeId: number } }) =
           }}
         />
         <div className="w-full">
-          <NaverMap waypointGroups={waypointGroups} />
+          <NaverMapForControlDetail waypointGroups={waypointGroups} stopOverListPoint={stopOverListPoint} />
         </div>
       </div>
     </>
