@@ -26,14 +26,12 @@ const ProfileBadge = () => {
   }, [user, router]);
 
   const handleClickLogoutBtn = async () => {
-    const [error] = await UsersAPI.logout();
+    await UsersAPI.logout();
 
-    if (!error) {
-      resetExcelDataAtoms();
-      resetDispatchData();
-      setUser(null);
-      router.push("/");
-    }
+    resetExcelDataAtoms();
+    resetDispatchData();
+    setUser(null);
+    router.push("/");
   };
 
   if (!isClient) {
