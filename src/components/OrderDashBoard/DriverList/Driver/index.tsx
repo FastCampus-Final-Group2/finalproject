@@ -4,37 +4,64 @@ import { IconId } from "@/components/core/Icon";
 import { BG_350 } from "@/styles/smColor";
 import { useRecoilState } from "recoil";
 import { bgColorState } from "@/atoms/bgColorState";
+import { driverIndex } from "@/atoms/driverIndex";
 
 interface DriverProps extends DriverListProps {
-  checkOrWarning: "check" | "warning";
+  index: number;
+  checkOrWarning: boolean;
   name: string;
   orderCount: number;
   kiloMeter: number;
   hours: number;
-  tonCode: string;
+  vehicleType: string;
   capacityRate: number;
+  vehicleTon: number;
   bgColor: keyof typeof BG_350;
 }
 
 const Driver = ({
+  index,
   checkOrWarning,
   name,
   orderCount,
   kiloMeter,
   hours,
-  tonCode,
+  vehicleType,
+  vehicleTon,
   capacityRate,
   onClickToggle,
   bgColor,
 }: DriverProps) => {
-  const checkOrWarningBgColor = checkOrWarning === "check" ? "bg-green-50" : "bg-red-600";
-  const checkOrWarningTextColor = checkOrWarning === "check" ? "text-green-500" : "text-white";
-  const dynamicIconId = tonCode as IconId;
+  const checkOrWarningBgColor = checkOrWarning ? "bg-green-50" : "bg-red-600";
+  const checkOrWarningTextColor = checkOrWarning ? "text-green-500" : "text-white";
+  const checkOrWarningId = checkOrWarning ? "check" : "warning";
+
+  const dynamicIconId = (vehicleType: string, vehicleTon: number): IconId => {
+    let prefix = "";
+
+    switch (vehicleType) {
+      case "WING_BODY":
+        prefix = "wing_";
+        break;
+      case "BOX":
+        prefix = "top_";
+        break;
+      case "CARGO":
+        prefix = "cargo_";
+        break;
+      default:
+        prefix = "";
+    }
+
+    return `${prefix}${vehicleTon}T` as IconId;
+  };
 
   const [, setBgColor] = useRecoilState(bgColorState);
+  const [, setDriverIndex] = useRecoilState(driverIndex);
 
   const handleButtonClick = () => {
     setBgColor(bgColor); // 버튼 클릭 시 bgColor를 전역 상태로 설정
+    setDriverIndex(index);
     if (onClickToggle) {
       onClickToggle(); // 기존의 onClickToggle 함수도 호출
     }
@@ -58,7 +85,7 @@ const Driver = ({
       <div className="flex h-10 shrink grow basis-0 items-center justify-start gap-1 rounded py-1 pl-3">
         <div className="flex items-center justify-start gap-3 py-[5px]">
           <div className={`p-1 ${checkOrWarningBgColor} flex items-center justify-center rounded-full`}>
-            <Icon id={checkOrWarning} size={14} className={checkOrWarningTextColor} />
+            <Icon id={checkOrWarningId} size={14} className={checkOrWarningTextColor} />
           </div>
         </div>
         <div className="flex h-[32px] w-[320px] items-center justify-start gap-2">
@@ -79,7 +106,7 @@ const Driver = ({
           <div className="h-[20px] w-[0px] border border-gray-100"></div>
           <div className="flex items-center justify-end gap-2">
             <div className="inline-flex w-[42px] flex-col items-center justify-center">
-              <Icon id={dynamicIconId} size={40} />
+              <Icon id={dynamicIconId(vehicleType, vehicleTon)} size={40} />
             </div>
             <div className="inline-flex w-[46px] flex-col items-center justify-center">
               <div

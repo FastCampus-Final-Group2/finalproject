@@ -9,19 +9,19 @@ import { ListStopOverData } from "@/components/SideTapDriverDetail";
 import * as XLSX from "xlsx";
 
 interface PendingOrderDataProps {
-  listPendingOrderData: ListStopOverData[];
+  pendingOrderData: ListStopOverData[];
 }
 
-const PendingOrderList = ({ listPendingOrderData }: PendingOrderDataProps) => {
+const PendingOrderList = ({ pendingOrderData }: PendingOrderDataProps) => {
   const { isExpanded, toggleExpand } = ToggleExpandSwitch(false);
 
   // 보류 주문 데이터를 엑셀로 변환 및 다운로드하는 함수
   const downloadPendingOrders = () => {
     // 1. address, meter, kilogram 필드만 추출한 데이터 생성
-    const extractedData = listPendingOrderData.map((order) => ({
-      address: order.address,
-      meter: order.meter,
-      kilogram: order.kilogram,
+    const extractedData = pendingOrderData.map((order) => ({
+      roadAddress: order.roadAddress,
+      volume: order.volume,
+      weight: order.weight,
     }));
 
     // 2. 데이터를 엑셀 시트 형식으로 변환
@@ -41,7 +41,7 @@ const PendingOrderList = ({ listPendingOrderData }: PendingOrderDataProps) => {
         <div className="flex w-full items-center justify-between">
           <div className="flex items-center gap-2">
             <div className="flex items-center gap-1">
-              <span className="text-gray-900 text-T-18-B">보류주문 ({listPendingOrderData.length})</span>
+              <span className="text-gray-900 text-T-18-B">보류주문 ({pendingOrderData.length})</span>
             </div>
 
             <div className="h-[20px] w-[0px] border border-gray-200"></div>
@@ -66,11 +66,21 @@ const PendingOrderList = ({ listPendingOrderData }: PendingOrderDataProps) => {
               {...provided.droppableProps}
               className="inline-flex max-h-[264px] w-full flex-col items-start justify-start gap-4 overflow-y-auto rounded-lg bg-white pt-[16px] scrollbar-hide"
             >
-              {listPendingOrderData.map((order, index) => (
-                <Draggable key={order.id} draggableId={`pendingOrder-${order.id}`} index={index}>
+              {pendingOrderData.map((order, index) => (
+                <Draggable
+                  key={`pendingOrder-${order.shipmentNumber}`}
+                  draggableId={`pendingOrder-${order.shipmentNumber}`}
+                  index={index}
+                >
                   {(provided) => (
                     <div ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
-                      <PendingOrder address={order.address} meter={order.meter} kilogram={order.kilogram} />
+                      <PendingOrder
+                        address={order.roadAddress}
+                        meter={order.volume}
+                        kilogram={order.weight}
+                        serviceRequestDate={order.serviceRequestDate}
+                        serviceRequestTime={order.serviceRequestTime}
+                      />
                     </div>
                   )}
                 </Draggable>
