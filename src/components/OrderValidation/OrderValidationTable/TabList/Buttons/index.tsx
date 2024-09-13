@@ -39,6 +39,7 @@ const Buttons = () => {
 
     if (error) {
       setLoadingModalOpen(false);
+      return;
     }
 
     setTimeout(() => {

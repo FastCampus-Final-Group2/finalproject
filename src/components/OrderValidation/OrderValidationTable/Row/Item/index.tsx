@@ -4,82 +4,82 @@ import { cn } from "@/utils/cn";
 import { itemVariants } from "./index.variants";
 import { ExcelDataHeader } from "@/types/excel";
 import { useRecoilState } from "recoil";
-import { selectedExcelDataCellSelector } from "@/atoms/excelData";
+import { excelDataCellSelector } from "@/atoms/excelData";
 import { OrderValidationFunc } from "@/utils/validation/order";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { TransportAPI } from "@/apis/transportOrder";
 
 interface ItemProps {
-  rowIndex: number;
+  rowId: number;
   header: ExcelDataHeader;
 }
 
-const Item = ({ rowIndex, header }: ItemProps) => {
-  const [selectedExcelDataCell, setSelectedExcelDataCell] = useRecoilState(
-    selectedExcelDataCellSelector({ rowIndex, header }),
-  );
-  const [debouncedValue, setDebouncedValue] = useState(selectedExcelDataCell.value);
+const Item = ({ rowId, header }: ItemProps) => {
+  const [excelDataCell, setExcelDataCell] = useRecoilState(excelDataCellSelector({ rowId, header }));
+  const [debouncedValue, setDebouncedValue] = useState(excelDataCell.value);
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      setDebouncedValue(selectedExcelDataCell.value);
+      if (debouncedValue !== excelDataCell.value) setDebouncedValue(excelDataCell.value);
     }, 1000);
 
     return () => {
       clearTimeout(timer);
     };
-  }, [header, rowIndex, selectedExcelDataCell.value]);
-
-  const validDebouncedSmName = useCallback(async () => {
-    const [error, smInfo] = await TransportAPI.valid({ requests: [{ smName: debouncedValue }] });
-
-    if (error) {
-      throw Error(error.data?.statusText);
-    }
-
-    if (smInfo.validList && smInfo.validList[0].smId && smInfo.validList[0].smNameValid) {
-      setSelectedExcelDataCell((prev) => ({
-        ...prev,
-        id: smInfo.validList[0].smId,
-        isValid: smInfo.validList[0].smNameValid,
-      }));
-    } else {
-      throw Error();
-    }
-  }, [debouncedValue, setSelectedExcelDataCell]);
+  }, [header, excelDataCell.value, debouncedValue]);
 
   useEffect(() => {
     if (header === "smName") {
-      validDebouncedSmName().catch(() => {
-        setSelectedExcelDataCell((prev) => ({
-          ...prev,
-          id: -1,
-          isValid: false,
-        }));
-      });
+      TransportAPI.valid({ requests: [{ smName: debouncedValue }] })
+        .then(([error, smInfo]) => {
+          if (error) {
+            throw Error(error.data?.statusText);
+          }
+
+          setExcelDataCell((prev) => ({
+            ...prev,
+            id: smInfo.validList[0].smId,
+            isValid: smInfo.validList[0].smNameValid,
+          }));
+        })
+        .catch(() => {
+          setExcelDataCell((prev) => ({
+            ...prev,
+            id: -1,
+            isValid: false,
+          }));
+        });
     } else {
       const isValid = OrderValidationFunc[header](debouncedValue);
 
-      setSelectedExcelDataCell({
+      setExcelDataCell({
         value: debouncedValue,
         isValid: isValid,
       });
     }
-  }, [debouncedValue, header, setSelectedExcelDataCell, validDebouncedSmName]);
+  }, [debouncedValue, header, setExcelDataCell]);
 
   const handleInputChange: React.ChangeEventHandler<HTMLInputElement> = (event) => {
     const value = event.target.value;
 
-    setSelectedExcelDataCell((prev) => ({
-      ...prev,
-      value: value,
-    }));
+    if (header === "smName") {
+      setExcelDataCell((prev) => ({
+        ...prev,
+        id: -1,
+        value: value,
+      }));
+    } else {
+      setExcelDataCell((prev) => ({
+        ...prev,
+        value: value,
+      }));
+    }
   };
 
   return (
     <input
-      value={selectedExcelDataCell.value}
-      className={cn(itemVariants({ isValid: selectedExcelDataCell.isValid }))}
+      value={excelDataCell.value}
+      className={cn(itemVariants({ isValid: excelDataCell.isValid }))}
       onChange={handleInputChange}
     />
   );

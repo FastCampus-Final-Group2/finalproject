@@ -5,11 +5,11 @@ import { useRecoilValue } from "recoil";
 import { isValidRowState } from "@/atoms/excelData";
 
 interface RowStateProps {
-  rowIndex: number;
+  rowId: number;
 }
 
-const RowState = ({ rowIndex }: RowStateProps) => {
-  const isValid = useRecoilValue(isValidRowState(rowIndex));
+const RowState = ({ rowId }: RowStateProps) => {
+  const isValid = useRecoilValue(isValidRowState(rowId));
 
   return (
     <div className="h-[35px] w-[140px] flex-shrink-0 px-5">
