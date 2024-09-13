@@ -1,4 +1,4 @@
-import { controlCheckboxState, controlOnlyClientState, controlPageState, controlSearchOptionState, controlTabState, searchDataState, searchEndTimeState, searchStartTimeState, searchTextInputState } from "@/atoms/control";
+import { controlCheckboxState, controlOnlyClientState, controlPageState, controlSearchOptionState, controlTabState, lastVisitedControlPageState, searchDataState, searchEndTimeState, searchStartTimeState, searchTextInputState } from "@/atoms/control";
 import { useResetRecoilState } from "recoil";
 
 const useResetControlAtoms = () => {
@@ -26,5 +26,6 @@ const useResetControlAtoms = () => {
 
   return resetControlAtoms;
 };
+
 
 export default useResetControlAtoms;

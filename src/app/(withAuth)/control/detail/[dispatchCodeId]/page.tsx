@@ -10,6 +10,8 @@ import { useSetRecoilState } from "recoil";
 import { lastVisitedControlPageState } from "@/atoms/control";
 import { useEffect } from "react";
 
+type ColorType = "lime" | "sky" | "violet" | "redwood" | "peanut" | "brown" | "forest" | "yale" | "olive";
+
 interface FetchData extends DispatchListResponse {
   dispatchList: {
     coordinates: {
@@ -26,6 +28,8 @@ const fetchDispatchCodeIdData = async (dispatchCodeId: number): Promise<FetchDat
   }
   return response as FetchData;
 };
+
+const ColorTypes: ColorType[] = ["lime", "sky", "violet", "redwood", "peanut", "brown", "forest", "yale", "olive"];
 
 const ControlDetailPage = ({ params }: { params: { dispatchCodeId: number } }) => {
   const { dispatchCodeId } = params;
@@ -53,14 +57,20 @@ const ControlDetailPage = ({ params }: { params: { dispatchCodeId: number } }) =
   if (error) return <div>Error: {(error as Error).message}</div>;
 
   console.log("대시보드 데이터", fetchedData);
-
   // 출발 센터 좌표와 도착지 좌표를 포함한 좌표 배열 생성
+  // coordinates는 경로 -> 선으로 표시
+  // fetchedData?.startStopover는 출발지 -> 깃발 아이콘을 달 것
+  // fetchedData?.stopoverList는 경유지 -> 마커 아이콘을 달 것
   const waypointGroups =
-    fetchedData?.dispatchList?.map((dispatch) => {
-      return [
-        { lat: fetchedData?.startStopover?.lat ?? 0, lng: fetchedData?.startStopover?.lon ?? 0 },
-        ...dispatch.coordinates,
-      ];
+    fetchedData?.dispatchList?.map((dispatch, index) => {
+      return {
+        id: index + 1,
+        bgColor: ColorTypes[index % ColorTypes.length],
+        waypoints: [
+          { lon: fetchedData?.startStopover?.lon ?? 0, lat: fetchedData?.startStopover?.lat ?? 0 },
+          ...dispatch.coordinates,
+        ],
+      };
     }) ?? [];
 
   console.log("waypointGroups", waypointGroups);
@@ -74,7 +84,9 @@ const ControlDetailPage = ({ params }: { params: { dispatchCodeId: number } }) =
             await refetch();
           }}
         />
-        <div className="w-full">{/* <NaverMap waypointGroups={waypointGroups} /> */}</div>
+        <div className="w-full">
+          <NaverMap waypointGroups={waypointGroups} />
+        </div>
       </div>
     </>
   );

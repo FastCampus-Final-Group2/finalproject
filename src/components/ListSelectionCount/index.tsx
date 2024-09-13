@@ -7,9 +7,15 @@ interface ListSelectionCountProps {
   currentCount: number;
   selectedCount: number;
   selectedDispatchIds: number[];
+  refreshData: () => void;
 }
 
-const ListSelectionCount = ({ currentCount, selectedCount, selectedDispatchIds }: ListSelectionCountProps) => {
+const ListSelectionCount = ({
+  currentCount,
+  selectedCount,
+  selectedDispatchIds,
+  refreshData,
+}: ListSelectionCountProps) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleCancelButtonClick = () => {
@@ -27,6 +33,7 @@ const ListSelectionCount = ({ currentCount, selectedCount, selectedDispatchIds }
       await DispatchApi.dispatchCancel({ dispatchNumberIds: selectedDispatchIds });
       alert("배차가 성공적으로 강제 종료되었습니다.");
       setIsModalOpen(false);
+      refreshData();
     } catch (error) {
       alert("배차 강제 종료에 실패했습니다.");
       console.error(error);

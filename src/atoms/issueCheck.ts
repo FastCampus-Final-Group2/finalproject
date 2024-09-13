@@ -1,9 +1,18 @@
 import { atom, selector, selectorFamily } from 'recoil';
+import { persistAtom } from './persistAtom';
 
 export const issueCheckState = atom({
   key: 'issueCheckState',
   default: [],
 });
+
+// todo: 이슈 선택 시 읽음 처리
+export const issueReadState = atom({
+  key: "issueReadState",
+  default: false,
+  effects_UNSTABLE: [persistAtom],
+});
+
 
 export const issueCheckSelector = selector({
   key: 'issueCheckSelector',

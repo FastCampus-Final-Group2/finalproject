@@ -2,6 +2,7 @@ import { atom, selector, selectorFamily } from "recoil";
 import { persistAtom } from "./persistAtom";
 import { CONTROL_TABS } from "@/components/TabForDispatchedList/index.constants";
 import { TabForProgressStatus } from "@/types/dispatchNumber";
+import { BgColorType } from "./bgColorState";
 
 // todo: 검색 결과 데이터 유지
 export const searchDataState = atom({
@@ -93,7 +94,7 @@ export const searchStatusAndDataState = selector({
   },
 });
 
-// todo: 마지막 방문한 페이지 유지(for detail page)
+// 마지막 방문한 페이지 유지(for detail page)
 export const lastVisitedControlPageState = atom<{
   general: string;
   detail: string | null;
@@ -131,15 +132,17 @@ export const controlSideTabDataState = atom({
 });
 
 // todo: 사이드탭 열린 상태 유지하기
-export const controlSideTabState = atom({
+export const controlSideTabState = atom<{
+  isExpanded: boolean;
+  color: BgColorType;
+  dispatchId: number | null;
+}>({
   key: "controlSideTabState",
-  default: false,
+  default: {
+    isExpanded: false,
+    color: "lime",
+    dispatchId: null,
+  },
   effects_UNSTABLE: [persistAtom],
 });
 
-// todo: 이슈 선택 시 읽음 처리
-export const issueReadState = atom({
-  key: "issueReadState",
-  default: false,
-  effects_UNSTABLE: [persistAtom],
-});
