@@ -20,11 +20,12 @@ import ListSelectionCount from "@/components/ListSelectionCount";
   // 2. 배차 취소 구현(아마 제일 쉬움)
   3. 이슈상황 모아보기 작업하기(목록을 클릭해서 사이드탭을 열면 특정 listcard가 포커스되고 bg 색상이 연빨강으로 변함)
   // 4. 지도 컴포넌트에 좌표 뿌리기
-  5. 사이드탭 열었을 때 순서 아이콘 넣기
+  5. 사이드탭 열었을 때 순서 아이콘 표시하기
   6. 사이드탭 열었을 때 휴식 중 컴포넌트 넣는 방법 생각하기
   7. 예정 시간을 지나치면 작업 속도 늦어짐 메시지를 넣어야 하나?
   8. UT 플로우를 따를 때 운송 목록이 지정된 시간을 지나치면 자동으로 컴포넌트가 바뀌어야 하는지 물어보기
   // 9. DeliveryProgressSideTab의 refetch가 DeliveryProgressSideTab, DeliveryRoutine을 통해 차례로 전달되고, SelectDelivery에서 '배송취소' 버튼을 클릭하면 api가 작동하면서 DeliveryProgressSideTab을 새로고침해야 해.
+  10. 특정 운송 목록을 취소할 때 대시보드와 사이드바가 모두 새로고침되게 하기
 */
 
 // API를 통해 데이터를 가져오는 함수
