@@ -80,7 +80,7 @@ const Buttons = () => {
           title="경로 최적화 진행 중"
           text={["배차 계획을 만들고 있습니다.", "잠시만 기다려주세요."]}
           awaitFn={calculateDispatch}
-          time={7000}
+          time={10000}
           intervalTime={10}
         />
       )}
