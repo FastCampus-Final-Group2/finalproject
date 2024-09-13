@@ -5,20 +5,24 @@ import CheckBox from "@/components/core/CheckBox";
 import { FormProvider, useForm } from "react-hook-form";
 import type { SubmitErrorHandler, SubmitHandler } from "react-hook-form";
 import { useRouter } from "next/navigation";
-import { LOGIN_FORMS } from "./index.constants";
+import { LOGIN_ERROR_MESSAGE, LOGIN_FORMS } from "./index.constants";
 import LoginFormInput from "./LoginFormInput";
 import { UsersAPI } from "@/apis/users";
-import { useRecoilState } from "recoil";
+import { useRecoilState, useResetRecoilState } from "recoil";
 import { userState } from "@/atoms/user";
 import localStorage from "@/service/localStorage";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useTabStateContext } from "@/contexts/TabStateContext";
 import useResetExcelDataAtoms from "@/hooks/useResetExcelDataAtoms";
+import { dispatchDataState } from "@/atoms/dispatchData";
+import { loginRequestValid } from "@/utils/validation/login";
 
 const LoginForm = () => {
   const router = useRouter();
+  const [errorMessage, setErrorMessage] = useState("");
   const [user, setUser] = useRecoilState(userState);
   const resetExcelDataAtoms = useResetExcelDataAtoms();
+  const resetDispatchData = useResetRecoilState(dispatchDataState);
   const { resetTabState } = useTabStateContext();
 
   useEffect(() => {
@@ -39,12 +43,19 @@ const LoginForm = () => {
     handleSubmit,
     register,
     formState: { errors },
-    resetField,
+    setValue,
     setError,
   } = useFormMethods;
 
   const onSubmit: SubmitHandler<typeof initialState> = async (formData) => {
     const { save, ...loginRequest } = formData;
+
+    if (!loginRequestValid(loginRequest)) {
+      setErrorMessage(LOGIN_ERROR_MESSAGE);
+      setError("username", { message: LOGIN_ERROR_MESSAGE });
+      setError("password", { message: LOGIN_ERROR_MESSAGE });
+      return;
+    }
 
     if (save) {
       localStorage.username.set(loginRequest.username);
@@ -56,27 +67,21 @@ const LoginForm = () => {
 
     if (loginData) {
       resetExcelDataAtoms();
+      resetDispatchData();
       resetTabState();
       setUser(loginData.name);
       router.push("/dispatch");
     }
 
-    if (error && error.type === "AXIOS_ERROR") {
-      setError("username", {
-        type: error.statusText,
-        message: "아이디 또는 비밀번호가 맞지 않습니다. 다시 확인해주세요.",
-      });
-      setError("password", {
-        type: error.statusText,
-        message: "아이디 또는 비밀번호가 맞지 않습니다. 다시 확인해주세요.",
-      });
+    if (error) {
+      setErrorMessage(LOGIN_ERROR_MESSAGE);
     }
   };
 
   const onError: SubmitErrorHandler<typeof initialState> = (errors) => {
     const ids = Object.keys(errors) as (keyof typeof initialState)[];
     ids.forEach((id) => {
-      if (errors[id]) resetField(id, { keepError: true });
+      if (errors[id]) setValue(id, "");
     });
   };
 
@@ -95,14 +100,7 @@ const LoginForm = () => {
           <Button className="h-[43px] p-3" type="submit">
             로그인
           </Button>
-          {(errors.username?.type === "pattern" ||
-            errors.username?.type === "Not Found" ||
-            errors.password?.type === "pattern" ||
-            errors.password?.type === "Not Found") && (
-            <p className="text-center text-red-500 text-T-16-M">
-              아이디 또는 비밀번호가 맞지 않습니다. 다시 확인해주세요.
-            </p>
-          )}
+          {errorMessage && <p className="text-center text-red-500 text-T-16-M">{errorMessage}</p>}
         </form>
       </FormProvider>
     </div>

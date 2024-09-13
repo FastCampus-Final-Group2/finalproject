@@ -112,35 +112,60 @@ export const selectedExcelDataLengthSelector = selector<number>({
   },
 });
 
-export const startRowSelector = selector<number>({
-  key: "startRowSelector",
+export const selectedExcelDataRowIdsSelector = selector<number[]>({
+  key: "selectedExcelDataRowIdsSelector",
   get: ({ get }) => {
     const currentPage = get(excelDataPageState);
+    const selectedExcelData = get(selectedExcelDataSelector);
+    const selectedExcelDataLength = get(selectedExcelDataLengthSelector);
 
     const startRow = (currentPage - 1) * ORDER_VALIDATION_PER_PAGE;
+    const endRow = Math.min(startRow + ORDER_VALIDATION_PER_PAGE - 1, selectedExcelDataLength - 1);
 
-    return startRow;
+    const rowIds = Array.from({ length: endRow - startRow + 1 }).map((_, index) => {
+      return selectedExcelData[startRow + index].rowId;
+    });
+
+    return rowIds;
   },
 });
 
-export const endRowSelector = selector<number>({
-  key: "endRowSelector",
-  get: ({ get }) => {
-    const selectedExcelDataLength = get(selectedExcelDataLengthSelector);
-    const startRow = get(startRowSelector);
-
-    return Math.min(startRow + ORDER_VALIDATION_PER_PAGE - 1, selectedExcelDataLength - 1);
-  },
-});
-
-export const selectedExcelDataRowSelector = selectorFamily<ExcelData, number>({
-  key: "selectedExcelDataCellSelector",
+export const selectedExcelDataRowIdSelector = selectorFamily<number, number>({
+  key: "selectedExcelDataRowIdSelector",
   get:
     (rowIndex) =>
     ({ get }) => {
       const selectedExcelData = get(selectedExcelDataSelector);
 
-      return selectedExcelData[rowIndex];
+      return selectedExcelData[rowIndex].rowId;
+    },
+});
+
+export const excelDataCellSelector = selectorFamily<
+  DefaultExcelDataValue | SmNameExcelDataValue,
+  { rowId: number; header: ExcelDataHeader }
+>({
+  key: "excelDataCellSelector",
+  get:
+    ({ rowId, header }) =>
+    ({ get }) => {
+      const excelData = get(excelDataState);
+
+      return excelData[rowId][header];
+    },
+  set:
+    ({ rowId, header }) =>
+    ({ set, get }, newValue) => {
+      const excelData = get(excelDataState);
+
+      set(excelDataState, [
+        ...excelData.slice(0, rowId),
+        {
+          ...excelData[rowId],
+          [header]: newValue,
+        },
+        ...excelData.slice(rowId + 1),
+      ]);
     },
 });
 
@@ -160,9 +185,9 @@ export const selectedExcelDataCellSelector = selectorFamily<
     ({ rowIndex, header }) =>
     ({ set, get }, newValue) => {
       const excelData = get(excelDataState);
-      const selectedExcelDataRow = get(selectedExcelDataRowSelector(rowIndex));
+      const selectedExcelData = get(selectedExcelDataSelector);
 
-      const changedRow = selectedExcelDataRow.rowId;
+      const changedRow = selectedExcelData[rowIndex].rowId;
 
       set(excelDataState, [
         ...excelData.slice(0, changedRow),
@@ -178,13 +203,11 @@ export const selectedExcelDataCellSelector = selectorFamily<
 export const isValidRowState = selectorFamily<boolean, number>({
   key: "isValidRowState",
   get:
-    (index: number) =>
+    (rowId: number) =>
     ({ get }) => {
-      const selectedExcelData = get(selectedExcelDataSelector);
+      const excelData = get(excelDataState);
 
-      return !Object.values(selectedExcelData[index]).some((cell) =>
-        typeof cell === "number" ? false : !cell.isValid,
-      );
+      return !Object.values(excelData[rowId]).some((cell) => (typeof cell === "number" ? false : !cell.isValid));
     },
 });
 

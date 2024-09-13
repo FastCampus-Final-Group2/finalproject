@@ -8,6 +8,8 @@ import ModalBase from "@/components/detailModal/ModalBase";
 import { TransportAPI } from "@/apis/transportOrder";
 import { useEffect, useState } from "react";
 import { GetTransportOrderByIdData } from "@/models/ApiTypes";
+import { useSetRecoilState } from "recoil";
+import { userState } from "@/atoms/user";
 
 interface OrderModalProps {
   id: number;
@@ -16,6 +18,7 @@ interface OrderModalProps {
 }
 
 const OrderModal = ({ id, orderInfo, onClose }: OrderModalProps) => {
+  const setUser = useSetRecoilState(userState);
   const [info, setInfo] = useState<GetTransportOrderByIdData | null>(orderInfo || null);
 
   useEffect(() => {
@@ -23,7 +26,10 @@ const OrderModal = ({ id, orderInfo, onClose }: OrderModalProps) => {
       TransportAPI.getDetailInfo(id)
         .then(([error, data]) => {
           if (error) {
-            onClose();
+            if (error.status === 401) {
+              setUser(null);
+            }
+            throw Error(error.data?.statusText);
           }
 
           setInfo(data);
@@ -32,7 +38,7 @@ const OrderModal = ({ id, orderInfo, onClose }: OrderModalProps) => {
           onClose();
         });
     }
-  }, [id, onClose, orderInfo]);
+  }, [id, onClose, orderInfo, setUser]);
 
   if (!info) return null;
 

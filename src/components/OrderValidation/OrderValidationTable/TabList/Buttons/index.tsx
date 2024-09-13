@@ -3,6 +3,7 @@
 import { TransportAPI } from "@/apis/transportOrder";
 import { dispatchDataState } from "@/atoms/dispatchData";
 import { dispatchNameState, excelDataState, isValidExcelDataState, loadingStartTimeState } from "@/atoms/excelData";
+import { userState } from "@/atoms/user";
 import ConfirmModal from "@/components/ConfirmModal";
 import Button from "@/components/core/Button";
 import LoadingModal from "@/components/LoadingModal";
@@ -12,6 +13,8 @@ import { useState } from "react";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 
 const Buttons = () => {
+  const setUser = useSetRecoilState(userState);
+
   const [loadingModalOpen, setLoadingModalOpen] = useState(false);
   const [cancelModalOpen, setCancelModalOpen] = useState(false);
 
@@ -38,7 +41,11 @@ const Buttons = () => {
     const [error, data] = await TransportAPI.postOrder(transportOrderRequest);
 
     if (error) {
+      if (error.status === 401) {
+        setUser(null);
+      }
       setLoadingModalOpen(false);
+      return;
     }
 
     setTimeout(() => {
@@ -67,6 +74,7 @@ const Buttons = () => {
           onClickClose={() => {
             setCancelModalOpen(false);
           }}
+          doConfirm={true}
           onConfirm={() => {
             resetExcelDataAtoms();
           }}
@@ -79,7 +87,7 @@ const Buttons = () => {
           title="경로 최적화 진행 중"
           text={["배차 계획을 만들고 있습니다.", "잠시만 기다려주세요."]}
           awaitFn={calculateDispatch}
-          time={7000}
+          time={10000}
           intervalTime={10}
         />
       )}

@@ -2,11 +2,13 @@
 
 import { CenterAPI } from "@/apis/center";
 import { DestinationAPI } from "@/apis/deliveryDestination";
+import { userState } from "@/atoms/user";
 import Button from "@/components/core/Button";
 import { useDeliveryModalEditContext } from "@/contexts/DeliveryModalEditContext";
 import { CenterResponse, DeliveryDestinationResponse } from "@/models/ApiTypes";
 import { formatRestrictedTonObject } from "@/utils/tonCode";
 import dayjs from "dayjs";
+import { useSetRecoilState } from "recoil";
 
 interface EditButtonsProps {
   id: number;
@@ -17,6 +19,7 @@ interface EditButtonsProps {
 }
 
 const EditButtons = ({ id, updateAt, onClose, isCenter, setInfo }: EditButtonsProps) => {
+  const setUser = useSetRecoilState(userState);
   const { isEdited, comment, hour, minute, wing, top, cargo } = useDeliveryModalEditContext();
 
   const handleClickEditBtn = async () => {
@@ -32,7 +35,11 @@ const EditButtons = ({ id, updateAt, onClose, isCenter, setInfo }: EditButtonsPr
       ? await CenterAPI.updateDetailInfo(id, updateRequest)
       : await DestinationAPI.updateDetailInfo(id, updateRequest);
 
-    if (!error) {
+    if (error) {
+      if (error.status === 401) {
+        setUser(null);
+      }
+    } else {
       setInfo((prev) => {
         return {
           ...prev,

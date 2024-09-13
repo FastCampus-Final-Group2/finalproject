@@ -31,7 +31,7 @@ const ProfileBadge = () => {
     if (!error) {
       resetExcelDataAtoms();
       resetDispatchData();
-      setUser(undefined);
+      setUser(null);
       router.push("/");
     }
   };

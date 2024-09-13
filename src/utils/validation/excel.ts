@@ -4,6 +4,7 @@ import dayjs from "dayjs";
 import getSmInfos from "@/utils/getSmInfos";
 import { formatExcelDataRow } from "@/utils/format/excelData";
 import { EXCEL_HEADERS } from "@/constants/excel";
+import { Error } from "@/utils/toAxios";
 
 export const isExcelHeaderCorrect = (row: string[]) => {
   return row.every((header, index) => {
@@ -18,7 +19,22 @@ export const isExcelDataEmpty = (excelData: string[][]) => {
   });
 };
 
-export const handleExcelFile = async (arrayBuffer: ArrayBuffer) => {
+export const handleExcelFile = async (
+  arrayBuffer: ArrayBuffer,
+): Promise<
+  | [
+      (
+        | Error
+        | {
+            type: string;
+            status: null;
+            data: null;
+          }
+      ),
+      null,
+    ]
+  | [null, ExcelData[]]
+> => {
   const workbook = XLSX.read(arrayBuffer, { type: "array", cellDates: true });
 
   const sheetName = workbook.SheetNames[0];
@@ -39,18 +55,25 @@ export const handleExcelFile = async (arrayBuffer: ArrayBuffer) => {
     }) as string[][];
 
   if (!isExcelHeaderCorrect(excelData[0]) || isExcelDataEmpty(excelData)) {
-    return null;
+    return [
+      {
+        type: "EXAMPLE_ERROR",
+        status: null,
+        data: null,
+      },
+      null,
+    ];
   }
 
   const [error, smInfos] = await getSmInfos(excelData.slice(4));
 
   if (error) {
-    return null;
+    return [error, null];
   }
 
   const validedExcelData: ExcelData[] = excelData.slice(4).map((row, index) => {
     return formatExcelDataRow(row, index, smInfos);
   });
 
-  return validedExcelData;
+  return [null, validedExcelData];
 };
