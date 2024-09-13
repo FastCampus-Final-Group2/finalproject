@@ -5,6 +5,8 @@ import FileInput from "./FileInput.tsx";
 import Dimmed from "@/components/core/Dimmed";
 import { TransportAPI } from "@/apis/transportOrder";
 import downloadExampleFile from "@/utils/downloadExampleFile";
+import { userState } from "@/atoms/user";
+import { useSetRecoilState } from "recoil";
 
 interface UploadModalProps {
   setModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -12,24 +14,31 @@ interface UploadModalProps {
 }
 
 const UploadModal = ({ setModalOpen, setIsError }: UploadModalProps) => {
+  const setUser = useSetRecoilState(userState);
+
   const handleExcelExampleBtn = async () => {
     const [error, data] = await TransportAPI.excelExample();
 
-    if (!error) {
-      const blob = new Blob([data], {
-        type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-      });
-
-      const url = window.URL.createObjectURL(blob);
-      const link = document.createElement("a");
-      link.href = url;
-      link.setAttribute("download", "운송_주문_양식.xlsx");
-      document.body.appendChild(link);
-      link.click();
-      link.remove();
-    } else {
-      downloadExampleFile();
+    if (error) {
+      if (error.status === 401) {
+        setUser(null);
+      } else {
+        downloadExampleFile();
+      }
+      return;
     }
+
+    const blob = new Blob([data], {
+      type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    });
+
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.setAttribute("download", "운송_주문_양식.xlsx");
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
   };
 
   return (

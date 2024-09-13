@@ -3,11 +3,12 @@
 import { cn } from "@/utils/cn";
 import { itemVariants } from "./index.variants";
 import { ExcelDataHeader } from "@/types/excel";
-import { useRecoilState } from "recoil";
+import { useRecoilState, useSetRecoilState } from "recoil";
 import { excelDataCellSelector } from "@/atoms/excelData";
 import { OrderValidationFunc } from "@/utils/validation/order";
 import { useEffect, useState } from "react";
 import { TransportAPI } from "@/apis/transportOrder";
+import { userState } from "@/atoms/user";
 
 interface ItemProps {
   rowId: number;
@@ -15,6 +16,7 @@ interface ItemProps {
 }
 
 const Item = ({ rowId, header }: ItemProps) => {
+  const setUser = useSetRecoilState(userState);
   const [excelDataCell, setExcelDataCell] = useRecoilState(excelDataCellSelector({ rowId, header }));
   const [debouncedValue, setDebouncedValue] = useState(excelDataCell.value);
 
@@ -33,6 +35,9 @@ const Item = ({ rowId, header }: ItemProps) => {
       TransportAPI.valid({ requests: [{ smName: debouncedValue }] })
         .then(([error, smInfo]) => {
           if (error) {
+            if (error.status === 401) {
+              setUser(null);
+            }
             throw Error(error.data?.statusText);
           }
 
@@ -57,7 +62,7 @@ const Item = ({ rowId, header }: ItemProps) => {
         isValid: isValid,
       });
     }
-  }, [debouncedValue, header, setExcelDataCell]);
+  }, [debouncedValue, header, setExcelDataCell, setUser]);
 
   const handleInputChange: React.ChangeEventHandler<HTMLInputElement> = (event) => {
     const value = event.target.value;

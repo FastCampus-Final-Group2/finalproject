@@ -3,6 +3,7 @@
 import { TransportAPI } from "@/apis/transportOrder";
 import { dispatchDataState } from "@/atoms/dispatchData";
 import { dispatchNameState, excelDataState, isValidExcelDataState, loadingStartTimeState } from "@/atoms/excelData";
+import { userState } from "@/atoms/user";
 import ConfirmModal from "@/components/ConfirmModal";
 import Button from "@/components/core/Button";
 import LoadingModal from "@/components/LoadingModal";
@@ -12,6 +13,8 @@ import { useState } from "react";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 
 const Buttons = () => {
+  const setUser = useSetRecoilState(userState);
+
   const [loadingModalOpen, setLoadingModalOpen] = useState(false);
   const [cancelModalOpen, setCancelModalOpen] = useState(false);
 
@@ -38,6 +41,9 @@ const Buttons = () => {
     const [error, data] = await TransportAPI.postOrder(transportOrderRequest);
 
     if (error) {
+      if (error.status === 401) {
+        setUser(null);
+      }
       setLoadingModalOpen(false);
       return;
     }
