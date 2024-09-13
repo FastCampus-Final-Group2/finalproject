@@ -74,6 +74,7 @@ const Buttons = () => {
           onClickClose={() => {
             setCancelModalOpen(false);
           }}
+          doConfirm={true}
           onConfirm={() => {
             resetExcelDataAtoms();
           }}
