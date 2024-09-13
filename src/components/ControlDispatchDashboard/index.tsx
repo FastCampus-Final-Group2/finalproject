@@ -1,6 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useRecoilState } from "recoil";
+import { controlSideTabState } from "@/atoms/control";
 import IssuesList from "./IssuesList";
 import DeliveryTotalOrders from "./DeliveryTotalOrder";
 import DispatchedDrivers from "./DispatchedDrivers";
@@ -30,15 +32,25 @@ const ControlDispatchDashboard = ({
   const [selectedColor, setSelectedColor] = useState(smColors[0]);
   const [selectedDispatchId, setSelectedDispatchId] = useState<number | null>(null);
 
-  const [isSideTapExpanded, setSideTapExpanded] = useState(false);
+  const [sideTabState, setSideTabState] = useRecoilState(controlSideTabState);
+
+  useEffect(() => {
+    if (sideTabState.isExpanded && sideTabState.dispatchId !== null) {
+      setSelectedColor(sideTabState.color as ColorType);
+      setSelectedDispatchId(sideTabState.dispatchId);
+    }
+  }, [sideTabState]);
 
   const openSideTap = (color: ColorType, dispatchId: number) => {
     setSelectedColor(color);
     setSelectedDispatchId(dispatchId);
-    setSideTapExpanded(true);
+    setSideTabState({ isExpanded: true, color, dispatchId });
     console.log(dispatchId);
   };
-  const closeSideTap = () => setSideTapExpanded(false);
+
+  const closeSideTap = () => {
+    setSideTabState({ isExpanded: false, color: selectedColor, dispatchId: null });
+  };
 
   return (
     <div className="flex">
@@ -54,7 +66,6 @@ const ControlDispatchDashboard = ({
             />
           </div>
           <div className="flex h-[344px] w-[524px] justify-center">
-            {/* todo: onClickToggle={openSideTap} 타입 정리할 것. 일단 동작은 함. */}
             <DispatchedDrivers
               onClickToggle={openSideTap}
               drivers={fetchedData.dispatchList ?? []}
@@ -69,10 +80,11 @@ const ControlDispatchDashboard = ({
       </div>
       <div>
         <DeliveryProgressSideTab
-          isExpanded={isSideTapExpanded}
+          isExpanded={sideTabState.isExpanded}
           onClose={closeSideTap}
           selectedColor={selectedColor}
           dispatchId={selectedDispatchId}
+          refreshData={refreshData}
         />
       </div>
     </div>

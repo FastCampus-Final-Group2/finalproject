@@ -1,6 +1,8 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
+import { useRecoilState } from "recoil";
+import { searchStartTimeState, searchEndTimeState } from "@/atoms/control";
 import CalendarPicker from "@/components/CalendarPicker";
 import Icon from "@/components/core/Icon";
 
@@ -10,22 +12,39 @@ interface SearchDateProps {
 }
 
 const SearchDate = ({ onStartDateChange, onEndDateChange }: SearchDateProps) => {
-  const [startDate, setStartDate] = useState<string>("YYYY-MM-DD --:--");
-  const [endDate, setEndDate] = useState<string>("YYYY-MM-DD --:--");
+  const [startDate, setStartDate] = useRecoilState(searchStartTimeState);
+  const [endDate, setEndDate] = useRecoilState(searchEndTimeState);
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
   const [dateType, setDateType] = useState<"start" | "end">("start"); // Track which date to set
   const [calendarPosition, setCalendarPosition] = useState({ top: 0, left: 0 });
 
   const startDateRef = useRef<HTMLParagraphElement>(null);
   const endDateRef = useRef<HTMLParagraphElement>(null);
+  const calendarRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    onStartDateChange(startDate);
+    onEndDateChange(endDate);
+  }, [startDate, endDate, onStartDateChange, onEndDateChange]);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (calendarRef.current && !calendarRef.current.contains(event.target as Node)) {
+        setIsCalendarOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   const handleDateConfirm = (date: string) => {
     if (dateType === "start") {
       setStartDate(date);
-      onStartDateChange(date);
     } else if (dateType === "end") {
       setEndDate(date);
-      onEndDateChange(date);
     }
     setIsCalendarOpen(false); // Close calendar after selecting a date
   };
@@ -69,7 +88,11 @@ const SearchDate = ({ onStartDateChange, onEndDateChange }: SearchDateProps) => 
         </div>
       </div>
       {isCalendarOpen && (
-        <div className="absolute z-50" style={{ top: `${calendarPosition.top}px`, left: `${calendarPosition.left}px` }}>
+        <div
+          ref={calendarRef}
+          className="absolute z-50"
+          style={{ top: `${calendarPosition.top}px`, left: `${calendarPosition.left}px` }}
+        >
           <CalendarPicker onSelectDate={handleDateConfirm} />
         </div>
       )}

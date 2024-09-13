@@ -9,4 +9,5 @@ const orderCancel = async (dispatchCancelRequest: DispatchCancelRequest) => {
   return toAxios(axios.patch(DISPATCH_DETAIL_API_PATH.dispatchDetail + "/vehicle-control", dispatchCancelRequest))
 }
 
+
 export default orderCancel;

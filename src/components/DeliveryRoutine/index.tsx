@@ -25,7 +25,7 @@ const formatTime = (dateTimeString: string): string => {
   return `${hours}:${minutes}`;
 };
 
-const DeliveryRoutine = ({ fetchData }: { fetchData: FetchData }) => {
+const DeliveryRoutine = ({ fetchData, refreshData }: { fetchData: FetchData; refreshData: () => Promise<void> }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const handleModalOpen = () => {
     setIsModalOpen(true);
@@ -44,7 +44,7 @@ const DeliveryRoutine = ({ fetchData }: { fetchData: FetchData }) => {
 
   return (
     <>
-      <SelectedDelivery selectedOrders={selectedOrders} />
+      <SelectedDelivery selectedOrders={selectedOrders} refreshData={refreshData} />
       <div className="flex h-fit max-h-[500px] flex-col gap-[6px] py-[8px] text-T-18-B">
         {startEnd.map((data, index) => (
           <React.Fragment key={data.status}>

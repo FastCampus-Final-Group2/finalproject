@@ -19,7 +19,7 @@ const TimePicker = ({ selectedHour, selectedMinute, onHourChange, onMinuteChange
           {hours.map((hour) => (
             <li
               key={hour}
-              className={`cursor-pointer px-[10px] py-[3px] ${selectedHour === hour ? "bg-blue-100" : ""}`}
+              className={`cursor-pointer px-[10px] py-[3px] ${selectedHour === hour ? "rounded-[4px] bg-blue-100" : ""}`}
               onClick={() => onHourChange(hour)}
             >
               {hour.toString().padStart(2, "0")} {/* 2자리로 표시 */}
@@ -34,7 +34,7 @@ const TimePicker = ({ selectedHour, selectedMinute, onHourChange, onMinuteChange
           {minutes.map((minute) => (
             <li
               key={minute}
-              className={`cursor-pointer px-[10px] py-[3px] ${selectedMinute === minute ? "bg-blue-100" : ""}`}
+              className={`cursor-pointer px-[10px] py-[3px] ${selectedMinute === minute ? "rounded-[4px] bg-blue-100" : ""}`}
               onClick={() => onMinuteChange(minute)}
             >
               {minute.toString().padStart(2, "0")} {/* 2자리로 표시 */}

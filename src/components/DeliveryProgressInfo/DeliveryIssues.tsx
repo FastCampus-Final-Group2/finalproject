@@ -1,10 +1,11 @@
 "use client";
 
 import Icon from "@/components/core/Icon";
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useMemo } from "react";
 import ConfirmModal from "@/components/ConfirmModal";
-import { dispatchApi } from "@/apis/dispatches/dispatch";
+import { DispatchApi } from "@/apis/dispatches/dispatch";
 import { IssueRequest } from "@/models/ApiTypes";
+import { debounce } from "@/utils/debounce";
 
 const DeliveryIssue = ({ issue, dispatchId }: { issue: string; dispatchId: number }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -12,11 +13,12 @@ const DeliveryIssue = ({ issue, dispatchId }: { issue: string; dispatchId: numbe
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [savedIssue, setSavedIssue] = useState(issue);
 
-  const fetchIssue = useCallback(
+  // 메모 저장 로직
+  const debouncedFetchIssue = useCallback(
     async (text: string) => {
       try {
         const issueRequest: IssueRequest = { issue: text };
-        const [error, response] = await dispatchApi.issue(dispatchId, issueRequest);
+        const [error, response] = await DispatchApi.issue(dispatchId, issueRequest);
         if (error) {
           console.error("이슈 저장 중 오류 발생:", error);
         } else {
@@ -27,28 +29,30 @@ const DeliveryIssue = ({ issue, dispatchId }: { issue: string; dispatchId: numbe
         console.error("이슈 저장 중 예외 발생:", error);
       }
     },
-    [dispatchId],
+    [dispatchId, setSavedIssue],
   );
 
+  // 메모 입력 디바운스
+  const debouncedSaveIssue = useMemo(() => debounce(debouncedFetchIssue, 1000), [debouncedFetchIssue]);
   useEffect(() => {
-    let timer: NodeJS.Timeout;
     if (memo !== savedIssue) {
-      timer = setTimeout(async () => {
-        await fetchIssue(memo);
-      }, 1000);
+      // eslint-disable-next-line @typescript-eslint/no-floating-promises
+      debouncedSaveIssue(memo);
     }
-    return () => clearTimeout(timer);
-  }, [memo, savedIssue, fetchIssue]);
+  }, [memo, savedIssue, debouncedSaveIssue]);
 
+  // 300자 이내로 입력
   const handleMemoChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const newText = e.target.value.slice(0, 300);
     setMemo(newText);
   };
 
-  const handleDelete = async () => {
+  // 이슈 메모 삭제
+  const handleDelete = () => {
     setMemo("");
     setSavedIssue("");
-    await fetchIssue("");
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
+    debouncedFetchIssue("");
     setIsModalOpen(false);
   };
 

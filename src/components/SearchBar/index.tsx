@@ -1,6 +1,8 @@
 import { useState } from "react";
+import { useRecoilState } from "recoil";
+import { controlSearchOptionState, searchTextInputState, controlOnlyClientState } from "@/atoms/control";
 import SearchDate from "./SearchDate";
-import SearchCategory from "./SearchCategory";
+import SearchOption from "./SearchOption";
 import SearchTextInput from "./SearchTextInput";
 import CheckBox from "@/components/core/CheckBox";
 import { DispatchResult } from "@/models/ApiTypes";
@@ -12,9 +14,10 @@ interface SearchBarsProps {
   onSearch: (results: DispatchResult[]) => void;
 }
 
-const SearchBars = ({ data, onSearch }: SearchBarsProps) => {
-  const [searchCategory, setSearchCategory] = useState("dispatchCode");
-  const [searchKeyword, setSearchKeyword] = useState("");
+const SearchBars = ({ onSearch }: SearchBarsProps) => {
+  const [searchOption] = useRecoilState(controlSearchOptionState);
+  const [searchKeyword, setSearchKeyword] = useRecoilState(searchTextInputState);
+  const [onlyClient, setOnlyClient] = useRecoilState(controlOnlyClientState);
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
 
@@ -25,12 +28,13 @@ const SearchBars = ({ data, onSearch }: SearchBarsProps) => {
 
       const searchParams = {
         request: {
-          status: "IN_TRANSIT" as const, // 'as const'를 추가하여 리터럴 타입으로 지정
+          status: "IN_TRANSIT" as const,
           isManager: false,
           startDateTime: formattedStartDate,
           endDateTime: formattedEndDate,
-          searchOption: searchKeyword ? searchCategory : "",
-          searchKeyword: searchKeyword,
+          searchOption: searchKeyword ? searchOption : "",
+          searchKeyword,
+          onlyClient,
         },
       };
 
@@ -41,21 +45,25 @@ const SearchBars = ({ data, onSearch }: SearchBarsProps) => {
         return;
       }
 
-      onSearch(results as DispatchResult[]); // 검색 결과를 부모 컴포넌트로 전달
+      onSearch(results as DispatchResult[]);
     } catch (err) {
       console.error("API 호출 중 오류 발생:", err);
     }
   };
 
+  const handleOnlyClientChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setOnlyClient(e.target.checked);
+  };
+
   return (
     <div className="flex items-center gap-[14px]">
-      <SearchDate onStartDateChange={(date) => setStartDate(date)} onEndDateChange={(date) => setEndDate(date)} />
+      <SearchDate onStartDateChange={setStartDate} onEndDateChange={setEndDate} />
       <div className="flex w-fit items-center gap-[12px] rounded-[8px] border border-gray-200 p-[12px] text-T-16-B">
-        <SearchCategory onCategoryChange={setSearchCategory} />
-        <SearchTextInput onKeywordChange={setSearchKeyword} onSearch={handleSearch} />
+        <SearchOption />
+        <SearchTextInput onSearch={handleSearch} />
       </div>
       <div className="flex gap-[12px] p-[16px] text-SB-14-M">
-        <CheckBox label="내 담당 주문만 보기" />
+        <CheckBox label="내 담당 주문만 보기" checked={onlyClient} onChange={handleOnlyClientChange} />
       </div>
     </div>
   );

@@ -6,6 +6,7 @@ interface DeliveryCompletedCardProps {
   completedOrderCount: number;
   deliveryOrderCount: number;
   totalTime: string;
+  refreshData: () => Promise<void>;
 }
 
 const formatTotalTime = (totalTime: string): { hours: number; minutes: number } => {
