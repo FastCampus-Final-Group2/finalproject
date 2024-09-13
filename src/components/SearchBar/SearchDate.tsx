@@ -20,11 +20,25 @@ const SearchDate = ({ onStartDateChange, onEndDateChange }: SearchDateProps) => 
 
   const startDateRef = useRef<HTMLParagraphElement>(null);
   const endDateRef = useRef<HTMLParagraphElement>(null);
+  const calendarRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     onStartDateChange(startDate);
     onEndDateChange(endDate);
   }, [startDate, endDate, onStartDateChange, onEndDateChange]);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (calendarRef.current && !calendarRef.current.contains(event.target as Node)) {
+        setIsCalendarOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   const handleDateConfirm = (date: string) => {
     if (dateType === "start") {
@@ -74,7 +88,11 @@ const SearchDate = ({ onStartDateChange, onEndDateChange }: SearchDateProps) => 
         </div>
       </div>
       {isCalendarOpen && (
-        <div className="absolute z-50" style={{ top: `${calendarPosition.top}px`, left: `${calendarPosition.left}px` }}>
+        <div
+          ref={calendarRef}
+          className="absolute z-50"
+          style={{ top: `${calendarPosition.top}px`, left: `${calendarPosition.left}px` }}
+        >
           <CalendarPicker onSelectDate={handleDateConfirm} />
         </div>
       )}

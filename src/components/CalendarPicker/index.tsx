@@ -48,7 +48,12 @@ const CalendarPicker = ({ onSelectDate }: SearchDateProps) => {
           />
         </div>
       </div>
-      <Button onClick={handleConfirmClick} intent="primary" size="s">
+      <Button
+        onClick={handleConfirmClick}
+        intent="primary"
+        size="i"
+        className="bg-blue-500 text-white hover:bg-blue-600"
+      >
         확인
       </Button>
     </div>
