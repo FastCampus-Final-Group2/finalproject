@@ -5,27 +5,27 @@ import { BG_50, TEXT_650 } from "@/styles/smColor";
 import { IconId } from "@/components/core/Icon";
 
 interface DriverDispatchDetailDashboardProps extends ColorProps {
-  drivingTime: number;
-  mileage: number;
-  totalOrder: number;
-  availabilityOrder: number;
-  floorAreaRatio: number;
-  driverName: string;
-  driverPhoneNumber: string;
-  vehicleType: string;
-  vehicleTon: number;
+  drivingTime?: number;
+  mileage?: number;
+  totalOrder?: number;
+  availabilityOrder?: number;
+  floorAreaRatio?: number;
+  driverName?: string;
+  driverPhoneNumber?: string;
+  vehicleType?: string;
+  vehicleTon?: number;
 }
 
 const DriverDispatchDetailDashboard = ({
   drivingTime,
   mileage,
-  totalOrder,
-  availabilityOrder,
-  floorAreaRatio,
+  totalOrder = 0,
+  availabilityOrder = 0,
+  floorAreaRatio = 0,
   driverName,
   driverPhoneNumber,
-  vehicleType,
-  vehicleTon,
+  vehicleType = "",
+  vehicleTon = 0,
   bgColor,
 }: DriverDispatchDetailDashboardProps) => {
   const orderTextColor = totalOrder > availabilityOrder ? "text-red-500" : TEXT_650[bgColor];

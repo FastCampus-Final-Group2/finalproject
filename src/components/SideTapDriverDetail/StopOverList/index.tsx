@@ -8,13 +8,14 @@ import StopOverStartCenter from "@/components/SideTapDriverDetail/StopOverList/S
 import { BG_50 } from "@/styles/smColor";
 import { StrictModeDroppable } from "@/components/DragDrop/StrictModeDroppable";
 import { ListStopOverData } from "@/components/SideTapDriverDetail";
+import { CourseDetailResponse } from "@/models/ApiTypes";
 
 export interface ColorProps {
   bgColor: keyof typeof BG_50;
 }
 
 interface StopOverListProps {
-  listStopOverData: ListStopOverData[];
+  listStopOverData: CourseDetailResponse[];
   isExpanded: boolean;
   toggleExpand: () => void;
   bgColor: keyof typeof BG_50;
@@ -68,22 +69,16 @@ const StopOverList = ({ bgColor, listStopOverData, isExpanded, toggleExpand }: S
               >
                 {!isExpanded ? (
                   <>
-                    {listStopOverData[0] && (
-                      <StopOverStartCenter
-                        bgColor={bgColor}
-                        ett={listStopOverData[0].ett}
-                        distance={listStopOverData[0].distance}
-                      />
-                    )}
+                    {listStopOverData[0] && <StopOverStartCenter />}
 
                     {listStopOverData.map((stopOver, index) => (
                       <Draggable key={stopOver.shipmentNumber} draggableId={`${stopOver.shipmentNumber}`} index={index}>
                         {(provided) => (
                           <div ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
                             <StopOver
-                              errorRestrictedTonCode={stopOver.restrictedTonCode}
-                              errorDelayRequestTime={stopOver.delayRequestTime}
-                              errorOverContractNum={stopOver.overContractNum}
+                              restrictedTonCode={stopOver.restrictedTonCode}
+                              delayRequestTime={stopOver.delayRequestTime}
+                              overContractNum={stopOver.overContractNum}
                               index={index}
                               totalLength={listStopOverData.length}
                               bgColor={bgColor}
@@ -117,9 +112,9 @@ const StopOverList = ({ bgColor, listStopOverData, isExpanded, toggleExpand }: S
                           {(provided) => (
                             <div ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
                               <StopOver
-                                errorRestrictedTonCode={stopOver.restrictedTonCode}
-                                errorDelayRequestTime={stopOver.delayRequestTime}
-                                errorOverContractNum={stopOver.overContractNum}
+                                restrictedTonCode={stopOver.restrictedTonCode}
+                                delayRequestTime={stopOver.delayRequestTime}
+                                overContractNum={stopOver.overContractNum}
                                 index={index}
                                 totalLength={listStopOverData.length}
                                 bgColor={bgColor}

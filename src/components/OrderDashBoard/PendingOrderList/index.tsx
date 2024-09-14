@@ -5,12 +5,22 @@ import { StrictModeDroppable } from "@/components/DragDrop/StrictModeDroppable";
 import Icon from "@/components/core/Icon";
 import PendingOrder from "@/components/OrderDashBoard/PendingOrderList/PendingOrder";
 import ToggleExpandSwitch from "@/components/core/ToggleExpandSwitch";
-import { ListStopOverData } from "@/components/SideTapDriverDetail";
+import { CourseDetailResponse, LocalTime } from "@/models/ApiTypes";
 import * as XLSX from "xlsx";
 
 interface PendingOrderDataProps {
-  pendingOrderData: ListStopOverData[];
+  pendingOrderData: CourseDetailResponse[];
 }
+
+// LocalTime을 string으로 변환하는 유틸리티 함수
+const localTimeToString = (localTime: LocalTime | undefined): string => {
+  if (!localTime) return "";
+
+  const hours = localTime?.hour?.toString().padStart(2, "0");
+  const minutes = localTime?.minute?.toString().padStart(2, "0");
+
+  return `${hours}:${minutes}`;
+};
 
 const PendingOrderList = ({ pendingOrderData }: PendingOrderDataProps) => {
   const { isExpanded, toggleExpand } = ToggleExpandSwitch(false);
@@ -79,7 +89,7 @@ const PendingOrderList = ({ pendingOrderData }: PendingOrderDataProps) => {
                         meter={order.volume}
                         kilogram={order.weight}
                         serviceRequestDate={order.serviceRequestDate}
-                        serviceRequestTime={order.serviceRequestTime}
+                        serviceRequestTime={localTimeToString(order.serviceRequestTime)}
                       />
                     </div>
                   )}

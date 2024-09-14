@@ -1,35 +1,26 @@
 import Icon from "@/components/core/Icon";
 import { BG_50 } from "@/styles/smColor";
 import { ColorProps } from "@/components/SideTapDriverDetail/StopOverList";
+import { CourseDetailResponse } from "@/models/ApiTypes";
 
-interface StopOverProps extends ColorProps {
+interface StopOverProps extends ColorProps, CourseDetailResponse {
   index: number;
   totalLength: number;
-  errorRestrictedTonCode: boolean;
-  errorDelayRequestTime: boolean;
-  errorOverContractNum: boolean;
-  roadAddress: string;
-  detailAddress: string;
-  orderType: string;
-  expectationOperationStartTime: string;
-  expectationOperationEndTime: string;
-  ett: number;
-  distance: number;
   isExpanded: boolean;
 }
 
 const StopOver = ({
   index,
   totalLength,
-  errorRestrictedTonCode,
-  errorDelayRequestTime,
-  errorOverContractNum,
+  restrictedTonCode,
+  delayRequestTime,
+  overContractNum,
   bgColor,
   roadAddress,
   detailAddress,
   orderType,
-  expectationOperationStartTime,
-  expectationOperationEndTime,
+  expectationOperationStartTime = "",
+  expectationOperationEndTime = "",
   ett,
   distance,
   isExpanded,
@@ -53,13 +44,13 @@ const StopOver = ({
   };
 
   const getErrorMessage = (
-    errorRestrictedTonCode: boolean,
-    errorDelayRequestTime: boolean,
-    errorOverContractNum: boolean,
+    restrictedTonCode: boolean = false,
+    delayRequestTime: boolean = false,
+    overContractNum: boolean = false,
   ): JSX.Element[] => {
     const errorMessages: JSX.Element[] = [];
 
-    if (errorRestrictedTonCode) {
+    if (restrictedTonCode) {
       errorMessages.push(
         <div className="inline-flex items-center gap-[4px]">
           <Icon id="warning" size={14} className="text-red-500" />
@@ -68,7 +59,7 @@ const StopOver = ({
       );
     }
 
-    if (errorDelayRequestTime) {
+    if (delayRequestTime) {
       errorMessages.push(
         <div className="inline-flex items-center gap-[4px]">
           <Icon id="warning" size={14} className="text-red-500" />
@@ -77,7 +68,7 @@ const StopOver = ({
       );
     }
 
-    if (errorOverContractNum) {
+    if (overContractNum) {
       errorMessages.push(
         <div className="inline-flex items-center gap-[4px]">
           <Icon id="warning" size={14} className="text-red-500" />
@@ -125,19 +116,17 @@ const StopOver = ({
         <div className="flex w-full flex-col items-start justify-start gap-[12px] rounded-lg bg-white p-[16px]">
           <div className="flex flex-col items-start justify-start gap-[4px] self-stretch">
             <div className="inline-flex items-center justify-start gap-[8px] self-stretch">
-              <button className="flex items-center justify-start gap-[4px] border-b border-blue-500 pt-[1px]">
+              <button className="flex items-center justify-start gap-[4px] truncate border-b border-blue-500 pt-[1px]">
                 <div className="text-center text-blue-500 text-T-16-M">{roadAddress}</div>
                 <div className="text-center text-blue-500 text-T-16-M">{detailAddress}</div>
               </button>
             </div>
 
-            {(errorRestrictedTonCode || errorDelayRequestTime || errorOverContractNum) && (
+            {(restrictedTonCode || delayRequestTime || overContractNum) && (
               <div className="inline-flex flex-col items-start gap-[4px] self-stretch rounded">
-                {getErrorMessage(errorRestrictedTonCode, errorDelayRequestTime, errorOverContractNum).map(
-                  (message, index) => (
-                    <div key={index}>{message}</div>
-                  ),
-                )}
+                {getErrorMessage(restrictedTonCode, delayRequestTime, overContractNum).map((message, index) => (
+                  <div key={index}>{message}</div>
+                ))}
               </div>
             )}
           </div>

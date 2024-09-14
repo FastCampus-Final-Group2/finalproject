@@ -621,7 +621,7 @@ export interface CourseDetailResponse {
    */
   delayRequestTime?: boolean;
   /**
-   * 계약 초과 위반 여부
+   * 계약 초과 오류 여부
    * @example false
    */
   overContractNum?: boolean;
@@ -732,12 +732,12 @@ export interface CourseDetailResponse {
   contact?: string;
   /**
    * 도로명 주소
-   * @example "서울특별시 강남구 테헤란로 123"
+   * @example "서울 강남구 테헤란로 123"
    */
   roadAddress?: string;
   /**
    * 지번 주소
-   * @example "서울특별시 강남구 대치동"
+   * @example "서울특별시 강남구 테헤란로 123"
    */
   lotNumberAddress?: string;
   /**

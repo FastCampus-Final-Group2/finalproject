@@ -82,7 +82,7 @@ export interface DispatchData {
 }
 
 const defaultDispatchData: DispatchData = {
-  dispatchCode: "20240915C001#1",
+  dispatchCode: "20240917C002#1",
   dispatchName: "배차1",
   totalOrder: 4,
   totalErrorNum: 4,
