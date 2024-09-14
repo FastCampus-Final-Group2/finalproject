@@ -118,20 +118,12 @@ import Button from "@/components/core/Button";
 import ConfirmModal from "@/components/ConfirmModal";
 import dayjs from "dayjs";
 import axios from "@/utils/axios"; // axios.ts에서 export한 axios 인스턴스 사용
+import { transportOrderState } from "@/atoms/transportOrder";
+import { useRecoilValue } from "recoil";
 
-interface DispatchInformationHeaderProps {
-  dispatchCode: string;
-  dispatchName: string;
-  loadingStartTime: string;
-  contractType: string;
-}
+const DispatchInformationHeader = () => {
+  const dispatchData = useRecoilValue(transportOrderState);
 
-const DispatchInformationHeader = ({
-  dispatchCode,
-  dispatchName,
-  loadingStartTime,
-  contractType,
-}: DispatchInformationHeaderProps) => {
   const [isCancelModalOpen, setIsCancelModalOpen] = useState(false);
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
   const router = useRouter(); // useRouter 훅을 사용해 페이지 이동 관리
@@ -161,10 +153,10 @@ const DispatchInformationHeader = ({
 
   const handleConfirmDispatchConfirm = async () => {
     // 배차 확정 확인 시 서버로 데이터 전송
-    const dispatchData = {
-      dispatchCode,
-      dispatchName,
-      loadingStartTime,
+    const requestBodyDispatchData = {
+      dispatchCode: dispatchData.dispatchCode,
+      dispatchName: dispatchData.dispatchName,
+      loadingStartTime: dispatchData.loadingStartTime,
       dispatchList: [
         {
           smId: 1,
@@ -213,7 +205,7 @@ const DispatchInformationHeader = ({
     };
 
     try {
-      const response = await axios.post("/dispatch", dispatchData); // 서버로 데이터 전송
+      const response = await axios.post("/dispatch", requestBodyDispatchData); // 서버로 데이터 전송
       console.log("응답 상태 코드:", response.status); // 응답 상태 코드 출력
       if (response.status === 200 || response.status === 201) {
         console.log("배차 확정이 성공적으로 처리되었습니다.");
@@ -230,18 +222,18 @@ const DispatchInformationHeader = ({
     <div className="flex h-[92px] items-center justify-between border-b px-[40px] pb-[24px] pt-[28px]">
       <div className="flex h-[36px] w-[535px] items-center gap-5">
         <div className="flex h-[36px] w-[172px] items-center justify-center gap-[6px] text-[20px] font-B leading-[24px]">
-          <span>{dispatchCode}</span>
-          <CopyButton copyString={dispatchCode} />
+          <span>{dispatchData.dispatchCode}</span>
+          <CopyButton copyString={dispatchData.dispatchCode} />
         </div>
         <div className="flex h-[36px] w-[351px] gap-6">
           <div className="flex h-[36px] w-[174px] items-center justify-center leading-[24px] text-T-18-M">
-            {dispatchName}
+            {dispatchData.dispatchName}
           </div>
           <div className="flex h-[36px] w-[116px] items-center justify-center rounded-[4px] bg-gray-100 leading-[24px] text-B-14-M">
-            {formatDate(loadingStartTime)}
+            {formatDate(dispatchData.loadingStartTime)}
           </div>
           <div className="flex h-[36px] w-[41px] items-center justify-center rounded-[4px] bg-gray-700 leading-[24px] text-white text-B-14-B">
-            {contractType}
+            {dispatchData.contractType}
           </div>
         </div>
       </div>

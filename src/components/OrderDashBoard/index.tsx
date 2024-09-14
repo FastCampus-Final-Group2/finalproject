@@ -9,8 +9,9 @@ import { DragDropContext } from "react-beautiful-dnd";
 import { useRecoilState } from "recoil";
 import ToggleExpandSwitch from "@/components/core/ToggleExpandSwitch";
 import { useRecoilValue } from "recoil";
-import { transportOrderState, pendingOrderDataState } from "@/atoms/transportOrder";
+import { transportOrderState } from "@/atoms/transportOrder";
 import { driverIndex } from "@/atoms/driverIndex";
+import { dispatchDataState, pendingOrderDataState } from "@/atoms/dispatchData";
 
 // 리스트를 재정렬하는 함수
 const reorder = (list: any[], startIndex: number, endIndex: number) => {
@@ -45,18 +46,17 @@ const OrderDashBoard = () => {
 
   const [pendingOrderData, setPendingOrderData] = useRecoilState(pendingOrderDataState);
 
+  const [recoilDispatchData, setRecoilDispatchData] = useRecoilState(dispatchDataState);
+
   const [listStopOverData, setListStopOverData] = useState(
-    dispatchData.course[driverIndexState].courseDetailResponseList,
+    recoilDispatchData?.course?.[driverIndexState]?.courseDetailResponseList ?? [],
   );
 
   useEffect(() => {
-    const courseDetailResponseList = dispatchData.course[driverIndexState]?.courseDetailResponseList;
-
-    if (courseDetailResponseList) {
-      setListStopOverData(courseDetailResponseList);
+    if (recoilDispatchData && recoilDispatchData.course?.[driverIndexState]?.courseDetailResponseList) {
+      setListStopOverData(recoilDispatchData.course[driverIndexState].courseDetailResponseList);
     }
-    setPendingOrderData(pendingOrderData);
-  }, [dispatchData.course, driverIndexState, pendingOrderData, setPendingOrderData]);
+  }, [recoilDispatchData, driverIndexState]);
 
   const onDragEnd = (result: any) => {
     if (!result.destination) return; // 목적지가 없으면 종료
@@ -134,10 +134,10 @@ const OrderDashBoard = () => {
         <div className="h-[884px] w-[524px] bg-blue-30">
           <div className="flex h-[156px] w-[524px] items-center justify-center">
             <TotalOrder
-              totalOrders={dispatchData.totalOrder}
-              errorOrders={dispatchData.totalErrorNum}
-              estimatedTime={dispatchData.totalTime}
-              capacityRate={dispatchData.totalFloorAreaRatio}
+              totalOrders={recoilDispatchData?.totalOrder}
+              errorOrders={recoilDispatchData?.totalErrorNum}
+              estimatedTime={recoilDispatchData?.totalTime}
+              capacityRate={recoilDispatchData?.totalFloorAreaRatio}
             />
           </div>
           <div className="flex h-[344px] w-[524px] justify-center">
@@ -159,7 +159,7 @@ const OrderDashBoard = () => {
       </div>
 
       {/* 변경된 배열 확인 */}
-      {/* <div>
+      <div>
         <h2>StopOverData 배열:</h2>
         <pre>{JSON.stringify(listStopOverData, null, 2)}</pre>
       </div>
@@ -167,7 +167,7 @@ const OrderDashBoard = () => {
       <div>
         <h2>PendingOrderData 배열:</h2>
         <pre>{JSON.stringify(pendingOrderData, null, 2)}</pre>
-      </div> */}
+      </div>
     </DragDropContext>
   );
 };

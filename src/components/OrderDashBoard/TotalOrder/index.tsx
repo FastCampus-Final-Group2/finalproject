@@ -2,10 +2,10 @@ import Icon from "@/components/core/Icon";
 import CircularProgressBar from "@/components/core/CircularProgressBar";
 
 interface TotalOrderProps {
-  totalOrders: number;
-  errorOrders: number;
-  estimatedTime: number;
-  capacityRate: number;
+  totalOrders?: number;
+  errorOrders?: number;
+  estimatedTime?: number;
+  capacityRate?: number;
 }
 const TotalOrder = ({ totalOrders, errorOrders, estimatedTime, capacityRate }: TotalOrderProps) => {
   return (
@@ -57,7 +57,7 @@ const TotalOrder = ({ totalOrders, errorOrders, estimatedTime, capacityRate }: T
         <div className="h-[60px] w-[0px] border border-gray-50"></div>
 
         {/* 용적률 */}
-        <CircularProgressBar percentage={capacityRate} bgColor={"blue"} />
+        <CircularProgressBar percentage={capacityRate ?? 0} bgColor={"blue"} />
       </div>
     </div>
   );

@@ -125,12 +125,7 @@ const Page = () => {
   ];
   return (
     <div className="w-full">
-      <DispatchInformationHeader
-        dispatchCode={dispatchData.dispatchCode}
-        dispatchName={dispatchData.dispatchName}
-        loadingStartTime={dispatchData.loadingStartTime}
-        contractType={dispatchData.contractType}
-      />
+      <DispatchInformationHeader />
       <div className="flex w-full">
         <OrderDashBoard />
         <div className="w-full">

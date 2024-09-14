@@ -1,11 +1,17 @@
 interface PendingOrderProps {
-  address: string;
-  meter: number;
-  kilogram: number;
-  serviceRequestDate: string;
-  serviceRequestTime: string;
+  address?: string;
+  meter?: number;
+  kilogram?: number;
+  serviceRequestDate?: string;
+  serviceRequestTime?: string;
 }
-const PendingOrder = ({ address, meter, kilogram, serviceRequestDate, serviceRequestTime }: PendingOrderProps) => {
+const PendingOrder = ({
+  address,
+  meter,
+  kilogram,
+  serviceRequestDate = "",
+  serviceRequestTime = "",
+}: PendingOrderProps) => {
   const formatServiceRequest = (dateString: string, timeString: string): string => {
     const date = new Date(`${dateString}T${timeString}`);
 

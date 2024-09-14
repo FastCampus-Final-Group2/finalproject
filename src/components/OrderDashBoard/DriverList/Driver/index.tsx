@@ -8,14 +8,14 @@ import { driverIndex } from "@/atoms/driverIndex";
 
 interface DriverProps extends DriverListProps {
   index: number;
-  checkOrWarning: boolean;
-  name: string;
-  orderCount: number;
-  kiloMeter: number;
-  hours: number;
-  vehicleType: string;
-  capacityRate: number;
-  vehicleTon: number;
+  checkOrWarning?: boolean;
+  name?: string;
+  orderCount?: number;
+  kiloMeter?: number;
+  hours?: number;
+  vehicleType?: string;
+  capacityRate?: number;
+  vehicleTon?: number;
   bgColor: keyof typeof BG_350;
 }
 
@@ -26,9 +26,9 @@ const Driver = ({
   orderCount,
   kiloMeter,
   hours,
-  vehicleType,
-  vehicleTon,
-  capacityRate,
+  vehicleType = "",
+  vehicleTon = 0,
+  capacityRate = 0,
   onClickToggle,
   bgColor,
 }: DriverProps) => {

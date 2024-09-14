@@ -4,10 +4,12 @@ import DriverDispatchDetailDashboard from "@/components/SideTapDriverDetail/Driv
 import StopOverList from "@/components/SideTapDriverDetail/StopOverList";
 import Icon from "@/components/core/Icon";
 import { TEXT_650, BG_50 } from "@/styles/smColor";
-import { useRecoilValue } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import { bgColorState } from "@/atoms/bgColorState";
 import { transportOrderState } from "@/atoms/transportOrder";
 import { driverIndex } from "@/atoms/driverIndex";
+import { dispatchDataState } from "@/atoms/dispatchData";
+import { DispatchResponse, CourseDetailResponse } from "@/models/ApiTypes";
 
 export interface ListStopOverData {
   restrictedTonCode: boolean;
@@ -49,7 +51,7 @@ export interface ListStopOverData {
 interface SideTapDriverDetailProps {
   isSideTapExpanded: boolean;
   onClose: () => void;
-  listStopOverData: ListStopOverData[];
+  listStopOverData: CourseDetailResponse[];
   isExpanded: boolean;
   toggleExpand: () => void;
 }
@@ -65,22 +67,27 @@ const SideTapDriverDetail = ({
   const driverIndexState = useRecoilValue(driverIndex);
   const dispatchData = useRecoilValue(transportOrderState);
 
+  const [recoilDispatchData, setRecoilDispatchData] = useRecoilState<DispatchResponse | null>(dispatchDataState);
+
   return (
     <div>
-      {isSideTapExpanded && (
+      {isSideTapExpanded && recoilDispatchData && (
         <div className="relative h-[884px] w-[440px]">
-          <DriverDispatchDetailDashboard
-            drivingTime={dispatchData.course[driverIndexState].totalTime}
-            mileage={dispatchData.course[driverIndexState].mileage}
-            totalOrder={dispatchData.course[driverIndexState].orderNum}
-            availabilityOrder={80}
-            floorAreaRatio={dispatchData.course[driverIndexState].floorAreaRatio}
-            driverName={dispatchData.course[driverIndexState].smName}
-            driverPhoneNumber={dispatchData.course[driverIndexState].smPhoneNumber}
-            vehicleType={dispatchData.course[driverIndexState].vehicleType}
-            vehicleTon={dispatchData.course[driverIndexState].vehicleTon}
-            bgColor={bgColor}
-          />
+          {/* recoilDispatchData가 null이 아닌 경우에만 데이터를 접근 */}
+          {recoilDispatchData.course && recoilDispatchData.course[driverIndexState] && (
+            <DriverDispatchDetailDashboard
+              drivingTime={recoilDispatchData.course[driverIndexState].totalTime}
+              mileage={recoilDispatchData.course[driverIndexState].mileage}
+              totalOrder={recoilDispatchData.course[driverIndexState].orderNum}
+              availabilityOrder={80}
+              floorAreaRatio={recoilDispatchData.course[driverIndexState].floorAreaRatio}
+              driverName={recoilDispatchData.course[driverIndexState].smName}
+              driverPhoneNumber={recoilDispatchData.course[driverIndexState].smPhoneNumber}
+              vehicleType={recoilDispatchData.course[driverIndexState].vehicleType}
+              vehicleTon={recoilDispatchData.course[driverIndexState].vehicleTon}
+              bgColor={bgColor}
+            />
+          )}
           <StopOverList
             bgColor={bgColor}
             listStopOverData={listStopOverData}
