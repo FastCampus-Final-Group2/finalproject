@@ -16,13 +16,21 @@ const ControlDiapstchHeader = ({ fetchedData }: { fetchedData: DispatchListRespo
   };
   const convertDispatchCodeToDate = (dispatchCode: string): string => {
     // 정규 표현식을 사용하여 연도, 월, 일 부분 추출
-    const dateMatch = dispatchCode.match(/^(\d{4})(\d{2})(\d{2})/);
-    if (!dateMatch) {
-      throw new Error("Invalid dispatch code format");
+    let dateMatch = dispatchCode.match(/^(\d{4})(\d{2})(\d{2})/);
+    if (dateMatch) {
+      // 'YYYYMMDD' 형식인 경우
+      const [, year, month, day] = dateMatch;
+      return `${year}.${month}.${day}`;
     }
-    // 추출한 부분을 'YYYY.MM.DD' 형식으로 변환
-    const [, year, month, day] = dateMatch;
-    return `${year}.${month}.${day}`;
+
+    dateMatch = dispatchCode.match(/^(\d{2})(\d{2})(\d{2})/);
+    if (dateMatch) {
+      // 'YYMMDD' 형식인 경우
+      const [, year, month, day] = dateMatch;
+      return `20${year}.${month}.${day}`;
+    }
+
+    throw new Error("Invalid dispatch code format");
   };
   const formattedDate = convertDispatchCodeToDate(fetchedData.dispatchCode ?? "");
 
