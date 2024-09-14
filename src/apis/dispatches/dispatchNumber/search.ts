@@ -2,8 +2,8 @@
 
 import {
   SearchDispatchesParams,
-  dispatchNumberRequest,
-  dispatchNumberResponse,
+  DispatchNumberSearchRequest,
+  DispatchNumberSearchResponse,
 } from "@/models/ApiTypes";
 import axios from "@/utils/axios";
 import { DISPATCH_NUMBER_API_PATH } from "@/apis/path";
@@ -19,7 +19,7 @@ const search = async (searchDispatchesParams: SearchDispatchesParams) => {
     searchKeyword,
   } = searchDispatchesParams.request;
 
-  const dispatchNumberRequest: dispatchNumberRequest = {
+  const dispatchNumberRequest: DispatchNumberSearchRequest = {
     status,
     isManager,
     startDateTime,
@@ -29,7 +29,7 @@ const search = async (searchDispatchesParams: SearchDispatchesParams) => {
   };
 
   const response = await toAxios(
-    axios.get<dispatchNumberResponse>(
+    axios.get<DispatchNumberSearchResponse>(
       DISPATCH_NUMBER_API_PATH.dispatchNumber,
       {
         params: dispatchNumberRequest,

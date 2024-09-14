@@ -16,6 +16,8 @@ const DeliveryTotalOrders = ({
   issueOrder,
   refreshData,
 }: DeliveryTotalOrdersProps) => {
+  const dashboardDeliveryProgress = deliveryProgress > 100 ? 100 : deliveryProgress;
+
   return (
     <div className="flex h-[116px] w-[460px] flex-col rounded-[8px] bg-white px-[20px] pb-[4px] pt-[12px] text-gray-500 text-B-14-M">
       <div className="pl-[12px]">
@@ -24,11 +26,11 @@ const DeliveryTotalOrders = ({
 
       <div className="flex h-[80px] items-center justify-between px-[13px]">
         {/* 진행률 */}
-        <div className="flex flex-col items-center gap-[4px]">
+        <div className="flex flex-col items-start gap-[4px]">
           <ul className="flex gap-[4px]">
             <li className="flex items-center">진행률</li>
             <li className="flex items-center">
-              <p className="text-blue-500 text-T-20-B">{deliveryProgress}</p>
+              <p className="text-blue-500 text-T-20-B">{dashboardDeliveryProgress}</p>
               <p className="text-gray-700 text-T-16-B">%</p>
             </li>
           </ul>
@@ -36,7 +38,7 @@ const DeliveryTotalOrders = ({
             <div className="relative h-[12px] w-[82px] rounded-full bg-blue-50">
               <div
                 className="absolute h-[12px] rounded-full bg-blue-500"
-                style={{ width: `${deliveryProgress}px` }}
+                style={{ width: `${dashboardDeliveryProgress}px` }}
               ></div>
             </div>
           </div>

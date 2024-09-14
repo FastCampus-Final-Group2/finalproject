@@ -133,7 +133,7 @@ const NaverMapForControlDetail = ({
       });
   }, [waypointGroups, stopOverListPoint]);
 
-  return <div ref={mapElement} id="map" className="h-[884px] w-full" />;
+  return <div ref={mapElement} id="map" className="h-[calc(100vh-196px)] w-full" />;
 };
 
 export default NaverMapForControlDetail;

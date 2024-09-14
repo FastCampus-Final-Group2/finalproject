@@ -1,8 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { useRecoilState } from "recoil";
-import { controlSearchOptionState } from "@/atoms/control";
 import Icon from "@/components/core/Icon";
 
 const searchMoreOptions = [
@@ -24,23 +22,31 @@ const searchMoreOptions = [
   },
 ];
 
-const SearchOption = () => {
+interface SearchOptionProps {
+  selectedOption: string;
+  setSelectedOption: (option: string) => void;
+}
+
+const SearchOption = ({ selectedOption, setSelectedOption }: SearchOptionProps) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedOption, setSelectedOption] = useRecoilState(controlSearchOptionState);
 
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
   };
 
-  const handleCategorySelect = (option: string) => {
-    setSelectedOption(option);
+  const handleCategorySelect = (option: { name: string; value: string }) => {
+    setSelectedOption(option.value); // value를 저장
     setIsOpen(false);
+  };
+
+  const getSelectedOptionName = () => {
+    return searchMoreOptions.find((option) => option.value === selectedOption)?.name || "선택";
   };
 
   return (
     <div className="relative">
       <p className="flex w-[124px] cursor-pointer items-center justify-between" onClick={toggleDropdown}>
-        {selectedOption} <Icon id="arrowDown" />
+        {getSelectedOptionName()} <Icon id="arrowDown" />
       </p>
       {isOpen && (
         <ul className="absolute left-[-12px] z-20 mt-[20px] flex w-[156px] flex-col gap-[7px] rounded-[8px] border border-gray-200 bg-white px-[16px] py-[10px]">
@@ -48,7 +54,7 @@ const SearchOption = () => {
             <li
               key={index}
               className="cursor-pointer p-[4px] hover:bg-blue-100"
-              onClick={() => handleCategorySelect(option.name)}
+              onClick={() => handleCategorySelect(option)}
             >
               {option.name}
             </li>

@@ -1,14 +1,12 @@
-import { useRecoilState } from "recoil";
 import Icon from "@/components/core/Icon";
-import { searchTextInputState } from "@/atoms/control";
 
 interface SearchTextInputProps {
+  inputValue: string;
+  setInputValue: (value: string) => void;
   onSearch: () => void;
 }
 
-const SearchTextInput = ({ onSearch }: SearchTextInputProps) => {
-  const [inputValue, setInputValue] = useRecoilState(searchTextInputState);
-
+const SearchTextInput = ({ inputValue, setInputValue, onSearch }: SearchTextInputProps) => {
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInputValue(e.target.value);
   };

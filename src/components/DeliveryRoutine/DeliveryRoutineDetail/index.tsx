@@ -56,10 +56,18 @@ const DeliveryRoutineDetail = ({ selectedOrders, setSelectedOrders, fetchData }:
   const parseAddress = (fullAddress: string): { address: string; addressDetail: string } => {
     // 특별시, 광역시, 특별자치시, 특별자치도를 간단히 표시하는 함수
     const simplifyCity = (city: string): string => {
-      return city.replace(/특별시|광역시|특별자치시/, "시").replace(/특별자치도/, "도");
+      return city
+        .replace(/특별시|광역시|특별자치시/, "")
+        .replace(/특별자치도/, "도")
+        .replace(/경상북도/, "경북")
+        .replace(/경상남도/, "경남")
+        .replace(/전라북도/, "전북")
+        .replace(/전라남도/, "전남")
+        .replace(/충청북도/, "충북")
+        .replace(/충청남도/, "충남");
     };
 
-    const regex = /(.*?[시도군구])\s(.*?[동읍면])\s(.+)/;
+    const regex = /(.*?[시도군구])\s(.*?[동읍면가])\s(.+)/;
     const match = fullAddress.match(regex);
 
     if (match) {

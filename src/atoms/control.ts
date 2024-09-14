@@ -146,3 +146,17 @@ export const controlSideTabState = atom<{
   effects_UNSTABLE: [persistAtom],
 });
 
+// 검색 파라미터 상태 유지
+export const searchParamsState = atom({
+  key: "searchParamsState",
+  default: {
+    status: "IN_TRANSIT",
+    isManager: false,
+    startDateTime: "1900-01-01T00:00:00",
+    endDateTime: "3000-12-31T23:59:59",
+    searchOption: "",
+    searchKeyword: "",
+  },
+  effects_UNSTABLE: [persistAtom],
+});
+
