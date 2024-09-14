@@ -98,9 +98,7 @@ const ControlDetailPage = ({ params }: { params: { dispatchCodeId: number } }) =
             await refetch();
           }}
         />
-        <div className="w-full">
-          <NaverMapForControlDetail waypointGroups={waypointGroups} stopOverListPoint={stopOverListPoint} />
-        </div>
+        <NaverMapForControlDetail waypointGroups={waypointGroups} stopOverListPoint={stopOverListPoint} />
       </div>
     </>
   );

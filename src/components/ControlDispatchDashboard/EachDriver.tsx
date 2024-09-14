@@ -34,6 +34,8 @@ const EachDriver = ({
   smColor,
   dispatchStatus,
 }: EachDriverProps) => {
+  const dashboardDriverProgress = deliveryProgress > 100 ? 100 : deliveryProgress;
+
   return (
     <div className="flex flex-col gap-[10px] text-gray-900 text-B-14-B">
       <div className="flex h-[40px] items-center justify-between rounded-[4px] border border-gray-100">
@@ -41,7 +43,7 @@ const EachDriver = ({
           <DeliveryStatusTag vehicleStatus={dispatchStatus} restDisplay={false} />
           <li>{smName}</li>
           <span className="h-[20px] w-0 border-l border-gray-100"></span>
-          <li className="w-[40px] text-B-14-M">
+          <li className="flex w-[40px] justify-center text-B-14-M">
             {completedOrderNum}/{orderNum}
           </li>
           <span className="h-[20px] w-0 border-l border-gray-100"></span>
@@ -49,10 +51,10 @@ const EachDriver = ({
             <p className="relative h-[14px] w-[60px] rounded-full bg-blue-50">
               <span
                 className="absolute h-[14px] rounded-full bg-blue-400"
-                style={{ width: `${(60 / 100) * deliveryProgress}px` }}
+                style={{ width: `${(60 / 100) * dashboardDriverProgress}px` }}
               ></span>
             </p>
-            <p className="flex w-[55px] justify-end text-blue-400">{deliveryProgress}%</p>
+            <p className="flex w-[55px] justify-end text-blue-400">{dashboardDriverProgress}%</p>
           </li>
         </ul>
 

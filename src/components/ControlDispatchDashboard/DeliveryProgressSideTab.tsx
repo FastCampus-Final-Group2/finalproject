@@ -4,7 +4,7 @@ import DeliveryProgressInfo from "@/components/DeliveryProgressInfo";
 import DeliveryRoutine from "@/components/DeliveryRoutine";
 import { DispatchDetailApi } from "@/apis/dispatches/dispatchDetail";
 import { useQuery } from "@tanstack/react-query";
-import { DispatchDetailResponse } from "@/models/ApiTypes";
+import { DispatchDetailResponse, LocalTime } from "@/models/ApiTypes";
 
 interface DeliveryProgressSideTabProps {
   isExpanded: boolean;
@@ -18,17 +18,17 @@ interface FetchData extends DispatchDetailResponse {
   smPhoneNumber?: string;
   smName?: string;
   floorAreaRatio?: number;
-  vehicleType?: string;
+  vehicleType?: "WING_BODY" | "BOX" | "CARGO";
   vehicleTon?: number;
   completedOrderCount?: number;
   deliveryOrderCount?: number;
-  totalTime?: number;
+  totalTime?: LocalTime;
   issue?: string;
-  startStopover: { centerName: string; departureTime: string; centerId: number };
+  startStopover?: { centerName: string; departureTime: string; centerId: number };
   dispatchDetailList: [];
 }
 
-const fetchDispatchIdData = async (dispatchId: number | null): Promise<FetchData | null> => {
+const fetchDispatchIdData = async (dispatchId: number | null): Promise<DispatchDetailResponse | null> => {
   if (dispatchId === null) return null;
   try {
     const data = await DispatchDetailApi.dispatchIdVehicleControl(dispatchId);
@@ -73,7 +73,7 @@ const DeliveryProgressSideTab = ({ isExpanded, onClose, selectedColor, dispatchI
         </div>
         <div className="flex max-h-[556px] w-fit flex-col gap-[4px] rounded-[8px] bg-white pl-[12px] pr-[16px] pt-[20px]">
           <DeliveryRoutine
-            fetchData={fetchData}
+            fetchData={fetchData as Required<FetchData>}
             refreshData={async () => {
               await refetch();
             }}

@@ -18,7 +18,17 @@ const Cell = ({ isStartDate, isToday, isPast, isCurrentMonth, onClick, children,
     <div
       role="button"
       onClick={onClick}
-      className={`flex h-[26px] w-[26px] flex-1 cursor-pointer items-center justify-center text-B-14-M hover:border-blue-500 ${isPast ? "!text-gray-400" : isToday ? "flex items-center justify-center rounded-full border border-blue-250 text-B-14-B" : isStartDate ? "font-bold rounded-full bg-blue-500 text-white" : isSunday ? "text-red-500" : ""}`}
+      className={`flex h-[26px] w-[26px] flex-1 cursor-pointer items-center justify-center text-B-14-M hover:border-blue-500 ${
+        isStartDate
+          ? "rounded-full bg-blue-500 text-white text-B-14-B"
+          : isPast
+            ? "text-gray-400"
+            : isToday
+              ? "rounded-full border border-blue-250 text-B-14-B"
+              : isSunday
+                ? "text-red-500"
+                : ""
+      }`}
     >
       {children}
     </div>

@@ -62,7 +62,7 @@ const IssuesList = ({ fetchedIssues }: { fetchedIssues: Issue[] }) => {
                   <p className="h-[20px] w-[0px] border-l border-gray-200"></p>
                   <p className="flex gap-[4px] text-red-500 text-C-12-M">
                     <Icon id="warningFill" size={14} className="text-red-500" />
-                    <span>{issue.issue}</span>
+                    <span>{issue.delayedTime}분 지연</span>
                   </p>
                 </li>
               ))}
