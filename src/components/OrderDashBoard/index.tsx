@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import TotalOrder from "@/components/OrderDashBoard/TotalOrder";
 import DriverList from "@/components/OrderDashBoard/DriverList";
 import PendingOrderList from "@/components/OrderDashBoard/PendingOrderList";
@@ -8,10 +8,7 @@ import SideTapDriverDetail from "@/components/SideTapDriverDetail";
 import { DragDropContext } from "react-beautiful-dnd";
 import { useRecoilState } from "recoil";
 import ToggleExpandSwitch from "@/components/core/ToggleExpandSwitch";
-import { useRecoilValue } from "recoil";
-import { transportOrderState } from "@/atoms/transportOrder";
-import { driverIndex } from "@/atoms/driverIndex";
-import { dispatchDataState, pendingOrderDataState } from "@/atoms/dispatchData";
+import { dispatchDataState, pendingOrderDataState, stopOverListSelector } from "@/atoms/dispatchData";
 
 // 리스트를 재정렬하는 함수
 const reorder = (list: any[], startIndex: number, endIndex: number) => {
@@ -41,22 +38,13 @@ const OrderDashBoard = () => {
   const openSideTap = () => setSideTapExpanded(true);
   const closeSideTap = () => setSideTapExpanded(false);
 
-  const driverIndexState = useRecoilValue(driverIndex);
-  const dispatchData = useRecoilValue(transportOrderState);
-
+  const [dispatchData, setDispatchData] = useRecoilState(dispatchDataState);
   const [pendingOrderData, setPendingOrderData] = useRecoilState(pendingOrderDataState);
+  const [stopOverList, setStopOverList] = useRecoilState(stopOverListSelector);
 
-  const [recoilDispatchData, setRecoilDispatchData] = useRecoilState(dispatchDataState);
-
-  const [listStopOverData, setListStopOverData] = useState(
-    recoilDispatchData?.course?.[driverIndexState]?.courseDetailResponseList ?? [],
-  );
-
-  useEffect(() => {
-    if (recoilDispatchData && recoilDispatchData.course?.[driverIndexState]?.courseDetailResponseList) {
-      setListStopOverData(recoilDispatchData.course[driverIndexState].courseDetailResponseList);
-    }
-  }, [recoilDispatchData, driverIndexState]);
+  console.log(dispatchData);
+  console.log(pendingOrderData);
+  console.log(stopOverList);
 
   const onDragEnd = (result: any) => {
     if (!result.destination) return; // 목적지가 없으면 종료
@@ -66,8 +54,8 @@ const OrderDashBoard = () => {
     // 같은 리스트에서의 이동
     if (source.droppableId === destination.droppableId) {
       if (source.droppableId === "droppableStopOverData") {
-        const reorderedData = reorder(listStopOverData, source.index, destination.index);
-        setListStopOverData(reorderedData);
+        const reorderedData = reorder(stopOverList, source.index, destination.index);
+        setStopOverList(reorderedData);
       } else if (source.droppableId === "droppablePendingOrderData") {
         const reorderedData = reorder(pendingOrderData, source.index, destination.index);
         setPendingOrderData(reorderedData); // Recoil 상태 업데이트
@@ -82,34 +70,33 @@ const OrderDashBoard = () => {
 
         if (isExpanded) {
           // 필터링된 상태일 때
-          const filteredData = listStopOverData.filter(
+          const filteredData = Array.from(stopOverList).filter(
             (stopOver) => stopOver.restrictedTonCode || stopOver.delayRequestTime || stopOver.overContractNum,
           );
           const actualFilteredSource = filteredData[source.index]?.shipmentNumber;
           const actualFilteredDestination = filteredData[destination.index]?.shipmentNumber;
 
           // 원본 데이터에서 필터링된 데이터의 실제 인덱스를 찾음
-          actualSourceIndex = listStopOverData.findIndex((item) => item.shipmentNumber === actualFilteredSource);
-          actualDestinationIndex = listStopOverData.findIndex(
-            (item) => item.shipmentNumber === actualFilteredDestination,
-          );
+          actualSourceIndex = stopOverList.findIndex((item) => item.shipmentNumber === actualFilteredSource);
+          actualDestinationIndex = stopOverList.findIndex((item) => item.shipmentNumber === actualFilteredDestination);
         }
 
         // 재정렬 수행
-        const reorderedData = reorder(listStopOverData, actualSourceIndex, actualDestinationIndex);
-        setListStopOverData(reorderedData);
+        const reorderedData = reorder(stopOverList, actualSourceIndex, actualDestinationIndex);
+
+        setStopOverList(reorderedData);
       }
     } else {
       // 리스트 간의 이동
       if (source.droppableId === "droppableStopOverData" && destination.droppableId === "droppablePendingOrderData") {
         // StopOverList -> PendingOrderList로 이동
         const { source: newStopOverData, destination: newPendingOrderData } = move(
-          listStopOverData,
+          stopOverList,
           pendingOrderData,
           source,
           destination,
         );
-        setListStopOverData(newStopOverData);
+        setStopOverList(newStopOverData);
         setPendingOrderData(newPendingOrderData); // Recoil 상태 업데이트
       } else if (
         source.droppableId === "droppablePendingOrderData" &&
@@ -118,12 +105,12 @@ const OrderDashBoard = () => {
         // PendingOrderList -> StopOverList로 이동
         const { source: newPendingOrderData, destination: newStopOverData } = move(
           pendingOrderData,
-          listStopOverData,
+          stopOverList,
           source,
           destination,
         );
         setPendingOrderData(newPendingOrderData); // Recoil 상태 업데이트
-        setListStopOverData(newStopOverData);
+        setStopOverList(newStopOverData);
       }
     }
   };
@@ -134,10 +121,10 @@ const OrderDashBoard = () => {
         <div className="h-[884px] w-[524px] bg-blue-30">
           <div className="flex h-[156px] w-[524px] items-center justify-center">
             <TotalOrder
-              totalOrders={recoilDispatchData?.totalOrder}
-              errorOrders={recoilDispatchData?.totalErrorNum}
-              estimatedTime={recoilDispatchData?.totalTime}
-              capacityRate={recoilDispatchData?.totalFloorAreaRatio}
+              totalOrders={dispatchData?.totalOrder}
+              errorOrders={dispatchData?.totalErrorNum}
+              estimatedTime={dispatchData?.totalTime}
+              capacityRate={dispatchData?.totalFloorAreaRatio}
             />
           </div>
           <div className="flex h-[344px] w-[524px] justify-center">
@@ -151,7 +138,7 @@ const OrderDashBoard = () => {
           <SideTapDriverDetail
             isSideTapExpanded={isSideTapExpanded}
             onClose={closeSideTap}
-            listStopOverData={listStopOverData}
+            listStopOverData={stopOverList}
             isExpanded={isExpanded}
             toggleExpand={toggleExpand}
           />
@@ -159,15 +146,15 @@ const OrderDashBoard = () => {
       </div>
 
       {/* 변경된 배열 확인 */}
-      <div>
+      {/* <div>
         <h2>StopOverData 배열:</h2>
-        <pre>{JSON.stringify(listStopOverData, null, 2)}</pre>
+        <pre>{JSON.stringify(stopOverList, null, 2)}</pre>
       </div>
 
       <div>
         <h2>PendingOrderData 배열:</h2>
         <pre>{JSON.stringify(pendingOrderData, null, 2)}</pre>
-      </div>
+      </div> */}
     </DragDropContext>
   );
 };

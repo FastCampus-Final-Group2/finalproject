@@ -7,7 +7,6 @@ import StopOver from "@/components/SideTapDriverDetail/StopOverList/StopOver";
 import StopOverStartCenter from "@/components/SideTapDriverDetail/StopOverList/StopOverStartCenter";
 import { BG_50 } from "@/styles/smColor";
 import { StrictModeDroppable } from "@/components/DragDrop/StrictModeDroppable";
-import { ListStopOverData } from "@/components/SideTapDriverDetail";
 import { CourseDetailResponse } from "@/models/ApiTypes";
 
 export interface ColorProps {
@@ -25,11 +24,15 @@ const StopOverList = ({ bgColor, listStopOverData, isExpanded, toggleExpand }: S
   const [errorCount, setErrorCount] = useState(0);
 
   useEffect(() => {
-    const count = listStopOverData.filter(
+    if (!listStopOverData) return;
+
+    const count = Array.from(listStopOverData).filter(
       (stopOver) => stopOver.restrictedTonCode || stopOver.delayRequestTime || stopOver.overContractNum,
     ).length;
     setErrorCount(count);
   }, [isExpanded, listStopOverData]);
+
+  if (!listStopOverData) return;
 
   return (
     <div className={`inline-flex h-[656px] items-start justify-start gap-[12px] ${BG_50[bgColor]} px-[32px] pb-[24px]`}>
@@ -69,7 +72,7 @@ const StopOverList = ({ bgColor, listStopOverData, isExpanded, toggleExpand }: S
               >
                 {!isExpanded ? (
                   <>
-                    {listStopOverData[0] && <StopOverStartCenter />}
+                    {<StopOverStartCenter />}
 
                     {listStopOverData.map((stopOver, index) => (
                       <Draggable key={stopOver.shipmentNumber} draggableId={`${stopOver.shipmentNumber}`} index={index}>
@@ -90,6 +93,8 @@ const StopOverList = ({ bgColor, listStopOverData, isExpanded, toggleExpand }: S
                               ett={stopOver.ett}
                               distance={stopOver.distance}
                               isExpanded={isExpanded}
+                              lat={0}
+                              lon={0}
                             />
                           </div>
                         )}
@@ -126,6 +131,8 @@ const StopOverList = ({ bgColor, listStopOverData, isExpanded, toggleExpand }: S
                                 ett={stopOver.ett}
                                 distance={stopOver.distance}
                                 isExpanded={isExpanded}
+                                lat={0}
+                                lon={0}
                               />
                             </div>
                           )}
