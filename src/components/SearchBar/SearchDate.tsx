@@ -43,12 +43,13 @@ const SearchDate = ({
     };
   }, []);
 
-  const handleDateConfirm = (selectedDate: string, selectedTime: string | null) => {
+  const handleDateConfirm = (selectedDateTime: string) => {
+    const [selectedDate, selectedTime] = selectedDateTime.split(" ");
     let formattedDate: string;
     const date = dayjs(selectedDate);
 
     if (dateType === "start") {
-      formattedDate = selectedTime ? date.format(`YYYY-MM-DD ${selectedTime}`) : date.format("YYYY-MM-DD 00:00");
+      formattedDate = selectedTime !== "--:--" ? selectedDateTime : `${selectedDate} 00:00`;
 
       if (endDate && dayjs(endDate).diff(date, "day") > 31) {
         alert("31일 기간을 범위로 검색해야 합니다.");
@@ -56,7 +57,7 @@ const SearchDate = ({
       }
       onStartDateChange(formattedDate);
     } else {
-      formattedDate = selectedTime ? date.format(`YYYY-MM-DD ${selectedTime}`) : date.format("YYYY-MM-DD 23:59");
+      formattedDate = selectedTime !== "--:--" ? selectedDateTime : `${selectedDate} 23:59`;
 
       if (startDate && date.diff(dayjs(startDate), "day") > 31) {
         alert("31일 기간을 범위로 검색해야 합니다.");
