@@ -11,6 +11,8 @@ import { useEffect, useState } from "react";
 import { GetCenterData, GetDeliveryDestinationData } from "@/models/ApiTypes";
 import { CenterAPI } from "@/apis/center";
 import { DestinationAPI } from "@/apis/deliveryDestination";
+import { useSetRecoilState } from "recoil";
+import { userState } from "@/atoms/user";
 
 interface DeliveryModalProps {
   id: number;
@@ -19,6 +21,7 @@ interface DeliveryModalProps {
 }
 
 const DeliveryModal = ({ id, isCenter, onClose }: DeliveryModalProps) => {
+  const setUser = useSetRecoilState(userState);
   const [info, setInfo] = useState<GetDeliveryDestinationData | GetCenterData | null>(null);
 
   useEffect(() => {
@@ -26,7 +29,10 @@ const DeliveryModal = ({ id, isCenter, onClose }: DeliveryModalProps) => {
       CenterAPI.getDetailInfo(id)
         .then(([error, data]) => {
           if (error) {
-            onClose();
+            if (error.status === 401) {
+              setUser(null);
+            }
+            throw Error(error.data?.statusText);
           }
 
           setInfo(data);
@@ -38,7 +44,10 @@ const DeliveryModal = ({ id, isCenter, onClose }: DeliveryModalProps) => {
       DestinationAPI.getDetailInfo(id)
         .then(([error, data]) => {
           if (error) {
-            onClose();
+            if (error.status === 401) {
+              setUser(null);
+            }
+            throw Error(error.data?.statusText);
           }
 
           setInfo(data);
@@ -47,7 +56,7 @@ const DeliveryModal = ({ id, isCenter, onClose }: DeliveryModalProps) => {
           onClose();
         });
     }
-  }, [id, isCenter, onClose]);
+  }, [id, isCenter, onClose, setUser]);
 
   if (!info) return null;
 

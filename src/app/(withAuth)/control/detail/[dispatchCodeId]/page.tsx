@@ -2,16 +2,25 @@
 
 import ControlDispatchHeader from "@/components/ControlDispatchHeader";
 import ControlDispatchDashboard from "@/components/ControlDispatchDashboard";
-import NaverMap from "@/components/core/NaverMap";
+import NaverMapForControlDetail from "@/components/NaverMapForControlDetail";
 import { DispatchNumberApi } from "@/apis/dispatches/dispatchNumber";
 import { DispatchListResponse } from "@/models/ApiTypes";
 import { useQuery } from "@tanstack/react-query";
+import { useSetRecoilState } from "recoil";
+import { lastVisitedControlPageState } from "@/atoms/control";
+import { useEffect } from "react";
+
+type ColorType = "lime" | "sky" | "violet" | "redwood" | "peanut" | "brown" | "forest" | "yale" | "olive";
 
 interface FetchData extends DispatchListResponse {
   dispatchList: {
+    stopoverList: {
+      lon: number;
+      lat: number;
+    }[];
     coordinates: {
       lat: number;
-      lng: number;
+      lon: number;
     }[];
   }[];
 }
@@ -24,8 +33,18 @@ const fetchDispatchCodeIdData = async (dispatchCodeId: number): Promise<FetchDat
   return response as FetchData;
 };
 
+const ColorTypes: ColorType[] = ["lime", "sky", "violet", "redwood", "peanut", "brown", "forest", "yale", "olive"];
+
 const ControlDetailPage = ({ params }: { params: { dispatchCodeId: number } }) => {
   const { dispatchCodeId } = params;
+  const setLastVisitedControlPage = useSetRecoilState(lastVisitedControlPageState);
+
+  useEffect(() => {
+    setLastVisitedControlPage((prev) => ({
+      ...prev,
+      detail: `/control/detail/${params.dispatchCodeId}`,
+    }));
+  }, [params.dispatchCodeId, setLastVisitedControlPage]);
 
   const {
     data: fetchedData,
@@ -41,18 +60,34 @@ const ControlDetailPage = ({ params }: { params: { dispatchCodeId: number } }) =
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>Error: {(error as Error).message}</div>;
 
-  console.log("fetchedData in control detail page", fetchedData);
+  console.log("대시보드 데이터", fetchedData);
 
-  // 출발 센터 좌표와 도착지 좌표를 포함한 좌표 배열 생성
   const waypointGroups =
-    fetchedData?.dispatchList?.map((dispatch) => {
-      return [
-        { lat: fetchedData?.startStopover?.lat ?? 0, lng: fetchedData?.startStopover?.lon ?? 0 },
-        ...dispatch.coordinates,
-      ];
+    fetchedData?.dispatchList?.map((dispatch, index) => {
+      return {
+        id: index + 1,
+        bgColor: ColorTypes[index % ColorTypes.length],
+        waypoints: [
+          { lon: fetchedData?.startStopover?.lon ?? 0, lat: fetchedData?.startStopover?.lat ?? 0 },
+          ...dispatch.coordinates,
+        ],
+      };
     }) ?? [];
-
   console.log("waypointGroups", waypointGroups);
+
+  const stopOverListPoint =
+    fetchedData?.dispatchList?.map((dispatch, index) => {
+      return {
+        id: index + 1,
+        bgColor: ColorTypes[index % ColorTypes.length],
+        waypoints: dispatch.stopoverList.map((stopover) => ({
+          lon: stopover.lon,
+          lat: stopover.lat,
+        })),
+      };
+    }) ?? [];
+  console.log("stopOverListPoint", stopOverListPoint);
+
   return (
     <>
       <ControlDispatchHeader fetchedData={fetchedData!} />
@@ -63,7 +98,7 @@ const ControlDetailPage = ({ params }: { params: { dispatchCodeId: number } }) =
             await refetch();
           }}
         />
-        <div className="w-full">{/* <NaverMap waypointGroups={waypointGroups} /> */}</div>
+        <NaverMapForControlDetail waypointGroups={waypointGroups} stopOverListPoint={stopOverListPoint} />
       </div>
     </>
   );

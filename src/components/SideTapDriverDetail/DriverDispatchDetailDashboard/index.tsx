@@ -2,33 +2,64 @@ import Icon from "@/components/core/Icon";
 import CircularProgressBar from "@/components/core/CircularProgressBar";
 import { ColorProps } from "@/components/SideTapDriverDetail/StopOverList";
 import { BG_50, TEXT_650 } from "@/styles/smColor";
+import { IconId } from "@/components/core/Icon";
 
 interface DriverDispatchDetailDashboardProps extends ColorProps {
-  drivingTime: number;
-  mileage: number;
-  totalOrder: number;
-  availabilityOrder: number;
+  drivingTime?: number;
+  mileage?: number;
+  totalOrder?: number;
+  availabilityOrder?: number;
+  floorAreaRatio?: number;
+  driverName?: string;
+  driverPhoneNumber?: string;
+  vehicleType?: string;
+  vehicleTon?: number;
 }
 
 const DriverDispatchDetailDashboard = ({
   drivingTime,
   mileage,
-  totalOrder,
-  availabilityOrder,
+  totalOrder = 0,
+  availabilityOrder = 0,
+  floorAreaRatio = 0,
+  driverName,
+  driverPhoneNumber,
+  vehicleType = "",
+  vehicleTon = 0,
   bgColor,
 }: DriverDispatchDetailDashboardProps) => {
   const orderTextColor = totalOrder > availabilityOrder ? "text-red-500" : TEXT_650[bgColor];
+
+  const dynamicIconId = (vehicleType: string, vehicleTon: number): IconId => {
+    let prefix = "";
+
+    switch (vehicleType) {
+      case "WING_BODY":
+        prefix = "wing_";
+        break;
+      case "BOX":
+        prefix = "top_";
+        break;
+      case "CARGO":
+        prefix = "cargo_";
+        break;
+      default:
+        prefix = "";
+    }
+
+    return `${prefix}${vehicleTon}T` as IconId;
+  };
 
   return (
     <div className={`inline-flex h-[228px] flex-col items-center justify-start ${BG_50[bgColor]} px-8 pb-6 pt-5`}>
       <div className="flex h-[198px] flex-col items-center justify-start gap-4 rounded-lg bg-white p-5">
         <div className={`inline-flex w-[336px] items-center justify-between rounded ${BG_50[bgColor]} px-3 py-1`}>
           <div className="flex items-center justify-start gap-1 py-1.5">
-            <div className="text-center text-gray-900 text-B-14-B">김기사</div>
-            <div className="text-center text-gray-700 text-B-14-R">010-1234-5678</div>
+            <div className="text-center text-gray-900 text-B-14-B">{driverName}</div>
+            <div className="text-center text-gray-700 text-B-14-R">{driverPhoneNumber}</div>
           </div>
           <div className="inline-flex w-[42px] flex-col items-center justify-center">
-            <Icon id="wing_3.5T" size={40}></Icon>
+            <Icon id={dynamicIconId(vehicleType, vehicleTon)} size={40}></Icon>
           </div>
         </div>
         <div className="inline-flex items-center justify-between self-stretch px-3">
@@ -90,7 +121,7 @@ const DriverDispatchDetailDashboard = ({
           </div>
           <div className="h-[0px] w-[60px] rotate-90 border border-gray-50"></div>
 
-          <CircularProgressBar percentage={90} bgColor={bgColor} />
+          <CircularProgressBar percentage={floorAreaRatio} bgColor={bgColor} />
         </div>
       </div>
     </div>

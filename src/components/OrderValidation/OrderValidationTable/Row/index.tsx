@@ -6,16 +6,16 @@ import { rowVariants } from "./index.variants";
 import { EXCEL_DATA_KEYS } from "@/components/OrderValidation/OrderValidationTable/index.constants";
 
 interface OrderValidationTableRowProps {
-  rowIndex: number;
+  rowId: number;
   isOdd: boolean;
 }
 
-const OrderValidationTableRow = ({ rowIndex, isOdd }: OrderValidationTableRowProps) => {
+const OrderValidationTableRow = ({ rowId, isOdd }: OrderValidationTableRowProps) => {
   return (
     <div className={cn(rowVariants({ isOdd }))}>
-      <RowState rowIndex={rowIndex} />
+      <RowState rowId={rowId} />
       {EXCEL_DATA_KEYS.map((key) => {
-        return <Item key={key} header={key as ExcelDataHeader} rowIndex={rowIndex} />;
+        return <Item key={key} header={key as ExcelDataHeader} rowId={rowId} />;
       })}
     </div>
   );

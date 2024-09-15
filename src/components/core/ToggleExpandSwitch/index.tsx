@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
+import { useState } from "react";
 
 const ToggleExpandSwitch = (initialState = true) => {
   const [isExpanded, setIsExpanded] = useState(initialState);
@@ -10,6 +10,6 @@ const ToggleExpandSwitch = (initialState = true) => {
   };
 
   return { isExpanded, toggleExpand };
-}
+};
 
 export default ToggleExpandSwitch;

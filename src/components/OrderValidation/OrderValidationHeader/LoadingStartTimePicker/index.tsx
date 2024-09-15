@@ -38,7 +38,7 @@ const LoadingStartTimePicker = () => {
       {isError && <span className="text-red-500 text-C-12-B">상차시작일시를 입력해주세요.</span>}
       {isCalendarOpen && (
         <div className="absolute left-0 top-12 z-50">
-          <CalendarPicker onSelectDate={handleCalendarConfirm} />
+          <CalendarPicker onSelectDate={handleCalendarConfirm} dateType="start" />
         </div>
       )}
     </div>

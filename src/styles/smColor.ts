@@ -53,7 +53,7 @@ export const TEXT_650 = {
 export const BG_50 = {
   lime: "bg-lime-50",
   sky: "bg-sky-50",
-  purple: "text-purple-50",
+  purple: "bg-purple-50",
   violet: "bg-violet-50",
   redwood: "bg-redwood-50",
   peanut: "bg-peanut-50",
@@ -66,7 +66,7 @@ export const BG_50 = {
 export const BG_100 = {
   lime: "bg-lime-100",
   sky: "bg-sky-100",
-  purple: "text-purple-100",
+  purple: "bg-purple-100",
   violet: "bg-violet-100",
   redwood: "bg-redwood-100",
   peanut: "bg-peanut-100",
@@ -79,7 +79,7 @@ export const BG_100 = {
 export const BG_350 = {
   lime: "bg-lime-350",
   sky: "bg-sky-350",
-  purple: "text-purple-350",
+  purple: "bg-purple-350",
   violet: "bg-violet-350",
   redwood: "bg-redwood-350",
   peanut: "bg-peanut-350",
@@ -92,7 +92,7 @@ export const BG_350 = {
 export const BG_650 = {
   lime: "bg-lime-650",
   sky: "bg-sky-650",
-  purple: "text-purple-650",
+  purple: "bg-purple-650",
   violet: "bg-violet-650",
   redwood: "bg-redwood-650",
   peanut: "bg-peanut-650",

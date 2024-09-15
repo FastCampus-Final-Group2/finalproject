@@ -8,12 +8,15 @@ import { handleExcelFile } from "@/utils/validation/excel";
 import ProgressBar from "@/components/core/ProgressBar";
 import { cn } from "@/utils/cn";
 import { fileInputVariants } from "./index.variants";
+import { userState } from "@/atoms/user";
 
 interface FileInputProps {
   setIsError: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const FileInput = ({ setIsError }: FileInputProps) => {
+  const setUser = useSetRecoilState(userState);
+
   const [excelFile, setExcelFile] = useState<File | null>(null);
   const setExcelData = useSetRecoilState(excelDataState);
 
@@ -27,15 +30,18 @@ const FileInput = ({ setIsError }: FileInputProps) => {
         try {
           const arrayBuffer = event.target?.result as ArrayBuffer;
 
-          const validedExcelData = await handleExcelFile(arrayBuffer);
+          const [error, validedExcelData] = await handleExcelFile(arrayBuffer);
 
-          if (!validedExcelData) {
+          if (error) {
+            if (error.status === 401) {
+              setUser(null);
+            }
             throw new Error("Invalid Excel Data");
+          } else {
+            setTimeout(() => {
+              setExcelData(validedExcelData);
+            }, 1000);
           }
-
-          setTimeout(() => {
-            setExcelData(validedExcelData);
-          }, 1000);
 
           resolve();
         } catch (err) {
@@ -46,7 +52,7 @@ const FileInput = ({ setIsError }: FileInputProps) => {
 
       reader.readAsArrayBuffer(excelFile);
     });
-  }, [excelFile, setExcelData, setIsError]);
+  }, [excelFile, setExcelData, setIsError, setUser]);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const uploadedFile = e.target.files?.[0] || null;

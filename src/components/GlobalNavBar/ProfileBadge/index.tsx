@@ -1,7 +1,7 @@
 "use client";
 
 import { UsersAPI } from "@/apis/users";
-import { dispatchDataState } from "@/atoms/dipatchData";
+import { dispatchDataState } from "@/atoms/dispatchData";
 import { userState } from "@/atoms/user";
 import Icon from "@/components/core/Icon";
 import useOnlyClient from "@/hooks/useOnlyClient";
@@ -26,14 +26,12 @@ const ProfileBadge = () => {
   }, [user, router]);
 
   const handleClickLogoutBtn = async () => {
-    const [error] = await UsersAPI.logout();
+    await UsersAPI.logout();
 
-    if (!error) {
-      resetExcelDataAtoms();
-      resetDispatchData();
-      setUser(undefined);
-      router.push("/");
-    }
+    resetExcelDataAtoms();
+    resetDispatchData();
+    setUser(null);
+    router.push("/");
   };
 
   if (!isClient) {

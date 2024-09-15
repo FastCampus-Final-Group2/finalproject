@@ -5,6 +5,9 @@ import CircleCheckbox from "./CircleCheckbox";
 import React, { useState } from "react";
 import IAmMoving from "./IAmMoving";
 import DeliveryModal from "@/components/detailModal/DeliveryModal";
+import IAmResting from "./IAmResting";
+import { LocalTime } from "@/models/ApiTypes";
+
 // DeliveryRoutineDetailStatusItem 정의 추가
 export interface DeliveryRoutineDetailStatusItem {
   dispatchDetailId: number;
@@ -26,7 +29,9 @@ export interface DeliveryRoutineDetailStatusItem {
   iconId: IconId;
   address: string;
   addressDetail: string;
-  errorMessage?: string;
+  destinationComment?: string;
+  delayedTime?: number;
+  isDelay?: boolean;
 }
 
 interface DeliveryRoutineDetailProps {
@@ -35,14 +40,24 @@ interface DeliveryRoutineDetailProps {
   fetchData: {
     dispatchDetailList: DeliveryRoutineDetailStatusItem[];
     ett?: number;
+    breakStartTime?: LocalTime;
+    breakEndTime?: LocalTime;
+    startStopover?: {
+      departureTime: LocalTime;
+    };
   };
 }
 
 const DeliveryRoutineDetail = ({ selectedOrders, setSelectedOrders, fetchData }: DeliveryRoutineDetailProps) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedDestinationId, setSelectedDestinationId] = useState<number | null>(null);
+  const handleAddressInfo = (item: DeliveryRoutineDetailStatusItem) => {
+    setSelectedDestinationId(item.destinationId);
+    setIsModalOpen(true);
+  };
+
   let orderCounter = 0;
 
-  // fetchListItems의 타입을 명시적으로 지정
   const fetchListItems: DeliveryRoutineDetailStatusItem[] = fetchData.dispatchDetailList;
 
   const formatTime = (dateTimeString: string | undefined): string => {
@@ -56,10 +71,18 @@ const DeliveryRoutineDetail = ({ selectedOrders, setSelectedOrders, fetchData }:
   const parseAddress = (fullAddress: string): { address: string; addressDetail: string } => {
     // 특별시, 광역시, 특별자치시, 특별자치도를 간단히 표시하는 함수
     const simplifyCity = (city: string): string => {
-      return city.replace(/특별시|광역시|특별자치시/, "시").replace(/특별자치도/, "도");
+      return city
+        .replace(/특별시|광역시|특별자치시/, "")
+        .replace(/특별자치도/, "도")
+        .replace(/경상북도/, "경북")
+        .replace(/경상남도/, "경남")
+        .replace(/전라북도/, "전북")
+        .replace(/전라남도/, "전남")
+        .replace(/충청북도/, "충북")
+        .replace(/충청남도/, "충남");
     };
 
-    const regex = /(.*?[시도군구])\s(.*?[동읍면])\s(.+)/;
+    const regex = /(.*?[시도군구])\s(.*?[동읍면가])\s(.+)/;
     const match = fullAddress.match(regex);
 
     if (match) {
@@ -83,12 +106,41 @@ const DeliveryRoutineDetail = ({ selectedOrders, setSelectedOrders, fetchData }:
     );
   };
 
-  const handleAddressInfo = (item: DeliveryRoutineDetailStatusItem) => {
-    setIsModalOpen(true);
-  };
+  // breakTime 처리
+  const breakStartTime = fetchData.breakStartTime;
+  const breakEndTime = fetchData.breakEndTime;
+  const departureTime = fetchData.startStopover?.departureTime;
+  const datePart = departureTime?.toString().split("T")[0] ?? new Date().toISOString().split("T")[0];
+  const changedBreakStartTime = breakStartTime ? `${datePart}T${breakStartTime.toString()}` : undefined;
+  const changedBreakEndTime = breakEndTime ? `${datePart}T${breakEndTime.toString()}` : undefined;
+
+  // 1. changedBreakStartTime이 departureTime보다 크고 changedBreakEndTime이 expectationOperationStartTime보다 작을 때 index의 맨 앞에 끼워넣기
+  // 2. changedBreakStartTime이 직전 index의 operationEndTime보다 크고 changedBreakEndTime이 바로 다음 index의 operationStartTime보다 작을 때 그 사이에 끼워넣기
+  // 3. changedBreakStartTime이 직전 index의 expectationOperationEndTime보다 작고 changedBreakEndTime이 바로 다음 index의 expectationOperationStartTime보다 작을 때 그 사이에 끼워넣기
+  // 4. changedBreakStartTime이 맨 마지막 index의 expectationOperationEndTime보다 큰 경우 맨 뒤에 끼워넣기
+  const shouldInsertResting =
+    changedBreakStartTime &&
+    changedBreakEndTime &&
+    departureTime &&
+    fetchListItems.length > 0 &&
+    fetchListItems[0].expectationOperationStartTime &&
+    changedBreakStartTime > departureTime &&
+    changedBreakEndTime < fetchListItems[0].expectationOperationStartTime;
+
+  const lastItem = fetchListItems[fetchListItems.length - 1];
+  const shouldAppendResting =
+    changedBreakStartTime &&
+    changedBreakEndTime &&
+    lastItem &&
+    lastItem.expectationOperationEndTime &&
+    changedBreakStartTime > lastItem.expectationOperationEndTime;
+
   return (
     <>
       <div className="flex flex-col gap-[12px] overflow-scroll scrollbar-hide">
+        {shouldInsertResting && (
+          <IAmResting breakStartTime={changedBreakStartTime} breakEndTime={changedBreakEndTime} />
+        )}
         {fetchListItems.map((item, index) => {
           const { address, addressDetail } = parseAddress(item.address);
           let startTimeLabel = "시작";
@@ -135,17 +187,22 @@ const DeliveryRoutineDetail = ({ selectedOrders, setSelectedOrders, fetchData }:
                   order={orderNumber ?? -1}
                   initialState={selectedOrders.some((o) => o === item)}
                   onChange={(e, checked) => handleCheckboxChange(index, checked, item)}
+                  delayedTime={item.delayedTime}
                 />
-                <DeliveryStopoverListCard background={item.dispatchDetailStatus === "default" ? "start" : undefined}>
+                <DeliveryStopoverListCard
+                  className={item.delayedTime ? "border-red-500 bg-red-30" : ""}
+                  background={item.dispatchDetailStatus === "default" ? "start" : undefined}
+                >
                   <div className="flex flex-col gap-[8px]">
                     <ul className={`${item.dispatchDetailStatus === "CANCELED" ? "text-gray-300" : ""} `}>
                       <li className="flex items-center gap-[8px]">
                         <DeliveryStatusTag vehicleStatus={item.dispatchDetailStatus || "default"}></DeliveryStatusTag>
                         <p
-                          className={`cursor-pointer text-nowrap border-b border-blue-500 text-T-16-M ${
+                          className={`cursor-pointer text-nowrap border-b border-blue-500 -tracking-[-1px] text-T-16-M ${
                             item.dispatchDetailStatus === "CANCELED" ? "border-gray-300 text-gray-300" : "text-blue-500"
                           } ${item.dispatchDetailStatus === "RESTING" ? "hidden" : ""} `}
                           onClick={() => handleAddressInfo(item)}
+                          style={{ letterSpacing: "-1px" }}
                         >
                           {address}
                         </p>
@@ -158,12 +215,20 @@ const DeliveryRoutineDetail = ({ selectedOrders, setSelectedOrders, fetchData }:
                         </p>
                       </li>
                     </ul>
+                    <ul className={`${item.delayedTime ? "h-[20px]" : "hidden"}`}>
+                      <li
+                        className={`flex h-[20px] items-center gap-[4px] ${item.delayedTime ? "text-red-500 text-B-14-M" : "hidden"} ${item.dispatchDetailStatus === "RESTING" || item.dispatchDetailStatus === "CANCELED" ? "hidden" : ""} `}
+                      >
+                        <Icon id="warning" size={14} className="text-red-500" />
+                        <p>시작 예상 시간 {item.delayedTime}분 초과</p>
+                      </li>
+                    </ul>
                     <ul className="h-[20px]">
                       <li
-                        className={`flex h-[20px] items-center gap-[4px] ${item.errorMessage ? "text-B-14-M" : "hidden"} ${item.dispatchDetailStatus === "RESTING" || item.dispatchDetailStatus === "CANCELED" ? "hidden" : ""} `}
+                        className={`flex h-[20px] items-center gap-[4px] ${item.destinationComment ? "text-B-14-M" : "hidden"} ${item.dispatchDetailStatus === "RESTING" || item.dispatchDetailStatus === "CANCELED" ? "hidden" : ""} `}
                       >
                         <Icon id="circleAlertFill" size={14} />
-                        <p>{item.errorMessage}</p>
+                        <p>{item.destinationComment}</p>
                       </li>
                     </ul>
                   </div>
@@ -172,10 +237,10 @@ const DeliveryRoutineDetail = ({ selectedOrders, setSelectedOrders, fetchData }:
                       item.dispatchDetailStatus === "CANCELED" ? "hidden" : "text-gray-700"
                     }`}
                   >
-                    <li>
+                    <li className="flex items-center justify-between gap-[4px]">
                       {startTimeLabel} <span>{displayStartTime}</span>
                     </li>
-                    <li>
+                    <li className="flex items-center justify-between gap-[4px]">
                       {endTimeLabel} <span>{displayEndTime}</span>
                     </li>
                   </ul>
@@ -185,9 +250,21 @@ const DeliveryRoutineDetail = ({ selectedOrders, setSelectedOrders, fetchData }:
                 fetchListItems[index + 1]?.dispatchDetailStatus === "WORK_WAITING" && (
                   <IAmMoving ett={fetchData.ett ?? 0} />
                 )}
+              {item.dispatchDetailStatus === "RESTING" &&
+                fetchData.breakStartTime &&
+                item.expectationOperationEndTime &&
+                item.expectationOperationStartTime &&
+                fetchData.breakStartTime < item.expectationOperationEndTime &&
+                fetchData.breakEndTime &&
+                fetchData.breakEndTime < item.expectationOperationStartTime && (
+                  <IAmResting breakStartTime={changedBreakStartTime ?? ""} breakEndTime={changedBreakEndTime ?? ""} />
+                )}
             </React.Fragment>
           );
         })}
+        {shouldAppendResting && (
+          <IAmResting breakStartTime={changedBreakStartTime} breakEndTime={changedBreakEndTime} />
+        )}
       </div>
       {isModalOpen && (
         <DeliveryModal

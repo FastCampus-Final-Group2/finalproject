@@ -3,6 +3,7 @@ import FloorAreaRatioCard from "./FloorAreaRatioCard";
 import DeliveryCompletedCard from "./DeliveryCompletedCard";
 import AccessTimeRefresh from "@/components/AccessTimeRefresh";
 import { BG_100 } from "@/styles/smColor";
+import { LocalTime } from "@/models/ApiTypes";
 // import { CourseResponse } from "@/models/ApiTypes";
 
 interface DeliveryProgressInfoProps {
@@ -15,7 +16,9 @@ interface DeliveryProgressInfoProps {
     vehicleTon: number;
     completedOrderCount: number;
     deliveryOrderCount: number;
-    totalTime: number;
+    totalTime: LocalTime;
+    totalDistance: number;
+    progressionRate: number;
     issue: string;
   };
   dispatchId: number;
@@ -39,8 +42,10 @@ const DeliveryProgressInfo = ({ selectedColor, fetchData, dispatchId, refreshDat
           completedOrderCount={fetchData.completedOrderCount ?? 0}
           deliveryOrderCount={fetchData.deliveryOrderCount ?? 0}
           totalTime={String(fetchData.totalTime ?? 0)}
+          progressionRate={fetchData.progressionRate ?? 0}
+          totalDistance={fetchData.totalDistance ?? 0}
+          refreshData={refreshData}
         />
-        {/* todo: deliveryProgressRate={50} 수정하기 */}
       </div>
       <div className="flex justify-end">
         <AccessTimeRefresh onClick={refreshData} />

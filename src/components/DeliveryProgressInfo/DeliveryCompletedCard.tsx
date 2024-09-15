@@ -6,6 +6,9 @@ interface DeliveryCompletedCardProps {
   completedOrderCount: number;
   deliveryOrderCount: number;
   totalTime: string;
+  progressionRate: number;
+  totalDistance: number;
+  refreshData: () => Promise<void>;
 }
 
 const formatTotalTime = (totalTime: string): { hours: number; minutes: number } => {
@@ -18,12 +21,13 @@ const formatTotalTime = (totalTime: string): { hours: number; minutes: number } 
   return { hours, minutes };
 };
 
-// todo: 주행 거리의 count는 api 연동 후 변경
 const DeliveryCompletedCard = ({
   selectedColor,
   completedOrderCount,
   deliveryOrderCount,
   totalTime,
+  progressionRate,
+  totalDistance,
 }: DeliveryCompletedCardProps) => {
   const { hours, minutes } = formatTotalTime(totalTime);
 
@@ -41,7 +45,7 @@ const DeliveryCompletedCard = ({
       iconId: "order",
       devide: "/",
     },
-    { title: "주행 거리", count: 23, unit: "km", iconId: "truck", devide: "" },
+    { title: "주행 거리", count: totalDistance.toFixed(2), unit: "km", iconId: "truck", devide: "" },
     {
       title: "주행 시간",
       count: (
@@ -69,7 +73,6 @@ const DeliveryCompletedCard = ({
       devide: "",
     },
   ];
-  const progressRate = Math.round((completedOrderCount / deliveryOrderCount) * 100);
 
   return (
     <div className="flex flex-col gap-[12px] px-[12px] pt-[12px]">
@@ -77,12 +80,12 @@ const DeliveryCompletedCard = ({
         <li className="flex items-center gap-[4px]">
           <p>진행률</p>
           <p>
-            <span className={`${TEXT_650[selectedColor]} text-T-20-B`}>{progressRate}</span>
+            <span className={`${TEXT_650[selectedColor]} text-T-20-B`}>{progressionRate}</span>
             <span className="text-T-16-B">%</span>
           </p>
         </li>
         <li className={`h-[12px] w-[80px] rounded-full ${BG_100[selectedColor]}`}>
-          <p className={`h-[12px] rounded-full ${BG_650[selectedColor]}`} style={{ width: `${progressRate}%` }}></p>
+          <p className={`h-[12px] rounded-full ${BG_650[selectedColor]}`} style={{ width: `${progressionRate}%` }}></p>
         </li>
       </ul>
       <div className="text-gray-700 text-B-14-M">

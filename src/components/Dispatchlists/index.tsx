@@ -9,9 +9,10 @@ interface DispatchListsProps {
   completed: number;
   results: DispatchResult[];
   onSelectedItemsCountChange: (count: number) => void;
+  onSelectedDispatchIdsChange: (ids: number[]) => void;
 }
 
-const DispatchLists = ({ results, onSelectedItemsCountChange }: DispatchListsProps) => {
+const DispatchLists = ({ results, onSelectedItemsCountChange, onSelectedDispatchIdsChange }: DispatchListsProps) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [checkedItems, setCheckedItems] = useState<boolean[]>(new Array(results.length).fill(false));
   const [isAllChecked, setIsAllChecked] = useState(false);
@@ -80,7 +81,13 @@ const DispatchLists = ({ results, onSelectedItemsCountChange }: DispatchListsPro
   useEffect(() => {
     const selectedCount = checkedItems.filter(Boolean).length;
     onSelectedItemsCountChange(selectedCount);
-  }, [checkedItems, onSelectedItemsCountChange]);
+
+    const selectedIds = results
+      .filter((_, index) => checkedItems[index])
+      .map((result) => result.dispatchNumberId)
+      .filter((id): id is number => id !== undefined);
+    onSelectedDispatchIdsChange(selectedIds);
+  }, [checkedItems, results, onSelectedItemsCountChange, onSelectedDispatchIdsChange]);
 
   return (
     <div>

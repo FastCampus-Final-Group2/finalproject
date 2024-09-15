@@ -15,12 +15,21 @@ interface ConfirmModalProps {
     value: string;
   }[];
   onClickClose: () => void;
-  onConfirm?: () => void;
+  doConfirm?: boolean;
+  onConfirm: () => void;
   leftButtonText: string;
   rightButtonText: string;
 }
 
-const ConfirmModal = ({ title, text, onClickClose, onConfirm, leftButtonText, rightButtonText }: ConfirmModalProps) => {
+const ConfirmModal = ({
+  title,
+  text,
+  onClickClose,
+  doConfirm,
+  onConfirm,
+  leftButtonText,
+  rightButtonText,
+}: ConfirmModalProps) => {
   const [isConfirmed, toggleIsConfirmed] = useReducer((v) => !v, false);
 
   return (
@@ -40,7 +49,7 @@ const ConfirmModal = ({ title, text, onClickClose, onConfirm, leftButtonText, ri
               })}
             </div>
           </div>
-          {onConfirm && (
+          {doConfirm && (
             <div className="flex items-center justify-center gap-1 text-gray-900">
               <CheckBox onChange={() => toggleIsConfirmed()} label="위 내용을 확인했습니다." />
             </div>
@@ -50,11 +59,7 @@ const ConfirmModal = ({ title, text, onClickClose, onConfirm, leftButtonText, ri
           <Button shape="text" intent="secondary" className="w-[156px]" onClick={() => onClickClose()}>
             {leftButtonText}
           </Button>
-          <Button
-            disabled={onConfirm ? !isConfirmed : false}
-            onClick={onConfirm && (() => onConfirm())}
-            className="w-[156px]"
-          >
+          <Button disabled={doConfirm ? !isConfirmed : false} onClick={() => onConfirm()} className="w-[156px]">
             {rightButtonText}
           </Button>
         </div>

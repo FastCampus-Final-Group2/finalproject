@@ -5,13 +5,13 @@ import DeliveryRoutineDetail, {
   DeliveryRoutineDetailStatusItem,
 } from "@/components/DeliveryRoutine/DeliveryRoutineDetail";
 import DeliveryStopoverListCard from "@/components/DeliveryRoutine/DeliveryStopoverListCard";
-import { CourseDetailResponse } from "@/models/ApiTypes";
+import { CourseDetailResponse, LocalTime } from "@/models/ApiTypes";
 import DeliveryModal from "@/components/detailModal/DeliveryModal";
 
-interface FetchData extends CourseDetailResponse {
+interface FetchRoutineData extends CourseDetailResponse {
   startStopover: {
     centerName: string;
-    departureTime: string;
+    departureTime: LocalTime;
     centerId: number;
   };
   dispatchDetailList: DeliveryRoutineDetailStatusItem[];
@@ -25,7 +25,13 @@ const formatTime = (dateTimeString: string): string => {
   return `${hours}:${minutes}`;
 };
 
-const DeliveryRoutine = ({ fetchData }: { fetchData: FetchData }) => {
+const DeliveryRoutine = ({
+  fetchData,
+  refreshData,
+}: {
+  fetchData: FetchRoutineData;
+  refreshData: () => Promise<void>;
+}) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const handleModalOpen = () => {
     setIsModalOpen(true);
@@ -36,7 +42,7 @@ const DeliveryRoutine = ({ fetchData }: { fetchData: FetchData }) => {
       status: "운송 시작",
       centerName: fetchData.startStopover?.centerName,
       timetext: "시작",
-      time: fetchData.startStopover?.departureTime ? formatTime(fetchData.startStopover.departureTime) : "",
+      time: fetchData.startStopover?.departureTime ? formatTime(fetchData.startStopover.departureTime.toString()) : "",
     },
     { status: "운송 종료", centerName: "", timetext: "종료 예정", time: "20:00" },
   ];
@@ -44,7 +50,7 @@ const DeliveryRoutine = ({ fetchData }: { fetchData: FetchData }) => {
 
   return (
     <>
-      <SelectedDelivery selectedOrders={selectedOrders} />
+      <SelectedDelivery selectedOrders={selectedOrders} refreshData={refreshData} />
       <div className="flex h-fit max-h-[500px] flex-col gap-[6px] py-[8px] text-T-18-B">
         {startEnd.map((data, index) => (
           <React.Fragment key={data.status}>

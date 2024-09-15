@@ -8,13 +8,14 @@ import StopOverStartCenter from "@/components/SideTapDriverDetail/StopOverList/S
 import { BG_50 } from "@/styles/smColor";
 import { StrictModeDroppable } from "@/components/DragDrop/StrictModeDroppable";
 import { ListStopOverData } from "@/components/SideTapDriverDetail";
+import { CourseDetailResponse } from "@/models/ApiTypes";
 
 export interface ColorProps {
   bgColor: keyof typeof BG_50;
 }
 
 interface StopOverListProps {
-  listStopOverData: ListStopOverData[];
+  listStopOverData: CourseDetailResponse[];
   isExpanded: boolean;
   toggleExpand: () => void;
   bgColor: keyof typeof BG_50;
@@ -24,12 +25,10 @@ const StopOverList = ({ bgColor, listStopOverData, isExpanded, toggleExpand }: S
   const [errorCount, setErrorCount] = useState(0);
 
   useEffect(() => {
-    if (isExpanded) {
-      const count = listStopOverData.filter((stopOver) => stopOver.warningCheck).length;
-      setErrorCount(count);
-    } else {
-      setErrorCount(0); // Collapse 상태일 때는 errorCount를 0으로 설정
-    }
+    const count = listStopOverData.filter(
+      (stopOver) => stopOver.restrictedTonCode || stopOver.delayRequestTime || stopOver.overContractNum,
+    ).length;
+    setErrorCount(count);
   }, [isExpanded, listStopOverData]);
 
   return (
@@ -46,8 +45,8 @@ const StopOverList = ({ bgColor, listStopOverData, isExpanded, toggleExpand }: S
                 </div>
               </div>
               <div className="text-center text-gray-900 text-T-16-M">모아보기</div>
-              <button onClick={toggleExpand}>
-                {isExpanded ? (
+              <button onClick={errorCount > 0 ? toggleExpand : undefined} disabled={errorCount === 0}>
+                {!isExpanded ? (
                   <Icon id="toggleOn" size={28} className="text-gray-500" />
                 ) : (
                   <Icon id="toggleOff" size={28} className="text-gray-500" />
@@ -68,42 +67,70 @@ const StopOverList = ({ bgColor, listStopOverData, isExpanded, toggleExpand }: S
                 {...provided.droppableProps}
                 ref={provided.innerRef}
               >
-                {isExpanded ? (
+                {!isExpanded ? (
                   <>
-                    <StopOverStartCenter bgColor={bgColor} />
-                    {listStopOverData
-                      .filter((stopOver) => stopOver.warningCheck)
-                      .map((stopOver, index) => (
-                        <Draggable key={stopOver.id} draggableId={`${stopOver.id}`} index={index}>
-                          {(provided) => (
-                            <div ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
-                              <StopOver
-                                warningCheck={stopOver.warningCheck}
-                                errorMessage={stopOver.errorMessage}
-                                bgColor={bgColor}
-                                address={stopOver.address}
-                              />
-                            </div>
-                          )}
-                        </Draggable>
-                      ))}
-                  </>
-                ) : (
-                  <>
+                    {listStopOverData[0] && <StopOverStartCenter />}
+
                     {listStopOverData.map((stopOver, index) => (
-                      <Draggable key={stopOver.id} draggableId={`${stopOver.id}`} index={index}>
+                      <Draggable key={stopOver.shipmentNumber} draggableId={`${stopOver.shipmentNumber}`} index={index}>
                         {(provided) => (
                           <div ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
                             <StopOver
-                              warningCheck={stopOver.warningCheck}
-                              errorMessage={stopOver.errorMessage}
+                              restrictedTonCode={stopOver.restrictedTonCode}
+                              delayRequestTime={stopOver.delayRequestTime}
+                              overContractNum={stopOver.overContractNum}
+                              index={index}
+                              totalLength={listStopOverData.length}
                               bgColor={bgColor}
-                              address={stopOver.address}
+                              roadAddress={stopOver.roadAddress}
+                              detailAddress={stopOver.detailAddress}
+                              orderType={stopOver.orderType}
+                              expectationOperationStartTime={stopOver.expectationOperationStartTime}
+                              expectationOperationEndTime={stopOver.expectationOperationEndTime}
+                              ett={stopOver.ett}
+                              distance={stopOver.distance}
+                              isExpanded={isExpanded}
                             />
                           </div>
                         )}
                       </Draggable>
                     ))}
+                  </>
+                ) : (
+                  <>
+                    {listStopOverData
+                      .filter(
+                        (stopOver) =>
+                          stopOver.restrictedTonCode || stopOver.delayRequestTime || stopOver.overContractNum,
+                      )
+                      .map((stopOver, index) => (
+                        <Draggable
+                          key={`stopOver-${stopOver.shipmentNumber}`}
+                          draggableId={`stopOver-${stopOver.shipmentNumber}`}
+                          index={index}
+                        >
+                          {(provided) => (
+                            <div ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
+                              <StopOver
+                                restrictedTonCode={stopOver.restrictedTonCode}
+                                delayRequestTime={stopOver.delayRequestTime}
+                                overContractNum={stopOver.overContractNum}
+                                index={index}
+                                totalLength={listStopOverData.length}
+                                bgColor={bgColor}
+                                roadAddress={stopOver.roadAddress}
+                                detailAddress={stopOver.detailAddress}
+                                orderType={stopOver.orderType}
+                                expectationOperationStartTime={stopOver.expectationOperationStartTime}
+                                expectationOperationEndTime={stopOver.expectationOperationEndTime}
+                                ett={stopOver.ett}
+                                distance={stopOver.distance}
+                                isExpanded={isExpanded}
+                              />
+                            </div>
+                          )}
+                        </Draggable>
+                      ))}
                   </>
                 )}
                 {provided.placeholder}
@@ -111,6 +138,7 @@ const StopOverList = ({ bgColor, listStopOverData, isExpanded, toggleExpand }: S
             )}
           </StrictModeDroppable>
         </div>
+        {/* <pre>{JSON.stringify(listStopOverData, null, 2)}</pre> */}
       </div>
     </div>
   );

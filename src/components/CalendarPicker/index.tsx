@@ -6,32 +6,37 @@ import Calendar from "@/components/CalendarPicker/Calendar";
 import TimePicker from "@/components/CalendarPicker/TimePicker";
 import Button from "@/components/core/Button";
 
-interface SearchDateProps {
-  onSelectDate: (date: string) => void;
+interface CalendarPickerProps {
+  onSelectDate: (date: string, time: string | null) => void;
+  dateType: "start" | "end";
 }
 
-const CalendarPicker = ({ onSelectDate }: SearchDateProps) => {
-  const [startDate, setStartDate] = useState<dayjs.Dayjs | null>(null);
+const CalendarPicker = ({ onSelectDate, dateType }: CalendarPickerProps) => {
+  const [selectedDate, setSelectedDate] = useState<dayjs.Dayjs | null>(null);
   const [selectedHour, setSelectedHour] = useState<number | null>(null);
   const [selectedMinute, setSelectedMinute] = useState<number | null>(null);
 
   const handleDateClick = (date: dayjs.Dayjs) => {
-    setStartDate(date);
+    setSelectedDate(date);
   };
 
   const handleConfirmClick = () => {
-    if (startDate !== null && selectedHour !== null && selectedMinute !== null) {
-      const dateTime = startDate.hour(selectedHour).minute(selectedMinute).format("YYYY-MM-DD HH:mm");
-      onSelectDate(dateTime);
+    if (selectedDate) {
+      const formattedDate = selectedDate.format("YYYY-MM-DD");
+      const formattedTime =
+        selectedHour !== null && selectedMinute !== null
+          ? `${selectedHour.toString().padStart(2, "0")}:${selectedMinute.toString().padStart(2, "0")}`
+          : null;
+      onSelectDate(formattedDate, formattedTime);
     } else {
-      alert("날짜와 시간을 모두 선택하세요.");
+      alert("날짜를 선택하세요.");
     }
   };
 
   return (
     <div className="flex flex-col items-end rounded-[8px] bg-white p-[10px] shadow-md">
       <div className="relative mb-[10px] flex border-b border-gray-100">
-        <Calendar startDate={startDate} onDateClick={handleDateClick} />
+        <Calendar startDate={selectedDate} onDateClick={handleDateClick} />
         <div>
           <div className="flex h-[29.5px] justify-center">
             <p className="flex items-center text-B-14-B">
@@ -48,7 +53,12 @@ const CalendarPicker = ({ onSelectDate }: SearchDateProps) => {
           />
         </div>
       </div>
-      <Button onClick={handleConfirmClick} intent="primary" size="s">
+      <Button
+        onClick={handleConfirmClick}
+        intent="primary"
+        size="i"
+        className="bg-blue-500 text-white hover:bg-blue-600"
+      >
         확인
       </Button>
     </div>

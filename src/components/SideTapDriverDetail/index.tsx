@@ -4,22 +4,54 @@ import DriverDispatchDetailDashboard from "@/components/SideTapDriverDetail/Driv
 import StopOverList from "@/components/SideTapDriverDetail/StopOverList";
 import Icon from "@/components/core/Icon";
 import { TEXT_650, BG_50 } from "@/styles/smColor";
-import { useRecoilValue } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import { bgColorState } from "@/atoms/bgColorState";
+import { transportOrderState } from "@/atoms/transportOrder";
+import { driverIndex } from "@/atoms/driverIndex";
+import { dispatchDataState } from "@/atoms/dispatchData";
+import { DispatchResponse, CourseDetailResponse } from "@/models/ApiTypes";
 
 export interface ListStopOverData {
-  id: number;
-  warningCheck: boolean;
-  errorMessage: string;
-  address: string;
-  meter: number;
-  kilogram: number;
+  restrictedTonCode: boolean;
+  delayRequestTime: boolean;
+  overContractNum: boolean;
+  ett: number;
+  expectationOperationStartTime: string;
+  expectationOperationEndTime: string;
+  deliveryDestinationId: number;
+  managerName: string | null;
+  phoneNumber: string | null;
+  lat: number;
+  lon: number;
+  distance: number;
+  deliveryType: string;
+  smId: number;
+  smName: string;
+  shipmentNumber: string;
+  clientOrderKey: string;
+  orderType: string;
+  receivedDate: string;
+  serviceRequestDate: string;
+  serviceRequestTime: string;
+  clientName: string;
+  contact: string;
+  roadAddress: string;
+  lotNumberAddress: string;
+  detailAddress: string;
+  zipcode: string;
+  volume: number;
+  weight: number;
+  note: string;
+  expectedServiceDuration: number;
+  productName: string;
+  productCode: string;
+  productQuantity: number;
 }
 
 interface SideTapDriverDetailProps {
   isSideTapExpanded: boolean;
   onClose: () => void;
-  listStopOverData: ListStopOverData[];
+  listStopOverData: CourseDetailResponse[];
   isExpanded: boolean;
   toggleExpand: () => void;
 }
@@ -32,18 +64,30 @@ const SideTapDriverDetail = ({
   toggleExpand,
 }: SideTapDriverDetailProps) => {
   const bgColor = useRecoilValue(bgColorState);
+  const driverIndexState = useRecoilValue(driverIndex);
+  const dispatchData = useRecoilValue(transportOrderState);
+
+  const [recoilDispatchData, setRecoilDispatchData] = useRecoilState<DispatchResponse | null>(dispatchDataState);
 
   return (
     <div>
-      {isSideTapExpanded && (
+      {isSideTapExpanded && recoilDispatchData && (
         <div className="relative h-[884px] w-[440px]">
-          <DriverDispatchDetailDashboard
-            drivingTime={16}
-            mileage={23}
-            totalOrder={81}
-            availabilityOrder={80}
-            bgColor={bgColor}
-          />
+          {/* recoilDispatchData가 null이 아닌 경우에만 데이터를 접근 */}
+          {recoilDispatchData.course && recoilDispatchData.course[driverIndexState] && (
+            <DriverDispatchDetailDashboard
+              drivingTime={recoilDispatchData.course[driverIndexState].totalTime}
+              mileage={recoilDispatchData.course[driverIndexState].mileage}
+              totalOrder={recoilDispatchData.course[driverIndexState].orderNum}
+              availabilityOrder={80}
+              floorAreaRatio={recoilDispatchData.course[driverIndexState].floorAreaRatio}
+              driverName={recoilDispatchData.course[driverIndexState].smName}
+              driverPhoneNumber={recoilDispatchData.course[driverIndexState].smPhoneNumber}
+              vehicleType={recoilDispatchData.course[driverIndexState].vehicleType}
+              vehicleTon={recoilDispatchData.course[driverIndexState].vehicleTon}
+              bgColor={bgColor}
+            />
+          )}
           <StopOverList
             bgColor={bgColor}
             listStopOverData={listStopOverData}

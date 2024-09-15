@@ -4,26 +4,27 @@ import DeliveryProgressInfo from "@/components/DeliveryProgressInfo";
 import DeliveryRoutine from "@/components/DeliveryRoutine";
 import { DispatchDetailApi } from "@/apis/dispatches/dispatchDetail";
 import { useQuery } from "@tanstack/react-query";
-import { DispatchDetailResponse } from "@/models/ApiTypes";
+import { DispatchDetailResponse, LocalTime } from "@/models/ApiTypes";
 
 interface DeliveryProgressSideTabProps {
   isExpanded: boolean;
   onClose: () => void;
   selectedColor: keyof typeof BG_50 | keyof typeof TEXT_650;
   dispatchId: number | null;
+  refreshData: () => Promise<void>;
 }
 
 interface FetchData extends DispatchDetailResponse {
   smPhoneNumber?: string;
   smName?: string;
   floorAreaRatio?: number;
-  vehicleType?: string;
+  vehicleType?: "WING_BODY" | "BOX" | "CARGO";
   vehicleTon?: number;
   completedOrderCount?: number;
   deliveryOrderCount?: number;
-  totalTime?: number;
+  totalTime?: LocalTime;
   issue?: string;
-  startStopover: { centerName: string; departureTime: string; centerId: number };
+  startStopover?: { centerName: string; departureTime: string; centerId: number }; // LocalTime -> string으로 변경
   dispatchDetailList: [];
 }
 
@@ -54,7 +55,8 @@ const DeliveryProgressSideTab = ({ isExpanded, onClose, selectedColor, dispatchI
   if (isLoading) return <div>dispatchId: {dispatchId} 로딩 중...</div>;
   if (error) return <div>오류: {(error as Error).message}</div>;
   if (!fetchData) return <div>데이터가 없습니다.</div>;
-  console.log("dispatchIdFetchData", fetchData);
+  const data = fetchData as FetchData;
+  console.log("사이드바 데이터", fetchData);
   return (
     <div className="transition-width relative z-50 duration-300 ease-in-out">
       <div
@@ -71,7 +73,12 @@ const DeliveryProgressSideTab = ({ isExpanded, onClose, selectedColor, dispatchI
           />
         </div>
         <div className="flex max-h-[556px] w-fit flex-col gap-[4px] rounded-[8px] bg-white pl-[12px] pr-[16px] pt-[20px]">
-          <DeliveryRoutine fetchData={fetchData} />
+          <DeliveryRoutine
+            fetchData={fetchData as any}
+            refreshData={async () => {
+              await refetch();
+            }}
+          />
         </div>
       </div>
       <button

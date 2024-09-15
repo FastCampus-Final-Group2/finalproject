@@ -10,6 +10,7 @@ import { useCallback } from "react";
 import type { MouseEventHandler } from "react";
 import { cn } from "@/utils/cn";
 import { gnbTabContentVariants, gnbTabToggleIconVariants, gnbTabVariants } from "./index.variants";
+import { matchPathname } from "@/utils/validation/pathname";
 
 interface GlobalNavBarTabItem {
   tabName: SideNavBarLink["name"];
@@ -21,7 +22,7 @@ const GlobalNavBarTabItem = ({ isMyMenu, href, tabName }: GlobalNavBarTabItem) =
   const { tabStates, removeTab } = useTabStateContext();
   const router = useRouter();
   const pathname = usePathname();
-  const isPageOpened = pathname === "/dispatch/manual" ? "/dispatch" === href : pathname === href;
+  const isPageOpened = matchPathname(pathname, href);
   const { addMyMenu, removeMyMenu } = useMyMenus();
 
   const handleToggleMyMenuButton: MouseEventHandler<HTMLButtonElement> = useCallback(

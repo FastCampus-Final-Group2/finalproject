@@ -1,9 +1,30 @@
 interface PendingOrderProps {
-  address: string;
-  meter: number;
-  kilogram: number;
+  address?: string;
+  meter?: number;
+  kilogram?: number;
+  serviceRequestDate?: string;
+  serviceRequestTime?: string;
 }
-const PendingOrder = ({ address, meter, kilogram }: PendingOrderProps) => {
+const PendingOrder = ({
+  address,
+  meter,
+  kilogram,
+  serviceRequestDate = "",
+  serviceRequestTime = "",
+}: PendingOrderProps) => {
+  const formatServiceRequest = (dateString: string, timeString: string): string => {
+    const date = new Date(`${dateString}T${timeString}`);
+
+    const month = (date.getMonth() + 1).toString().padStart(2, "0"); // 월은 0부터 시작하므로 1을 더함
+    const day = date.getDate().toString().padStart(2, "0");
+    const hours = date.getHours().toString().padStart(2, "0");
+    const minutes = date.getMinutes().toString().padStart(2, "0");
+
+    return `${month}월${day}일 ${hours}:${minutes}`;
+  };
+
+  const formattedString = formatServiceRequest(serviceRequestDate, serviceRequestTime);
+
   return (
     <div className="inline-flex h-[36px] items-center justify-start self-stretch rounded bg-white py-[2px] pl-[12px]">
       <div className="flex items-center justify-start gap-[12px] py-[6px]">
@@ -31,15 +52,7 @@ const PendingOrder = ({ address, meter, kilogram }: PendingOrderProps) => {
         </div>
         <div className="flex items-center justify-start rounded bg-gray-100 p-2">
           <div className="flex items-center justify-start">
-            <div className="text-gray-700 text-B-14-M">08</div>
-            <div className="text-gray-700 text-B-14-M">월</div>
-            <div className="text-gray-700 text-B-14-M">08</div>
-            <div className="text-gray-700 text-B-14-M">일</div>
-          </div>
-          <div className="flex items-center justify-start">
-            <div className="text-gray-700 text-B-14-M">14</div>
-            <div className="text-gray-700 text-B-14-M">:</div>
-            <div className="text-gray-700 text-B-14-M">00</div>
+            <div className="text-gray-700 text-B-14-M">{formattedString}</div>
           </div>
         </div>
       </div>

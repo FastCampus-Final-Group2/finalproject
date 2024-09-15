@@ -26,8 +26,8 @@ export interface DispatchUpdateRequest {
 }
 
 /**
- * 예상작업 소요시간
- * @example "00:30"
+ * 휴식 종료 시간
+ * @example "15:00"
  */
 export interface LocalTime {
   /** @format int32 */
@@ -42,20 +42,25 @@ export interface LocalTime {
 
 export interface Order {
   /**
-   * 주소(주소가 아니더라도 특정할 수 있는 데이터 ex)start ,stopover1)
-   * @example "서울시 강동구 천호동"
+   * 주소
+   * @example "충남 천안시 서북구 백석로 123"
    */
-  address: string;
+  roadAddress: string;
+  /**
+   * 상세 주소
+   * @example "지하 1층"
+   */
+  detailAddress: string;
   /**
    * 위도
    * @format double
-   * @example 38.3333
+   * @example 36.4501
    */
   lat: number;
   /**
    * 경도
    * @format double
-   * @example 127.243
+   * @example 127.1234
    */
   lon: number;
   /**
@@ -70,15 +75,15 @@ export interface Order {
    * @example "2024-06-15"
    */
   serviceRequestDate: string;
-  /** 예상작업 소요시간 */
+  /** 휴식 종료 시간 */
   serviceRequestTime: LocalTime;
 }
 
 export interface ErrorResponse {
   detailMessageArguments?: object[];
+  typeMessageCode?: string;
   detailMessageCode?: string;
   titleMessageCode?: string;
-  typeMessageCode?: string;
   body?: ProblemDetail;
   statusCode?: HttpStatusCode;
   headers?: {
@@ -142,8 +147,6 @@ export interface ErrorResponse {
       iso3Country?: string;
     }[];
     accessControlAllowCredentials?: boolean;
-    accept?: MediaType[];
-    acceptPatch?: MediaType[];
     accessControlAllowHeaders?: string[];
     accessControlAllowMethods?: HttpMethod[];
     accessControlAllowOrigin?: string;
@@ -151,6 +154,8 @@ export interface ErrorResponse {
     /** @format int64 */
     accessControlMaxAge?: number;
     accessControlRequestHeaders?: string[];
+    accept?: MediaType[];
+    acceptPatch?: MediaType[];
     accessControlRequestMethod?: HttpMethod;
     /** @format int64 */
     ifUnmodifiedSince?: number;
@@ -183,14 +188,14 @@ export interface ErrorResponse {
     expires?: number;
     ifMatch?: string[];
     ifNoneMatch?: string[];
-    origin?: string;
     pragma?: string;
     upgrade?: string;
     vary?: string[];
     contentDisposition?: ContentDisposition;
+    origin?: string;
+    cacheControl?: string;
     range?: HttpRange[];
     contentType?: MediaType;
-    cacheControl?: string;
     /** @format int64 */
     ifModifiedSince?: number;
     [key: string]: any;
@@ -199,55 +204,75 @@ export interface ErrorResponse {
 
 export interface DispatchDetailResponse {
   /**
-   * 주소
-   * @example "서울시 강동구 천호동"
+   * 기사 명
+   * @example "1"
    */
-  address?: string;
+  smName?: string;
   /**
-   * 예상 이동 시간 (분)
-   * @format int64
-   * @example 27
+   * 기사 전화번호
+   * @example "010-1234-5678"
    */
-  ett?: number;
+  smPhoneNumber?: string;
   /**
-   * 예상작업시작시간
-   * @format date-time
+   * 용적률
+   * @format double
+   * @example 80
    */
-  expectationOperationStartTime?: string;
+  floorAreaRatio?: number;
   /**
-   * 예상작업종료시간
-   * @format date-time
+   * 차종
+   * @example "WING_BODY"
    */
-  expectationOperationEndTime?: string;
+  vehicleType?: "WING_BODY" | "BOX" | "CARGO";
   /**
-   * 예상작업시간
+   * 차량 톤
+   * @format double
+   * @example 5
+   */
+  vehicleTon?: number;
+  /**
+   * 진행률
    * @format int32
-   * @example 30
+   * @example 75
    */
-  expectedServiceDuration?: number;
+  progressionRate?: number;
   /**
-   * 위도
+   * 완료주문
+   * @format int32
+   * @example 10
+   */
+  completedOrderCount?: number;
+  /**
+   * 주문 수
+   * @format int32
+   * @example 20
+   */
+  deliveryOrderCount?: number;
+  /**
+   * 총 주행 거리
    * @format double
-   * @example 37.5409
+   * @example 20.8
    */
-  lat?: number;
+  totalDistance?: number;
+  /** 휴식 종료 시간 */
+  totalTime?: LocalTime;
   /**
-   * 경도
-   * @format double
-   * @example 127.1263
+   * 이슈 및 메모
+   * @example "No issues"
    */
-  lon?: number;
+  issue?: string;
+  /** 휴식 종료 시간 */
+  breakStartTime?: LocalTime;
+  /** 휴식 종료 시간 */
+  breakEndTime?: LocalTime;
   /**
-   * 이동거리 (km)
-   * @format double
-   * @example 30.4
+   * 휴식 경유지 위치 (해당 경유지의 바로 앞)
+   * @format int32
+   * @example 3
    */
-  distance?: number;
-  /**
-   * 요청 시간 지연 여부
-   * @example true
-   */
-  delayRequestTime?: boolean;
+  restingStopover?: number;
+  startStopover?: StartStopover;
+  dispatchDetailList?: DispatchDetail[];
 }
 
 export interface DispatchUpdateResponse {
@@ -263,9 +288,9 @@ export interface DispatchUpdateResponse {
    * @example 34
    */
   totalTime?: number;
-  /** 예상작업 소요시간 */
+  /** 휴식 종료 시간 */
   breakStartTime?: LocalTime;
-  /** 예상작업 소요시간 */
+  /** 휴식 종료 시간 */
   breakEndTime?: LocalTime;
   /**
    * 휴식경유지(해당경유지로 이동중)
@@ -273,42 +298,64 @@ export interface DispatchUpdateResponse {
    * @example 3
    */
   restingStopover?: number;
+  /**
+   * 최대 계약 초과 오류
+   * @example true
+   */
+  maxContractOver?: boolean;
+  /**
+   * 전체 주문 or 거리
+   * @format int32
+   * @example 20
+   */
+  totalOrderOrDistanceNum?: number;
+  /**
+   * 가용 주문
+   * @format int32
+   * @example 80
+   */
+  availableNum?: number;
+  /**
+   * 배송 유형
+   * @example "지입"
+   */
+  contractType?: string;
   startStopover?: StartStopover;
   dispatchDetailList?: DispatchDetailResponse[];
   /** 경로 좌표 리스트 */
   coordinates?: Record<string, number>[];
+  restricted?: boolean;
 }
 
 export interface StartStopover {
   /**
-   * 센터id
+   * 센터 ID
    * @format int64
    * @example 1
    */
   centerId?: number;
   /**
-   * 주소
-   * @example "서울시 강동구 천호동"
+   * 센터 이름
+   * @example "Main Center"
    */
-  address?: string;
+  centerName?: string;
   /**
    * 위도
    * @format double
-   * @example 37.5409
+   * @example 37.5995
    */
   lat?: number;
   /**
    * 경도
    * @format double
-   * @example 127.1263
+   * @example 127.1116
    */
   lon?: number;
   /**
-   * 지연시간(분)
-   * @format int32
-   * @example 60
+   * 운송 시작 시간
+   * @format date-time
    */
-  delayTime?: number;
+  departureTime?: string;
 }
 
 export interface RegisterSuperAdminRequest {
@@ -459,7 +506,7 @@ export interface OrderRequest {
    * @example "2024-05-02"
    */
   serviceRequestDate: string;
-  /** 예상작업 소요시간 */
+  /** 휴식 종료 시간 */
   serviceRequestTime: LocalTime;
   /**
    * 고객명
@@ -545,74 +592,6 @@ export interface TransportOrderRequest {
   orderReuquestList: OrderRequest[];
 }
 
-export interface ContentDisposition {
-  type?: string;
-  name?: string;
-  filename?: string;
-  charset?: string;
-  /**
-   * @deprecated
-   * @format int64
-   */
-  size?: number;
-  /**
-   * @deprecated
-   * @format date-time
-   */
-  creationDate?: string;
-  /**
-   * @deprecated
-   * @format date-time
-   */
-  modificationDate?: string;
-  /**
-   * @deprecated
-   * @format date-time
-   */
-  readDate?: string;
-  attachment?: boolean;
-  formData?: boolean;
-  inline?: boolean;
-}
-
-export type HttpMethod = object;
-
-export type HttpRange = object;
-
-export interface HttpStatusCode {
-  error?: boolean;
-  is4xxClientError?: boolean;
-  is5xxServerError?: boolean;
-  is1xxInformational?: boolean;
-  is2xxSuccessful?: boolean;
-  is3xxRedirection?: boolean;
-}
-
-export interface MediaType {
-  type?: string;
-  subtype?: string;
-  parameters?: Record<string, string>;
-  /** @format double */
-  qualityValue?: number;
-  wildcardType?: boolean;
-  wildcardSubtype?: boolean;
-  subtypeSuffix?: string;
-  concrete?: boolean;
-  charset?: string;
-}
-
-export interface ProblemDetail {
-  /** @format uri */
-  type?: string;
-  title?: string;
-  /** @format int32 */
-  status?: number;
-  detail?: string;
-  /** @format uri */
-  instance?: string;
-  properties?: Record<string, object>;
-}
-
 /** 경로의 좌표 리스트 */
 export interface CoordinatesResponse {
   /**
@@ -641,6 +620,11 @@ export interface CourseDetailResponse {
    * @example false
    */
   delayRequestTime?: boolean;
+  /**
+   * 계약 초과 오류 여부
+   * @example false
+   */
+  overContractNum?: boolean;
   /**
    * 예상 이동 시간 (분)
    * @format int32
@@ -734,7 +718,7 @@ export interface CourseDetailResponse {
    * @example "2024-05-02"
    */
   serviceRequestDate?: string;
-  /** 예상작업 소요시간 */
+  /** 휴식 종료 시간 */
   serviceRequestTime?: LocalTime;
   /**
    * 고객 이름
@@ -747,10 +731,15 @@ export interface CourseDetailResponse {
    */
   contact?: string;
   /**
-   * 주소
+   * 도로명 주소
+   * @example "서울 강남구 테헤란로 123"
+   */
+  roadAddress?: string;
+  /**
+   * 지번 주소
    * @example "서울특별시 강남구 테헤란로 123"
    */
-  address?: string;
+  lotNumberAddress?: string;
   /**
    * 상세 주소
    * @example "아파트 101호"
@@ -802,16 +791,30 @@ export interface CourseDetailResponse {
   productQuantity?: number;
 }
 
-/**
- * 경로별 리스트
- * @example [{"errorYn":false,"smName":"홍길동","smPhoneNumber":"010-1234-5678","tonCode":"5T","ton":5,"orderNum":10,"mileage":150,"totalTime":120,"floorAreaRatio":75,"courseDetailResponseList":[{"errorYn":false,"ett":30,"expectationOperationStartTime":"2024-08-30T09:30:00","expectationOperationEndTime":"2024-08-30T10:00:00","deliveryDestinationId":456,"managerName":"이영희","phoneNumber":"010-9876-5432","lat":37.5665,"lon":126.978,"distance":20,"deliveryType":"택배","smId":123,"smName":"홍길동","shipmentNum":"1234567890","clientOrderKey":"A123456789","orderType":"배송","receivedDate":"2024-05-01","serviceRequestDate":"2024-05-02","serviceRequestTime":"14:00","clientName":"김철수","contact":"010-1234-5678","address":"서울특별시 강남구 테헤란로 123","detailAddress":"아파트 101호","zipcode":"06101","volume":2.5,"weight":10,"note":"문 앞에 놔주세요","expectedServiceDuration":30,"productName":"전자제품","productCode":"P123456","productQuantity":5}],"coordinatesResponseList":[{"lon":126.978,"lat":37.5665},{"lon":126.9876,"lat":37.5653}]}]
- */
 export interface CourseResponse {
+  /**
+   * 전체 주문의 수 or 거리
+   * @format int32
+   * @example 20
+   */
+  totalOrderOrDistanceNum?: number;
+  /**
+   * 가용주문 수 or 거리
+   * @format int32
+   * @example 80
+   */
+  availableNum?: number;
   /**
    * 오류 여부
    * @example false
    */
   errorYn?: boolean;
+  /**
+   * 기사 ID
+   * @format int64
+   * @example 123
+   */
+  smId?: number;
   /**
    * 기사 이름
    * @example "홍길동"
@@ -857,6 +860,16 @@ export interface CourseResponse {
    * @example 75
    */
   floorAreaRatio?: number;
+  /** 휴식 종료 시간 */
+  breakStartTime?: LocalTime;
+  /** 휴식 종료 시간 */
+  breakEndTime?: LocalTime;
+  /**
+   * 휴식 경유지 위치
+   * @format int32
+   * @example 2
+   */
+  restingPosition?: number;
   /** 경로의 상세 정보 리스트 */
   courseDetailResponseList?: CourseDetailResponse[];
   /** 경로의 좌표 리스트 */
@@ -903,19 +916,15 @@ export interface DispatchResponse {
    * @format date-time
    */
   loadingStartTime?: string;
-  /** 시작 경유지 정보 */
-  startStopoverResponse?: StartStopoverResponse;
   /**
-   * 경로별 리스트
-   * @example [{"errorYn":false,"smName":"홍길동","smPhoneNumber":"010-1234-5678","tonCode":"5T","ton":5,"orderNum":10,"mileage":150,"totalTime":120,"floorAreaRatio":75,"courseDetailResponseList":[{"errorYn":false,"ett":30,"expectationOperationStartTime":"2024-08-30T09:30:00","expectationOperationEndTime":"2024-08-30T10:00:00","deliveryDestinationId":456,"managerName":"이영희","phoneNumber":"010-9876-5432","lat":37.5665,"lon":126.978,"distance":20,"deliveryType":"택배","smId":123,"smName":"홍길동","shipmentNum":"1234567890","clientOrderKey":"A123456789","orderType":"배송","receivedDate":"2024-05-01","serviceRequestDate":"2024-05-02","serviceRequestTime":"14:00","clientName":"김철수","contact":"010-1234-5678","address":"서울특별시 강남구 테헤란로 123","detailAddress":"아파트 101호","zipcode":"06101","volume":2.5,"weight":10,"note":"문 앞에 놔주세요","expectedServiceDuration":30,"productName":"전자제품","productCode":"P123456","productQuantity":5}],"coordinatesResponseList":[{"lon":126.978,"lat":37.5665},{"lon":126.9876,"lat":37.5653}]}]
+   * 배송 유형
+   * @example "지입"
    */
+  contractType?: string;
+  startStopoverResponse?: StartStopoverResponse;
   course?: CourseResponse[];
 }
 
-/**
- * 시작 경유지 정보
- * @example {"centerId":123,"fullAddress":"서울시 강동구 천호동","lat":37.5409,"lon":127.1263,"expectedServiceDuration":"01:00","departureTime":"2024-08-30T10:00:00"}
- */
 export interface StartStopoverResponse {
   /**
    * 센터 ID (출발지)
@@ -924,10 +933,10 @@ export interface StartStopoverResponse {
    */
   centerId?: number;
   /**
-   * 출발지 주소
-   * @example "서울시 강동구 천호동"
+   * 출발지 이름
+   * @example "물류센터"
    */
-  fullAddress?: string;
+  centerName?: string;
   /**
    * 출발지 위도
    * @format double
@@ -940,13 +949,81 @@ export interface StartStopoverResponse {
    * @example 127.1263
    */
   lon?: number;
-  /** 예상작업 소요시간 */
+  /** 휴식 종료 시간 */
   expectedServiceDuration?: LocalTime;
   /**
    * 첫 경유지로 운송 시작 시간
    * @format date-time
    */
   departureTime?: string;
+}
+
+export interface ContentDisposition {
+  type?: string;
+  name?: string;
+  filename?: string;
+  charset?: string;
+  /**
+   * @deprecated
+   * @format int64
+   */
+  size?: number;
+  /**
+   * @deprecated
+   * @format date-time
+   */
+  creationDate?: string;
+  /**
+   * @deprecated
+   * @format date-time
+   */
+  modificationDate?: string;
+  /**
+   * @deprecated
+   * @format date-time
+   */
+  readDate?: string;
+  attachment?: boolean;
+  formData?: boolean;
+  inline?: boolean;
+}
+
+export type HttpMethod = object;
+
+export type HttpRange = object;
+
+export interface HttpStatusCode {
+  error?: boolean;
+  is4xxClientError?: boolean;
+  is5xxServerError?: boolean;
+  is1xxInformational?: boolean;
+  is2xxSuccessful?: boolean;
+  is3xxRedirection?: boolean;
+}
+
+export interface MediaType {
+  type?: string;
+  subtype?: string;
+  parameters?: Record<string, string>;
+  /** @format double */
+  qualityValue?: number;
+  wildcardSubtype?: boolean;
+  subtypeSuffix?: string;
+  wildcardType?: boolean;
+  concrete?: boolean;
+  charset?: string;
+}
+
+export interface ProblemDetail {
+  /** @format uri */
+  type?: string;
+  title?: string;
+  /** @format int32 */
+  status?: number;
+  detail?: string;
+  /** @format uri */
+  instance?: string;
+  properties?: Record<string, object>;
 }
 
 /**
@@ -1104,7 +1181,7 @@ export interface DispatchDetailList {
    * @example "2023-08-28"
    */
   serviceRequestDate?: string;
-  /** 예상작업 소요시간 */
+  /** 휴식 종료 시간 */
   serviceRequestTime?: LocalTime;
   /**
    * 고객 이름
@@ -1180,9 +1257,9 @@ export interface DispatchList {
    * @example 1
    */
   smId?: number;
-  /** 예상작업 소요시간 */
+  /** 휴식 종료 시간 */
   breakStartTime?: LocalTime;
-  /** 예상작업 소요시간 */
+  /** 휴식 종료 시간 */
   breakEndTime?: LocalTime;
   /**
    * 휴식 경유지 위치 (해당 경유지의 바로 앞)
@@ -1522,9 +1599,9 @@ export interface TransportOrderResponse {
    * @example "2024-08-18"
    */
   orderDate?: string;
-  /** 예상작업 소요시간 */
+  /** 휴식 종료 시간 */
   requestedArrivalTime?: LocalTime;
-  /** 예상작업 소요시간 */
+  /** 휴식 종료 시간 */
   estimatedWorkTime?: LocalTime;
   /**
    * 상품명
@@ -1553,7 +1630,7 @@ export interface TransportOrderResponse {
   clientInfo?: ClientInfo;
 }
 
-export interface dispatchNumberRequest {
+export interface DispatchNumberSearchRequest {
   /**
    * 배차 상태
    * @example "WAITING"
@@ -1586,7 +1663,7 @@ export interface dispatchNumberRequest {
   searchKeyword?: string;
 }
 
-export interface dispatchNumberResponse {
+export interface DispatchNumberSearchResponse {
   /**
    * 진행중
    * @format int32
@@ -1705,8 +1782,8 @@ export interface DispatchSimpleResponse {
    */
   dispatchId?: number;
   /**
-   * 배차상태(주행중, 주행대기, 주행완료)
-   * @example "주행중"
+   * 배차상태(이동 중, 작업완료, 작업대기, 작업시작, 배송지연, 운송 완료, 취소, 휴게 중)
+   * @example "작업완료"
    */
   dispatchStatus?: string;
   /**
@@ -1768,10 +1845,104 @@ export interface Issue {
    */
   deliveryDestinationId?: number;
   /**
-   * 배송처 비고
-   * @example "화물 엘레베이터 대기시간 1시간"
+   * 지연된 시간
+   * @format int32
+   * @example 20
    */
-  issue?: string;
+  delayedTime?: number;
+}
+
+export interface DispatchDetail {
+  /**
+   * 배차 상세 ID
+   * @format int64
+   * @example 1
+   */
+  dispatchDetailId?: number;
+  /**
+   * 현재 배송 상태
+   * @example "TRANSPORTATION_START"
+   */
+  dispatchDetailStatus?:
+    | "TRANSPORTATION_START"
+    | "MOVING"
+    | "WORK_COMPLETED"
+    | "WORK_WAITING"
+    | "WORK_START"
+    | "TRANSPORTATION_COMPLETED"
+    | "DELIVERY_DELAY"
+    | "CANCELED"
+    | "RESTING";
+  /**
+   * 작업 시작 시간
+   * @format date-time
+   */
+  operationStartTime?: string;
+  /**
+   * 작업 종료 시간
+   * @format date-time
+   */
+  operationEndTime?: string;
+  /**
+   * 예상 작업 시작 시간
+   * @format date-time
+   */
+  expectationOperationStartTime?: string;
+  /**
+   * 예상 작업 종료 시간
+   * @format date-time
+   */
+  expectationOperationEndTime?: string;
+  /**
+   * 예상 이동 시간
+   * @format int32
+   * @example 30
+   */
+  ett?: number;
+  /**
+   * 배송처 타입
+   * @example "CENTER"
+   */
+  destinationType?: "CENTER" | "DELIVERY_DESTINATION" | "CUSTOMER_DESTINATION";
+  /**
+   * 배송처 ID
+   * @format int64
+   */
+  destinationId?: number;
+  /**
+   * 배송처 비고
+   * @example "Handle with care"
+   */
+  destinationComment?: string;
+  /**
+   * 지연 시간
+   * @format int32
+   * @example 2
+   */
+  delayedTime?: number;
+  /**
+   * 지번 주소
+   * @example "123 Main St"
+   */
+  address?: string;
+  /**
+   * 운송 실행 주문 ID
+   * @format int64
+   * @example 1001
+   */
+  transportOrderId?: number;
+  /**
+   * 위도
+   * @format double
+   * @example 37.5995
+   */
+  lat?: number;
+  /**
+   * 경도
+   * @format double
+   * @example 127.1116
+   */
+  lon?: number;
 }
 
 export interface DeliveryDestinationResponse {
@@ -2017,11 +2188,7 @@ export type CancelDispatchDetailError = ErrorResponse;
 
 export type GetDeliveryDestinationData = DeliveryDestinationResponse;
 
-export type GetDeliveryDestinationError = ErrorResponse;
-
 export type UpdateDeliveryDestinationData = object;
-
-export type UpdateDeliveryDestinationError = ErrorResponse;
 
 export type GetCenterData = CenterResponse;
 
@@ -2043,10 +2210,10 @@ export type DownloadOrderFormExcelData = any;
 
 export interface SearchDispatchesParams {
   /** 배차 검색 요청 정보 */
-  request: dispatchNumberRequest;
+  request: DispatchNumberSearchRequest;
 }
 
-export type SearchDispatchesData = dispatchNumberResponse;
+export type SearchDispatchesData = DispatchNumberSearchResponse;
 
 export type SearchDispatchesError = ErrorResponse;
 
