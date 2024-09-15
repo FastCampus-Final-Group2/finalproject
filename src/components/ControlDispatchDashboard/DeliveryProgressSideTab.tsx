@@ -24,11 +24,11 @@ interface FetchData extends DispatchDetailResponse {
   deliveryOrderCount?: number;
   totalTime?: LocalTime;
   issue?: string;
-  startStopover?: { centerName: string; departureTime: string; centerId: number };
+  startStopover?: { centerName: string; departureTime: string; centerId: number }; // LocalTime -> string으로 변경
   dispatchDetailList: [];
 }
 
-const fetchDispatchIdData = async (dispatchId: number | null): Promise<DispatchDetailResponse | null> => {
+const fetchDispatchIdData = async (dispatchId: number | null): Promise<FetchData | null> => {
   if (dispatchId === null) return null;
   try {
     const data = await DispatchDetailApi.dispatchIdVehicleControl(dispatchId);
@@ -55,6 +55,7 @@ const DeliveryProgressSideTab = ({ isExpanded, onClose, selectedColor, dispatchI
   if (isLoading) return <div>dispatchId: {dispatchId} 로딩 중...</div>;
   if (error) return <div>오류: {(error as Error).message}</div>;
   if (!fetchData) return <div>데이터가 없습니다.</div>;
+  const data = fetchData as FetchData;
   console.log("사이드바 데이터", fetchData);
   return (
     <div className="transition-width relative z-50 duration-300 ease-in-out">
@@ -73,7 +74,7 @@ const DeliveryProgressSideTab = ({ isExpanded, onClose, selectedColor, dispatchI
         </div>
         <div className="flex max-h-[556px] w-fit flex-col gap-[4px] rounded-[8px] bg-white pl-[12px] pr-[16px] pt-[20px]">
           <DeliveryRoutine
-            fetchData={fetchData as Required<FetchData>}
+            fetchData={fetchData as any}
             refreshData={async () => {
               await refetch();
             }}
