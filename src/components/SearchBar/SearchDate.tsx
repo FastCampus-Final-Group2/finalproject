@@ -3,15 +3,25 @@
 import { useState, useRef, useEffect } from "react";
 import CalendarPicker from "@/components/CalendarPicker";
 import Icon from "@/components/core/Icon";
+import dayjs from "dayjs";
 
 interface SearchDateProps {
-  startDate: string;
-  endDate: string;
+  startDate: string | null;
+  endDate: string | null;
   onStartDateChange: (date: string) => void;
   onEndDateChange: (date: string) => void;
+  todayDate: string;
+  sevenDaysLater: string;
 }
 
-const SearchDate = ({ startDate, endDate, onStartDateChange, onEndDateChange }: SearchDateProps) => {
+const SearchDate = ({
+  startDate,
+  endDate,
+  onStartDateChange,
+  onEndDateChange,
+  todayDate,
+  sevenDaysLater,
+}: SearchDateProps) => {
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
   const [dateType, setDateType] = useState<"start" | "end">("start");
   const [calendarPosition, setCalendarPosition] = useState({ top: 0, left: 0 });
@@ -33,12 +43,28 @@ const SearchDate = ({ startDate, endDate, onStartDateChange, onEndDateChange }: 
     };
   }, []);
 
-  const handleDateConfirm = (date: string) => {
+  const handleDateConfirm = (selectedDate: string, selectedTime: string | null) => {
+    let formattedDate: string;
+    const date = dayjs(selectedDate);
+
     if (dateType === "start") {
-      onStartDateChange(date);
-    } else if (dateType === "end") {
-      onEndDateChange(date);
+      formattedDate = selectedTime ? date.format(`YYYY-MM-DD ${selectedTime}`) : date.format("YYYY-MM-DD 00:00");
+
+      if (endDate && dayjs(endDate).diff(date, "day") > 31) {
+        alert("31일 기간을 범위로 검색해야 합니다.");
+        return;
+      }
+      onStartDateChange(formattedDate);
+    } else {
+      formattedDate = selectedTime ? date.format(`YYYY-MM-DD ${selectedTime}`) : date.format("YYYY-MM-DD 23:59");
+
+      if (startDate && date.diff(dayjs(startDate), "day") > 31) {
+        alert("31일 기간을 범위로 검색해야 합니다.");
+        return;
+      }
+      onEndDateChange(formattedDate);
     }
+
     setIsCalendarOpen(false);
   };
 
@@ -57,6 +83,17 @@ const SearchDate = ({ startDate, endDate, onStartDateChange, onEndDateChange }: 
     setIsCalendarOpen(!isCalendarOpen);
   };
 
+  const formatDate = (date: string) => {
+    return dayjs(date).format("YYYY-MM-DD HH:mm");
+  };
+
+  const getDisplayDate = (selectedDate: string | null, defaultDate: string) => {
+    if (selectedDate && dayjs(selectedDate).isValid()) {
+      return formatDate(selectedDate);
+    }
+    return formatDate(defaultDate);
+  };
+
   return (
     <>
       <div className="flex h-full w-fit items-center gap-[12px] rounded-[8px] border border-gray-200 p-[12px] text-T-16-B">
@@ -68,7 +105,7 @@ const SearchDate = ({ startDate, endDate, onStartDateChange, onEndDateChange }: 
             onClick={() => toggleCalendar("start")}
             ref={startDateRef}
           >
-            <span>{startDate}</span> {/* 검색 시작일 설정 */}
+            <span>{getDisplayDate(startDate, todayDate)}</span>
           </p>
           <p>~</p>
           <p
@@ -76,7 +113,7 @@ const SearchDate = ({ startDate, endDate, onStartDateChange, onEndDateChange }: 
             onClick={() => toggleCalendar("end")}
             ref={endDateRef}
           >
-            <span>{endDate}</span> {/* 검색 종료일 설정 */}
+            <span>{getDisplayDate(endDate, sevenDaysLater)}</span>
           </p>
         </div>
       </div>
@@ -86,7 +123,7 @@ const SearchDate = ({ startDate, endDate, onStartDateChange, onEndDateChange }: 
           className="absolute z-50"
           style={{ top: `${calendarPosition.top}px`, left: `${calendarPosition.left}px` }}
         >
-          <CalendarPicker onSelectDate={handleDateConfirm} />
+          <CalendarPicker onSelectDate={handleDateConfirm} dateType={dateType} />
         </div>
       )}
     </>

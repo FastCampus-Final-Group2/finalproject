@@ -1,13 +1,28 @@
 import { atom, selector, selectorFamily } from "recoil";
 import { persistAtom } from "./persistAtom";
-import { CONTROL_TABS } from "@/components/TabForDispatchedList/index.constants";
+// import { CONTROL_TABS } from "@/components/TabForDispatchedList/index.constants";
 import { TabForProgressStatus } from "@/types/dispatchNumber";
 import { BgColorType } from "./bgColorState";
+import dayjs from "dayjs";
 
 // todo: 검색 결과 데이터 유지
 export const searchDataState = atom({
   key: "searchDataState",
   default: [],
+  effects_UNSTABLE: [persistAtom],
+});
+
+// 오늘 날짜 유지
+export const todayDateState = atom({
+  key: "todayDateState",
+  default: dayjs().format("YYYY-MM-DDTHH:mm:ss"),
+  effects_UNSTABLE: [persistAtom],
+});
+
+// 7일 뒤 날짜 유지
+export const sevenDaysLaterState = atom({
+  key: "sevenDaysLaterState",
+  default: dayjs().add(7, "day").format("YYYY-MM-DDTHH:mm:ss"),
   effects_UNSTABLE: [persistAtom],
 });
 
@@ -146,14 +161,16 @@ export const controlSideTabState = atom<{
   effects_UNSTABLE: [persistAtom],
 });
 
+const todayDate = dayjs().format("YYYY-MM-DDTHH:mm:ss");
+const sevenDaysLater = dayjs().add(7, "day").format("YYYY-MM-DDTHH:mm:ss");
 // 검색 파라미터 상태 유지
 export const searchParamsState = atom({
   key: "searchParamsState",
   default: {
     status: "IN_TRANSIT",
     isManager: false,
-    startDateTime: "1900-01-01T00:00:00",
-    endDateTime: "3000-12-31T23:59:59",
+    startDateTime: todayDate,
+    endDateTime: sevenDaysLater,
     searchOption: "",
     searchKeyword: "",
   },

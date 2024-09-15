@@ -15,26 +15,24 @@ import dayjs from "dayjs";
 interface SearchBarsProps {
   onSearch: () => void;
   onClear: () => void;
+  todayDate: string;
+  sevenDaysLater: string;
 }
 
-const SearchBars = ({ onSearch, onClear }: SearchBarsProps) => {
+const SearchBars = ({ onSearch, onClear, todayDate, sevenDaysLater }: SearchBarsProps) => {
   const [searchOption, setSearchOption] = useRecoilState(controlSearchOptionState);
   const [searchKeyword, setSearchKeyword] = useRecoilState(searchTextInputState);
   const [onlyClient, setOnlyClient] = useRecoilState(controlOnlyClientState);
   const [startDate, setStartDate] = useRecoilState(searchStartTimeState);
   const [endDate, setEndDate] = useRecoilState(searchEndTimeState);
 
-  // 날짜 초기화 함수
-  const resetDates = () => {
-    setStartDate(null);
-    setEndDate(null);
-  };
-
   return (
     <div className="flex items-center gap-[14px]">
       <SearchDate
         startDate={startDate}
         endDate={endDate}
+        todayDate={todayDate}
+        sevenDaysLater={sevenDaysLater}
         onStartDateChange={(date) => setStartDate(date)}
         onEndDateChange={(date) => setEndDate(date)}
       />
