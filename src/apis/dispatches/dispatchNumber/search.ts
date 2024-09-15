@@ -19,14 +19,24 @@ const search = async (searchDispatchesParams: SearchDispatchesParams) => {
     searchKeyword,
   } = searchDispatchesParams.request;
 
-  const dispatchNumberRequest: DispatchNumberSearchRequest = {
+  const dispatchNumberRequest: Partial<DispatchNumberSearchRequest> = {
     status,
     isManager,
-    startDateTime,
-    endDateTime,
-    searchOption,
-    searchKeyword,
   };
+
+  // 날짜 범위가 설정된 경우에만 파라미터에 추가
+  if (startDateTime) {
+    dispatchNumberRequest.startDateTime = startDateTime;
+  }
+  if (endDateTime) {
+    dispatchNumberRequest.endDateTime = endDateTime;
+  }
+
+  // 검색 옵션과 키워드가 설정된 경우에만 파라미터에 추가
+  if (searchOption && searchKeyword) {
+    dispatchNumberRequest.searchOption = searchOption;
+    dispatchNumberRequest.searchKeyword = searchKeyword;
+  }
 
   const response = await toAxios(
     axios.get<DispatchNumberSearchResponse>(

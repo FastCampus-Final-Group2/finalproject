@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import Icon from "@/components/core/Icon";
 
 const searchMoreOptions = [
@@ -29,6 +29,20 @@ interface SearchOptionProps {
 
 const SearchOption = ({ selectedOption, setSelectedOption }: SearchOptionProps) => {
   const [isOpen, setIsOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
@@ -40,11 +54,11 @@ const SearchOption = ({ selectedOption, setSelectedOption }: SearchOptionProps) 
   };
 
   const getSelectedOptionName = () => {
-    return searchMoreOptions.find((option) => option.value === selectedOption)?.name || "선택";
+    return searchMoreOptions.find((option) => option.value === selectedOption)?.name || "[선택]";
   };
 
   return (
-    <div className="relative">
+    <div className="relative" ref={dropdownRef}>
       <p className="flex w-[124px] cursor-pointer items-center justify-between" onClick={toggleDropdown}>
         {getSelectedOptionName()} <Icon id="arrowDown" />
       </p>

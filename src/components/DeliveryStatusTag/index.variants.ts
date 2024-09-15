@@ -1,18 +1,5 @@
 import { cva } from "class-variance-authority";
 
-
-// const status = [
-//   "TRANSPORTATION_START",
-//   "TRANSPORTATION_COMPLETED",
-//   "WORK_START",
-//   "WORK_WAITING",
-//   "WORK_COMPLETED",
-//   "MOVING",
-//   "CANCELED",
-//   "DELIVERY_DELAY",
-//   "RESTING",
-// ];
-
 export const deliveryStatusClass = cva(
   "rounded-[4px] h-[28px] text-B-14-B w-[65px] flex justify-center items-center gap-[4px]",
   {

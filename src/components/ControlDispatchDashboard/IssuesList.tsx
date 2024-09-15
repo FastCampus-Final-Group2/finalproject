@@ -54,7 +54,7 @@ const IssuesList = ({ fetchedIssues }: { fetchedIssues: Issue[] }) => {
                   <p>{issue.smName}</p>
                   <p className="h-[20px] w-[0px] border-l border-gray-200"></p>
                   <p
-                    className="h-fit cursor-pointer whitespace-nowrap border-b border-blue-500 text-blue-500 text-C-12-M"
+                    className="w-[160px]cursor-pointer h-fit whitespace-nowrap border-b border-blue-500 text-blue-500 text-C-12-M"
                     onClick={(e) => handleAddressClick(e, issue)}
                   >
                     {issue.address}
@@ -62,7 +62,7 @@ const IssuesList = ({ fetchedIssues }: { fetchedIssues: Issue[] }) => {
                   <p className="h-[20px] w-[0px] border-l border-gray-200"></p>
                   <p className="flex gap-[4px] text-red-500 text-C-12-M">
                     <Icon id="warningFill" size={14} className="text-red-500" />
-                    <span>{issue.delayedTime}분 지연</span>
+                    <span>시작 예상 시간 {issue.delayedTime}분 초과</span>
                   </p>
                 </li>
               ))}
