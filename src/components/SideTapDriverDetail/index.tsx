@@ -6,9 +6,7 @@ import Icon from "@/components/core/Icon";
 import { TEXT_650, BG_50 } from "@/styles/smColor";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { bgColorState } from "@/atoms/bgColorState";
-import { transportOrderState } from "@/atoms/transportOrder";
-import { driverIndex } from "@/atoms/driverIndex";
-import { dispatchDataState } from "@/atoms/dispatchData";
+import { dispatchDataState, selectedDriverState } from "@/atoms/dispatchData";
 import { DispatchResponse, CourseDetailResponse } from "@/models/ApiTypes";
 
 export interface ListStopOverData {
@@ -49,42 +47,33 @@ export interface ListStopOverData {
 }
 
 interface SideTapDriverDetailProps {
-  isSideTapExpanded: boolean;
-  onClose: () => void;
   listStopOverData: CourseDetailResponse[];
   isExpanded: boolean;
   toggleExpand: () => void;
 }
 
-const SideTapDriverDetail = ({
-  isSideTapExpanded,
-  onClose,
-  listStopOverData,
-  isExpanded,
-  toggleExpand,
-}: SideTapDriverDetailProps) => {
+const SideTapDriverDetail = ({ listStopOverData, isExpanded, toggleExpand }: SideTapDriverDetailProps) => {
   const bgColor = useRecoilValue(bgColorState);
-  const driverIndexState = useRecoilValue(driverIndex);
-  const dispatchData = useRecoilValue(transportOrderState);
+  const [selectedDriver, setSelectedDriver] = useRecoilState(selectedDriverState);
 
   const [recoilDispatchData, setRecoilDispatchData] = useRecoilState<DispatchResponse | null>(dispatchDataState);
 
   return (
     <div>
-      {isSideTapExpanded && recoilDispatchData && (
+      {selectedDriver !== -1 && recoilDispatchData && (
         <div className="relative h-[884px] w-[440px]">
           {/* recoilDispatchData가 null이 아닌 경우에만 데이터를 접근 */}
-          {recoilDispatchData.course && recoilDispatchData.course[driverIndexState] && (
+          {recoilDispatchData.course && recoilDispatchData.course[selectedDriver] && (
             <DriverDispatchDetailDashboard
-              drivingTime={recoilDispatchData.course[driverIndexState].totalTime}
-              mileage={recoilDispatchData.course[driverIndexState].mileage}
-              totalOrder={recoilDispatchData.course[driverIndexState].orderNum}
+              drivingTime={recoilDispatchData.course[selectedDriver].totalTime}
+              mileage={recoilDispatchData.course[selectedDriver].mileage}
+              totalOrder={recoilDispatchData.course[selectedDriver].orderNum}
               availabilityOrder={80}
-              floorAreaRatio={recoilDispatchData.course[driverIndexState].floorAreaRatio}
-              driverName={recoilDispatchData.course[driverIndexState].smName}
-              driverPhoneNumber={recoilDispatchData.course[driverIndexState].smPhoneNumber}
-              vehicleType={recoilDispatchData.course[driverIndexState].vehicleType}
-              vehicleTon={recoilDispatchData.course[driverIndexState].vehicleTon}
+              floorAreaRatio={recoilDispatchData.course[selectedDriver].floorAreaRatio}
+              driverName={recoilDispatchData.course[selectedDriver].smName}
+              driverPhoneNumber={recoilDispatchData.course[selectedDriver].smPhoneNumber}
+              vehicleType={recoilDispatchData.course[selectedDriver].vehicleType}
+              vehicleTon={recoilDispatchData.course[selectedDriver].vehicleTon}
               bgColor={bgColor}
             />
           )}
@@ -96,7 +85,7 @@ const SideTapDriverDetail = ({
           />
           <button
             className={`absolute bottom-[326px] right-[-16px] flex h-[128px] w-[48px] -translate-y-1/2 transform items-center justify-center rounded-full ${BG_50[bgColor]} z-10`}
-            onClick={onClose}
+            onClick={() => setSelectedDriver(-1)}
           >
             <Icon id="arrowLargeDoubleLeft" size={24} className={TEXT_650[bgColor]} />
           </button>

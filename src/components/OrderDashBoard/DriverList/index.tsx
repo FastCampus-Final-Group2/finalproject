@@ -7,11 +7,7 @@ import { BG_350 } from "@/styles/smColor";
 import { useRecoilState } from "recoil";
 import { dispatchDataState } from "@/atoms/dispatchData";
 
-export interface DriverListProps {
-  onClickToggle: () => void;
-}
-
-const DriverList = ({ onClickToggle }: DriverListProps) => {
+const DriverList = () => {
   const { isExpanded, toggleExpand } = ToggleExpandSwitch();
   const [recoilDispatchData] = useRecoilState(dispatchDataState);
 
@@ -50,7 +46,6 @@ const DriverList = ({ onClickToggle }: DriverListProps) => {
               vehicleType={driver.vehicleType}
               vehicleTon={driver.vehicleTon}
               capacityRate={driver.floorAreaRatio}
-              onClickToggle={onClickToggle}
               bgColor={colors[index % colors.length]}
             />
           ))}

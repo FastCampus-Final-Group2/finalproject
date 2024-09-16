@@ -722,8 +722,3 @@ export const transportOrderState = atom<DispatchData>({
   key: "transportOrderState",
   default: defaultDispatchData,
 });
-
-export const pendingOrderDataState = atom<DispatchData[]>({
-  key: "pendingOrderDataState",
-  default: [], // 빈 배열로 시작
-});

@@ -599,13 +599,13 @@ export interface CoordinatesResponse {
    * @format double
    * @example 126.978
    */
-  lon?: number;
+  lon: number;
   /**
    * 위도
    * @format double
    * @example 37.5665
    */
-  lat?: number;
+  lat: number;
 }
 
 /** 경로의 상세 정보 리스트 */
@@ -662,13 +662,13 @@ export interface CourseDetailResponse {
    * @format double
    * @example 37.5665
    */
-  lat?: number;
+  lat: number;
   /**
    * 경유지 경도
    * @format double
    * @example 126.978
    */
-  lon?: number;
+  lon: number;
   /**
    * 이동 거리 (km)
    * @format double
@@ -871,9 +871,9 @@ export interface CourseResponse {
    */
   restingPosition?: number;
   /** 경로의 상세 정보 리스트 */
-  courseDetailResponseList?: CourseDetailResponse[];
+  courseDetailResponseList: CourseDetailResponse[];
   /** 경로의 좌표 리스트 */
-  coordinatesResponseList?: CoordinatesResponse[];
+  coordinatesResponseList: CoordinatesResponse[];
 }
 
 export interface DispatchResponse {
@@ -921,8 +921,8 @@ export interface DispatchResponse {
    * @example "지입"
    */
   contractType?: string;
-  startStopoverResponse?: StartStopoverResponse;
-  course?: CourseResponse[];
+  startStopoverResponse: StartStopoverResponse;
+  course: CourseResponse[];
 }
 
 export interface StartStopoverResponse {
@@ -942,13 +942,13 @@ export interface StartStopoverResponse {
    * @format double
    * @example 37.5409
    */
-  lat?: number;
+  lat: number;
   /**
    * 출발지 경도
    * @format double
    * @example 127.1263
    */
-  lon?: number;
+  lon: number;
   /** 휴식 종료 시간 */
   expectedServiceDuration?: LocalTime;
   /**
