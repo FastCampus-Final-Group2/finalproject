@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Icon from "@/components/core/Icon";
 import SelectedDelivery from "@/components/SelectedDelivery";
 import DeliveryRoutineDetail, {
@@ -25,13 +25,19 @@ const formatTime = (dateTimeString: string): string => {
   return `${hours}:${minutes}`;
 };
 
+interface DeliveryRoutineProps {
+  fetchData: FetchRoutineData;
+  refreshDashboardData: () => Promise<void>;
+  refreshSideTabData: () => Promise<void>;
+  selectedDestinationId: number | null;
+}
+
 const DeliveryRoutine = ({
   fetchData,
-  refreshData,
-}: {
-  fetchData: FetchRoutineData;
-  refreshData: () => Promise<void>;
-}) => {
+  refreshDashboardData,
+  refreshSideTabData,
+  selectedDestinationId,
+}: DeliveryRoutineProps) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const handleModalOpen = () => {
     setIsModalOpen(true);
@@ -48,9 +54,19 @@ const DeliveryRoutine = ({
   ];
   const [selectedOrders, setSelectedOrders] = useState<DeliveryRoutineDetailStatusItem[]>([]);
 
+  const handleRefreshData = async () => {
+    await refreshSideTabData();
+    setSelectedOrders([]); // refreshData 후 selectedOrders 초기화
+  };
+
   return (
     <>
-      <SelectedDelivery selectedOrders={selectedOrders} refreshData={refreshData} />
+      <SelectedDelivery
+        selectedOrders={selectedOrders}
+        refreshSideTabData={handleRefreshData}
+        refreshDashboardData={refreshDashboardData}
+        resetSelectedOrders={() => setSelectedOrders([])}
+      />
       <div className="flex h-fit max-h-[500px] flex-col gap-[6px] py-[8px] text-T-18-B">
         {startEnd.map((data, index) => (
           <React.Fragment key={data.status}>
@@ -79,6 +95,8 @@ const DeliveryRoutine = ({
                 selectedOrders={selectedOrders}
                 setSelectedOrders={setSelectedOrders}
                 fetchData={fetchData}
+                selectedDestinationId={selectedDestinationId}
+                refreshSideTabData={handleRefreshData}
               />
             )}
           </React.Fragment>

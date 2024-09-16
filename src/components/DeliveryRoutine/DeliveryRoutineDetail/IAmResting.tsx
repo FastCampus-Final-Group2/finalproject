@@ -17,7 +17,7 @@ const IAmResting = ({ breakStartTime, breakEndTime }: { breakStartTime: string; 
     <div>
       <div className="flex w-[430px] justify-between">
         <CircleCheckbox status="RESTING" order={0} />
-        <DeliveryStopoverListCard>
+        <DeliveryStopoverListCard border="restOrCancel">
           <div className="flex h-full gap-[8px]">
             <DeliveryStatusTag vehicleStatus="RESTING" />
           </div>

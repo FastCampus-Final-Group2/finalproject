@@ -1,9 +1,25 @@
-import { atom, selector, selectorFamily } from 'recoil';
-import { persistAtom } from './persistAtom';
+import { atom, selector } from 'recoil';
+import { recoilPersist } from 'recoil-persist';
 
-export const issueCheckState = atom({
+const { persistAtom } = recoilPersist();
+
+interface ClickedIssue {
+  dispatchCodeId: number;
+  dispatchId: number;
+  deliveryDestinationId: number;
+}
+
+export const issueCheckState = atom<ClickedIssue[]>({
   key: 'issueCheckState',
   default: [],
+  effects_UNSTABLE: [persistAtom],
+});
+
+export const issueCheckSelector = selector({
+  key: 'issueCheckSelector',
+  get: ({ get }) => {
+    return get(issueCheckState);
+  },
 });
 
 // todo: 이슈 선택 시 읽음 처리
@@ -13,14 +29,6 @@ export const issueReadState = atom({
   effects_UNSTABLE: [persistAtom],
 });
 
-
-export const issueCheckSelector = selector({
-  key: 'issueCheckSelector',
-  get: ({ get }) => {
-    const issueCheck = get(issueCheckState);
-    return issueCheck;
-  },
-});
 // todo: 특정 이슈 목록을 클릭하면 해당 이슈 목록에 해당하는 사이드탭으로 이동
 
 

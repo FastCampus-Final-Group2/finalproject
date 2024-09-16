@@ -15,7 +15,7 @@ type VehicleStatusType =
   | "RESTING_TIME"
   | "default";
 export interface DispatchedDriversProps {
-  onClickToggle: (color: ColorType, dispatchId: number) => void; // ColorType으로 변경
+  onClickToggle: (color: ColorType, dispatchId: number, index: number) => void;
   smColors: ColorType[];
   drivers: DispatchSimpleResponse[];
   dispatchStatus: VehicleStatusType[];
@@ -36,14 +36,14 @@ const DispatchedDrivers = ({ onClickToggle, smColors, drivers, dispatchStatus }:
         <div className="flex max-h-[264px] flex-col gap-2 overflow-y-auto scrollbar-hide">
           {drivers.map((driver, index) => (
             <EachDriver
-              key={driver.dispatchId}
+              key={index}
               dispatchId={driver.dispatchId ?? 0}
               dispatchStatus={(driver.dispatchStatus as VehicleStatusType) ?? "default"}
               smName={driver.smName ?? ""}
               orderNum={driver.orderNum ?? 0}
               completedOrderNum={driver.completedOrderNum ?? 0}
               deliveryProgress={driver.progressionRate ?? 0}
-              onClickToggle={() => onClickToggle(smColors[index % smColors.length], driver.dispatchId ?? 0)}
+              onClickToggle={() => onClickToggle(smColors[index % smColors.length], driver.dispatchId ?? 0, index)}
               smColor={smColors[index % smColors.length]}
             />
           ))}

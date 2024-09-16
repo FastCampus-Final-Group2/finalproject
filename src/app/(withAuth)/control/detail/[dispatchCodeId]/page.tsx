@@ -9,6 +9,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useSetRecoilState } from "recoil";
 import { lastVisitedControlPageState } from "@/atoms/control";
 import { useEffect } from "react";
+import { useState } from "react";
 
 type ColorType = "lime" | "sky" | "violet" | "redwood" | "peanut" | "brown" | "forest" | "yale" | "olive";
 
@@ -38,6 +39,8 @@ const ColorTypes: ColorType[] = ["lime", "sky", "violet", "redwood", "peanut", "
 const ControlDetailPage = ({ params }: { params: { dispatchCodeId: number } }) => {
   const { dispatchCodeId } = params;
   const setLastVisitedControlPage = useSetRecoilState(lastVisitedControlPageState);
+  const [selectedDriverIndex, setSelectedDriverIndex] = useState<number | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     setLastVisitedControlPage((prev) => ({
@@ -65,7 +68,7 @@ const ControlDetailPage = ({ params }: { params: { dispatchCodeId: number } }) =
   const waypointGroups =
     fetchedData?.dispatchList?.map((dispatch, index) => {
       return {
-        id: index + 1,
+        id: index,
         bgColor: ColorTypes[index % ColorTypes.length],
         waypoints: [
           { lon: fetchedData?.startStopover?.lon ?? 0, lat: fetchedData?.startStopover?.lat ?? 0 },
@@ -73,12 +76,12 @@ const ControlDetailPage = ({ params }: { params: { dispatchCodeId: number } }) =
         ],
       };
     }) ?? [];
-  console.log("waypointGroups", waypointGroups);
+  // console.log("waypointGroups", waypointGroups);
 
   const stopOverListPoint =
     fetchedData?.dispatchList?.map((dispatch, index) => {
       return {
-        id: index + 1,
+        id: index,
         bgColor: ColorTypes[index % ColorTypes.length],
         waypoints: dispatch.stopoverList.map((stopover) => ({
           lon: stopover.lon,
@@ -86,7 +89,10 @@ const ControlDetailPage = ({ params }: { params: { dispatchCodeId: number } }) =
         })),
       };
     }) ?? [];
-  console.log("stopOverListPoint", stopOverListPoint);
+  // console.log("stopOverListPoint", stopOverListPoint);
+
+  // const handleModalOpen = () => setIsModalOpen(true);
+  // const handleModalClose = () => setIsModalOpen(false);
 
   return (
     <>
@@ -94,11 +100,22 @@ const ControlDetailPage = ({ params }: { params: { dispatchCodeId: number } }) =
       <div className="flex w-full">
         <ControlDispatchDashboard
           fetchedData={fetchedData!}
-          refreshData={async () => {
+          refreshDashboardData={async () => {
             await refetch();
           }}
+          refreshSideTabData={async () => {
+            await refetch();
+          }}
+          onDriverSelect={setSelectedDriverIndex}
+          // onModalOpen={handleModalOpen}
+          // onModalClose={handleModalClose}
         />
-        <NaverMapForControlDetail waypointGroups={waypointGroups} stopOverListPoint={stopOverListPoint} />
+        <NaverMapForControlDetail
+          waypointGroups={waypointGroups}
+          stopOverListPoint={stopOverListPoint}
+          selectedDriverIndex={selectedDriverIndex}
+          isModalOpen={isModalOpen}
+        />
       </div>
     </>
   );

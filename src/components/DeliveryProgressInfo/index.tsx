@@ -22,10 +22,16 @@ interface DeliveryProgressInfoProps {
     issue: string;
   };
   dispatchId: number;
-  refreshData: () => Promise<void>;
+
+  refreshSideTabData: () => Promise<void>;
 }
 
-const DeliveryProgressInfo = ({ selectedColor, fetchData, dispatchId, refreshData }: DeliveryProgressInfoProps) => {
+const DeliveryProgressInfo = ({
+  selectedColor,
+  fetchData,
+  dispatchId,
+  refreshSideTabData,
+}: DeliveryProgressInfoProps) => {
   return (
     <div className="flex flex-col gap-[12px]">
       <div className="flex justify-between">
@@ -44,11 +50,11 @@ const DeliveryProgressInfo = ({ selectedColor, fetchData, dispatchId, refreshDat
           totalTime={String(fetchData.totalTime ?? 0)}
           progressionRate={fetchData.progressionRate ?? 0}
           totalDistance={fetchData.totalDistance ?? 0}
-          refreshData={refreshData}
+          refreshSideTabData={refreshSideTabData}
         />
       </div>
       <div className="flex justify-end">
-        <AccessTimeRefresh onClick={refreshData} />
+        <AccessTimeRefresh onClick={refreshSideTabData} />
       </div>
       <DeliveryIssues issue={fetchData.issue ?? ""} dispatchId={dispatchId} />
     </div>

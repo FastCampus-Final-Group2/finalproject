@@ -94,7 +94,7 @@ const DeliveryIssue = ({ issue, dispatchId }: { issue: string; dispatchId: numbe
       </div>
       {isModalOpen && (
         <ConfirmModal
-          title="삭제 확인"
+          title="배송이슈 메모를 삭제하시겠습니까?"
           text={[{ type: "alert", value: "삭제 시, 복구되지 않습니다." }]}
           leftButtonText="아니오"
           rightButtonText="네"
