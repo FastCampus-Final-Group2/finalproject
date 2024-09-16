@@ -24,13 +24,16 @@ type VehicleStatusType =
 const ControlDispatchDashboard = ({
   fetchedData,
   refreshData,
+  onDriverSelect,
 }: {
   fetchedData: DispatchListResponse;
   refreshData: () => Promise<void>;
+  onDriverSelect: (index: number | null) => void;
 }) => {
   const smColors: ColorType[] = ["lime", "sky", "violet", "redwood", "peanut", "brown", "forest", "yale", "olive"];
   const [selectedColor, setSelectedColor] = useState(smColors[0]);
   const [selectedDispatchId, setSelectedDispatchId] = useState<number | null>(null);
+  const [selectedDriverIndex, setSelectedDriverIndex] = useState<number | null>(null);
 
   const [sideTabState, setSideTabState] = useRecoilState(controlSideTabState);
 
@@ -41,15 +44,19 @@ const ControlDispatchDashboard = ({
     }
   }, [sideTabState]);
 
-  const openSideTap = (color: ColorType, dispatchId: number) => {
+  const openSideTap = (color: ColorType, dispatchId: number, index: number) => {
     setSelectedColor(color);
     setSelectedDispatchId(dispatchId);
+    setSelectedDriverIndex(index);
     setSideTabState({ isExpanded: true, color, dispatchId });
-    console.log(dispatchId);
+    onDriverSelect(index);
+    console.log(dispatchId, index);
   };
 
   const closeSideTap = () => {
     setSideTabState({ isExpanded: false, color: selectedColor, dispatchId: null });
+    setSelectedDriverIndex(null);
+    onDriverSelect(null);
   };
 
   return (
@@ -67,14 +74,17 @@ const ControlDispatchDashboard = ({
           </div>
           <div className="flex h-[344px] w-[524px] justify-center">
             <DispatchedDrivers
-              onClickToggle={openSideTap}
+              onClickToggle={(color, dispatchId, index) => openSideTap(color, dispatchId, index)}
               drivers={fetchedData.dispatchList ?? []}
               smColors={smColors}
               dispatchStatus={fetchedData.dispatchList?.map((item) => item.dispatchStatus as VehicleStatusType) ?? []}
             />
           </div>
           <div className="mt-[20px] flex max-h-[364px] min-h-[64px] w-[524px] justify-center">
-            <IssuesList fetchedIssues={fetchedData.issueList ?? []} />
+            <IssuesList
+              fetchedIssues={fetchedData.issueList ?? []}
+              onClickToggle={(color: ColorType, dispatchId: number) => openSideTap(color, dispatchId, null)}
+            />
           </div>
         </div>
       </div>

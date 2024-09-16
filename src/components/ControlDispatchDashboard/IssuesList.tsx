@@ -6,7 +6,14 @@ import { useMemo, useState } from "react";
 import DeliveryModal from "@/components/detailModal/DeliveryModal";
 import { Issue } from "@/models/ApiTypes";
 
-const IssuesList = ({ fetchedIssues }: { fetchedIssues: Issue[] }) => {
+type ColorType = "lime" | "sky" | "violet" | "redwood" | "peanut" | "brown" | "forest" | "yale" | "olive";
+const IssuesList = ({
+  fetchedIssues,
+  onClickToggle,
+}: {
+  fetchedIssues: Issue[];
+  onClickToggle: (color: ColorType, dispatchId: number) => void;
+}) => {
   const { isExpanded, toggleExpand } = ToggleExpandSwitch(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedDeliveryDestinationId, setSelectedDeliveryDestinationId] = useState<number | null>(null);
@@ -14,8 +21,10 @@ const IssuesList = ({ fetchedIssues }: { fetchedIssues: Issue[] }) => {
   const issues = useMemo(() => fetchedIssues, [fetchedIssues]);
 
   const handleItemClick = (e: React.MouseEvent, issue: Issue) => {
-    e.stopPropagation(); // 이벤트 버블링 방지
-    alert("기사 상세 배송 목록 섹션이 펴지면서 오류 항목을 보여줌");
+    e.stopPropagation();
+    // 이 부분에서 onClickToggle을 호출하여 DeliveryProgressSideTab을 열도록 합니다.
+    // 색상은 임의로 'lime'으로 설정했지만, 실제 사용 시 적절한 색상을 선택해야 합니다.
+    onClickToggle("lime", issue.dispatchId ?? 0);
   };
 
   const handleAddressClick = (e: React.MouseEvent, issue: Issue) => {

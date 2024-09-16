@@ -41,6 +41,7 @@ import dayjs from "dayjs";
   12. 팝업에서 confirmed 미표시 → confirmed 문구&체크 박스 표시
   13. 새로고침 버튼 클릭 시 recoil reset
   14. 달력 선택 recoil status 만들기
+  캘린더 확인 클릭 시 검색 parameter를 고쳐서 보내야 하는데 그렇게 하지 못하고 있는 모양임.
 */
 
 interface DispatchData {
