@@ -2,9 +2,9 @@
 
 import ReactDOMServer from "react-dom/server";
 import { useEffect, useRef } from "react";
-import TransitMarkerIcon from "@/components/NaverMap/DispatchPath/Markers/MarkerIcon/TransitMarkerIcon";
-import EndMarkerIcon from "@/components/NaverMap/DispatchPath/Markers/MarkerIcon/EndMarkerIcon";
-import StartMarkerIcon from "@/components/NaverMap/DispatchPath/Markers/MarkerIcon/StartMarkerIcon";
+import StartMarkerIcon from "@/components/core/Icon/StartMarkerIcon";
+import EndMarkerIcon from "@/components/core/Icon/EndMarkerIcon";
+import TransitMarkerIcon from "@/components/core/Icon/TransitMarkerIcon";
 
 // 색상 매핑 객체
 const BG_COLOR_MAP = {
