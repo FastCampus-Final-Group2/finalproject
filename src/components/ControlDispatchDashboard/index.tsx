@@ -23,11 +23,11 @@ type VehicleStatusType =
 
 const ControlDispatchDashboard = ({
   fetchedData,
-  refreshData,
+  refreshDashboardData,
   onDriverSelect,
 }: {
   fetchedData: DispatchListResponse;
-  refreshData: () => Promise<void>;
+  refreshDashboardData: () => Promise<void>;
   onDriverSelect: (index: number | null) => void;
 }) => {
   const smColors: ColorType[] = ["lime", "sky", "violet", "redwood", "peanut", "brown", "forest", "yale", "olive"];
@@ -60,6 +60,12 @@ const ControlDispatchDashboard = ({
     onDriverSelect(null);
   };
 
+  const handleIssueSelect = (dispatchId: number) => {
+    const driverIndex = fetchedData.dispatchList?.findIndex((driver) => driver.dispatchId === dispatchId) ?? -1;
+    setSelectedDriverIndex(driverIndex);
+    onDriverSelect(driverIndex);
+  };
+
   return (
     <div className="flex">
       <div>
@@ -70,7 +76,7 @@ const ControlDispatchDashboard = ({
               completedOrder={fetchedData.totalCompletedOrderNum ?? 0}
               issueOrder={fetchedData.issueOrderNum ?? 0}
               deliveryProgress={fetchedData.totalProgressionRate ?? 0}
-              refreshData={refreshData}
+              refreshDashboardData={refreshDashboardData}
             />
           </div>
           <div className="flex h-[344px] w-[524px] justify-center">
@@ -87,6 +93,7 @@ const ControlDispatchDashboard = ({
               onClickToggle={(color: ColorType, dispatchId: number, destinationId?: number) =>
                 openSideTap(color, dispatchId, -1, destinationId)
               }
+              onIssueSelect={handleIssueSelect} // 새로운 prop 전달
             />
           </div>
         </div>
@@ -97,7 +104,7 @@ const ControlDispatchDashboard = ({
           onClose={closeSideTap}
           selectedColor={selectedColor}
           dispatchId={selectedDispatchId}
-          refreshData={refreshData}
+          refreshDashboardData={refreshDashboardData}
           selectedDestinationId={selectedDestinationId}
         />
       </div>

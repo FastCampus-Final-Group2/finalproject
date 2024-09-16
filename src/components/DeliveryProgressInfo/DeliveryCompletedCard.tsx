@@ -8,7 +8,7 @@ interface DeliveryCompletedCardProps {
   totalTime: string;
   progressionRate: number;
   totalDistance: number;
-  refreshData: () => Promise<void>;
+  refreshSideTabData: () => Promise<void>;
 }
 
 const formatTotalTime = (totalTime: string): { hours: number; minutes: number } => {

@@ -5,6 +5,7 @@ import { DeliveryStopoverListCardClass } from "./index.variants";
 interface DeliveryStopoverListCardProps extends VariantProps<typeof DeliveryStopoverListCardClass> {
   children?: React.ReactNode;
   className?: string;
+  onClick?: () => void;
 }
 
 const DeliveryStopoverListCard = ({
@@ -12,11 +13,17 @@ const DeliveryStopoverListCard = ({
   border,
   children,
   className,
+  onClick,
   ...props
 }: DeliveryStopoverListCardProps) => {
   return (
     <>
-      <div className={cn(DeliveryStopoverListCardClass({ background, border }))} {...props}>
+      <div
+        className={cn(DeliveryStopoverListCardClass({ background, border }))}
+        {...props}
+        onClick={onClick}
+        role="button"
+      >
         {children}
       </div>
     </>

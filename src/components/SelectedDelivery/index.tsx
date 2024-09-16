@@ -11,11 +11,17 @@ interface DispatchCancel extends DispatchCancelRequest {
 
 interface SelectedDeliveryProps {
   selectedOrders: DeliveryRoutineDetailStatusItem[];
-  refreshData: () => Promise<void>;
+  refreshSideTabData: () => Promise<void>;
   resetSelectedOrders: () => void;
+  refreshDashboardData: () => Promise<void>;
 }
 
-const SelectedDelivery = ({ selectedOrders, refreshData, resetSelectedOrders }: SelectedDeliveryProps) => {
+const SelectedDelivery = ({
+  selectedOrders,
+  refreshSideTabData,
+  resetSelectedOrders,
+  refreshDashboardData,
+}: SelectedDeliveryProps) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleCancel = async () => {
@@ -49,7 +55,8 @@ const SelectedDelivery = ({ selectedOrders, refreshData, resetSelectedOrders }: 
       alert("서버 오류가 발생했습니다.");
     } finally {
       setIsModalOpen(false);
-      await refreshData();
+      await refreshSideTabData();
+      await refreshDashboardData();
     }
   };
 
@@ -75,7 +82,7 @@ const SelectedDelivery = ({ selectedOrders, refreshData, resetSelectedOrders }: 
       </div>
       {isModalOpen && (
         <ConfirmModal
-          title="삭제 확인"
+          title="선택한 배송을 취소하시겠습니까?"
           text={[{ type: "alert", value: "배송 취소 시, 복구되지 않습니다." }]}
           leftButtonText="아니오"
           rightButtonText="네"

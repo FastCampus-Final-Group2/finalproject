@@ -35,13 +35,15 @@ interface NaverMapForControlDetailProps {
   waypointGroups: WaypointGroup[];
   stopOverListPoint?: WaypointGroup[];
   selectedDriverIndex: number | null;
+  isModalOpen: boolean; // 새로운 prop 추가
 }
 
 const NaverMapForControlDetail = ({
   waypointGroups,
   stopOverListPoint,
   selectedDriverIndex,
-}: NaverMapForControlDetailProps) => {
+  isModalOpen, // 새로운 prop 추가
+}: NaverMapForControlDetailProps & { isModalOpen: boolean }) => {
   const mapElement = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -201,7 +203,9 @@ const NaverMapForControlDetail = ({
       });
   }, [waypointGroups, stopOverListPoint, selectedDriverIndex]);
 
-  return <div ref={mapElement} id="map" className="h-[calc(100vh-196px)] w-full" />;
+  return (
+    <div ref={mapElement} id="map" className={`h-[calc(100vh-196px)] w-full ${isModalOpen ? "z-[-20]" : "z-0"}`} />
+  );
 };
 
 export default NaverMapForControlDetail;

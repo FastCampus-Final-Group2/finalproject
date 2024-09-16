@@ -40,6 +40,7 @@ const ControlDetailPage = ({ params }: { params: { dispatchCodeId: number } }) =
   const { dispatchCodeId } = params;
   const setLastVisitedControlPage = useSetRecoilState(lastVisitedControlPageState);
   const [selectedDriverIndex, setSelectedDriverIndex] = useState<number | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     setLastVisitedControlPage((prev) => ({
@@ -90,21 +91,27 @@ const ControlDetailPage = ({ params }: { params: { dispatchCodeId: number } }) =
     }) ?? [];
   // console.log("stopOverListPoint", stopOverListPoint);
 
+  // const handleModalOpen = () => setIsModalOpen(true);
+  // const handleModalClose = () => setIsModalOpen(false);
+
   return (
     <>
       <ControlDispatchHeader fetchedData={fetchedData!} />
       <div className="flex w-full">
         <ControlDispatchDashboard
           fetchedData={fetchedData!}
-          refreshData={async () => {
+          refreshDashboardData={async () => {
             await refetch();
           }}
           onDriverSelect={setSelectedDriverIndex}
+          // onModalOpen={handleModalOpen}
+          // onModalClose={handleModalClose}
         />
         <NaverMapForControlDetail
           waypointGroups={waypointGroups}
           stopOverListPoint={stopOverListPoint}
           selectedDriverIndex={selectedDriverIndex}
+          isModalOpen={isModalOpen}
         />
       </div>
     </>

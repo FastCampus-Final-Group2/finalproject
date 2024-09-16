@@ -11,7 +11,8 @@ interface DeliveryProgressSideTabProps {
   onClose: () => void;
   selectedColor: keyof typeof BG_50 | keyof typeof TEXT_650;
   dispatchId: number | null;
-  refreshData: () => Promise<void>;
+  refreshDashboardData: () => Promise<void>;
+  refreshSideTabData: () => Promise<void>;
   selectedDestinationId: number | null;
 }
 
@@ -44,6 +45,7 @@ const DeliveryProgressSideTab = ({
   onClose,
   selectedColor,
   dispatchId,
+  refreshDashboardData,
   selectedDestinationId,
 }: DeliveryProgressSideTabProps) => {
   const {
@@ -74,7 +76,7 @@ const DeliveryProgressSideTab = ({
             selectedColor={selectedColor}
             fetchData={fetchData as Required<FetchData>}
             dispatchId={dispatchId ?? 0}
-            refreshData={async () => {
+            refreshSideTabData={async () => {
               await refetch();
             }}
           />
@@ -82,9 +84,10 @@ const DeliveryProgressSideTab = ({
         <div className="flex max-h-[556px] w-fit flex-col gap-[4px] rounded-[8px] bg-white pl-[12px] pr-[16px] pt-[20px]">
           <DeliveryRoutine
             fetchData={fetchData as any}
-            refreshData={async () => {
+            refreshSideTabData={async () => {
               await refetch();
             }}
+            refreshDashboardData={refreshDashboardData}
             selectedDestinationId={selectedDestinationId}
           />
         </div>

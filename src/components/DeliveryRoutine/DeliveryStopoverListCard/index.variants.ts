@@ -1,7 +1,7 @@
 import { cva } from "class-variance-authority";
 
 export const DeliveryStopoverListCardClass = cva(
-  "p-[16px] rounded-[8px] w-[380px] flex gap-[16px] items-center box-border justify-between focus:border-blue-500 focus:border-[2px]  hover:border-[2px] hover:border-blue-500 border-gray-200",
+  "p-[16px] rounded-[8px] w-[380px] flex gap-[16px] items-center box-border justify-between focus:border-blue-500 focus:border-[2px]  hover:border-[2px] hover:border-blue-500 border-gray-200 cursor-default",
   {
     variants: {
       background: {

@@ -27,11 +27,17 @@ const formatTime = (dateTimeString: string): string => {
 
 interface DeliveryRoutineProps {
   fetchData: FetchRoutineData;
-  refreshData: () => Promise<void>;
+  refreshDashboardData: () => Promise<void>;
+  refreshSideTabData: () => Promise<void>;
   selectedDestinationId: number | null;
 }
 
-const DeliveryRoutine = ({ fetchData, refreshData, selectedDestinationId }: DeliveryRoutineProps) => {
+const DeliveryRoutine = ({
+  fetchData,
+  refreshDashboardData,
+  refreshSideTabData,
+  selectedDestinationId,
+}: DeliveryRoutineProps) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const handleModalOpen = () => {
     setIsModalOpen(true);
@@ -49,7 +55,7 @@ const DeliveryRoutine = ({ fetchData, refreshData, selectedDestinationId }: Deli
   const [selectedOrders, setSelectedOrders] = useState<DeliveryRoutineDetailStatusItem[]>([]);
 
   const handleRefreshData = async () => {
-    await refreshData();
+    await refreshSideTabData();
     setSelectedOrders([]); // refreshData 후 selectedOrders 초기화
   };
 
@@ -57,7 +63,8 @@ const DeliveryRoutine = ({ fetchData, refreshData, selectedDestinationId }: Deli
     <>
       <SelectedDelivery
         selectedOrders={selectedOrders}
-        refreshData={handleRefreshData}
+        refreshSideTabData={handleRefreshData}
+        refreshDashboardData={refreshDashboardData}
         resetSelectedOrders={() => setSelectedOrders([])}
       />
       <div className="flex h-fit max-h-[500px] flex-col gap-[6px] py-[8px] text-T-18-B">
@@ -89,7 +96,7 @@ const DeliveryRoutine = ({ fetchData, refreshData, selectedDestinationId }: Deli
                 setSelectedOrders={setSelectedOrders}
                 fetchData={fetchData}
                 selectedDestinationId={selectedDestinationId}
-                refreshData={handleRefreshData}
+                refreshSideTabData={handleRefreshData}
               />
             )}
           </React.Fragment>
