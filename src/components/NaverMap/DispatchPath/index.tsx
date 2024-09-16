@@ -4,7 +4,7 @@ import { useRecoilValue } from "recoil";
 import { driverNumSelector } from "@/atoms/dispatchData";
 import Polyline from "@/components/NaverMap/DispatchPath/Polyline";
 import Markers from "@/components/NaverMap/DispatchPath/Markers";
-import PendingMarker from "./Markers/PendingMarker";
+import PendingMarkers from "./PendingMarkers";
 
 interface DispatchPathProps {
   map: naver.maps.Map;
@@ -26,7 +26,7 @@ const DispatchPath = ({ map }: DispatchPathProps) => {
       {Array.from({ length: driverNum }).map((_, index) => {
         return <Markers key={index} map={map} index={index} isSelected={true} isPending={false} />;
       })}
-      <PendingMarker map={map} />
+      <PendingMarkers map={map} />
     </>
   );
 };

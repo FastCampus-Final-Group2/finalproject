@@ -25,6 +25,7 @@ const DispatchInfo = ({ info }: DispatchInfoProps) => {
             case "requestedWorkDate":
               return dayjs(info[key], "YYYY-MM-DD").format("YY-MM-DD");
             case "requestedArrivalTime":
+              return info[key] ? dayjs(String(info[key]), "HH:mm:ss").format("HH:mm") : "";
             case "estimatedWorkTime":
               return dayjs(String(info[key]), "HH:mm:ss").format("HH:mm");
             default:

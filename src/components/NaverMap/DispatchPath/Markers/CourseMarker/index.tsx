@@ -4,7 +4,7 @@ import ReactDOMServer from "react-dom/server";
 import { courseDetailListSelector } from "@/atoms/dispatchData";
 import { useEffect } from "react";
 import { useRecoilValue } from "recoil";
-import MarkerIcon from "../MarkerIcon";
+import MarkerIcon from "@/components/NaverMap/DispatchPath/Markers/MarkerIcon";
 
 interface CourseMarkerProps {
   map: naver.maps.Map;
@@ -16,6 +16,8 @@ const CourseMarker = ({ map, index }: CourseMarkerProps) => {
 
   useEffect(() => {
     if (!courseDetailList) return;
+
+    const markers: naver.maps.Marker[] = [];
 
     courseDetailList.forEach((courseDetail, coordinateIndex) => {
       const type = (() => {
@@ -37,7 +39,15 @@ const CourseMarker = ({ map, index }: CourseMarkerProps) => {
       };
 
       const marker = new window.naver.maps.Marker(markerOptions);
+
+      markers.push(marker);
     });
+
+    return () => {
+      markers.forEach((marker) => {
+        marker.setMap(null);
+      });
+    };
   }, [index, map, courseDetailList]);
 
   return <></>;

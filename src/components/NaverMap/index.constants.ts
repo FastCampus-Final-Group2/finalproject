@@ -14,6 +14,7 @@ export const BG_COLOR_MAP = {
 export const PENDING_COLOR = {
   default: "text-gray-300",
   hover: "hover:text-gray-700",
+  selected: "text-gray-700",
 };
 
 export const SM_COLOR_MAP = [

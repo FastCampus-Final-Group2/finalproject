@@ -20,6 +20,12 @@ export const selectedDriverState = atom<number>({
   effects_UNSTABLE: [persistAtom],
 });
 
+export const selectedPendingState = atom<number>({
+  key: "selectedPendingState",
+  default: -1,
+  effects_UNSTABLE: [persistAtom],
+});
+
 export const stopOverListSelector = selector<CourseDetailResponse[]>({
   key: "stopOverListSelector",
   get: ({ get }) => {

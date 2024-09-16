@@ -4,7 +4,7 @@ import ReactDOMServer from "react-dom/server";
 import { startStopoverResponseSelector } from "@/atoms/dispatchData";
 import { useEffect } from "react";
 import { useRecoilValue } from "recoil";
-import MarkerIcon from "../MarkerIcon";
+import MarkerIcon from "@/components/NaverMap/DispatchPath/Markers/MarkerIcon";
 
 interface StartMarkerProps {
   map: naver.maps.Map;
@@ -16,6 +16,9 @@ const StartMarker = ({ map, index }: StartMarkerProps) => {
 
   useEffect(() => {
     if (!startStopover) return;
+
+    const markers: naver.maps.Marker[] = [];
+
     const markerOptions = {
       position: new window.naver.maps.LatLng(startStopover.lat, startStopover.lon),
       map: map,
@@ -28,6 +31,14 @@ const StartMarker = ({ map, index }: StartMarkerProps) => {
     };
 
     const marker = new window.naver.maps.Marker(markerOptions);
+
+    markers.push(marker);
+
+    return () => {
+      markers.forEach((marker) => {
+        marker.setMap(null);
+      });
+    };
   }, [index, map, startStopover]);
 
   return <></>;
