@@ -51,10 +51,6 @@ const OrderDashBoard = () => {
     setSelectedDriver(-1);
   };
 
-  console.log(dispatchData);
-  console.log(pendingOrderData);
-  console.log(stopOverList);
-
   const onDragEnd = (result: any) => {
     if (!result.destination) return; // 목적지가 없으면 종료
 
