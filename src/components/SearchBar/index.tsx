@@ -12,6 +12,12 @@ import SearchOption from "./SearchOption";
 import SearchTextInput from "./SearchTextInput";
 import CheckBox from "@/components/core/CheckBox";
 
+// 파일 상단에 타입 정의 추가
+interface CheckboxState {
+  isManager: boolean;
+  // 다른 필요한 속성들...
+}
+
 interface SearchBarsProps {
   onSearch: () => void;
   onClear: () => void;
@@ -25,12 +31,12 @@ const SearchBars = ({ onSearch, onClear, todayDate, sevenDaysLater }: SearchBars
   const [onlyClient, setOnlyClient] = useRecoilState(controlOnlyClientState);
   const [startDate, setStartDate] = useRecoilState(searchStartTimeState);
   const [endDate, setEndDate] = useRecoilState(searchEndTimeState);
-  const [checkboxState, setCheckboxState] = useRecoilState(controlCheckboxState);
+  const [checkboxState, setCheckboxState] = useRecoilState<CheckboxState>(controlCheckboxState);
 
   const handleOnlyClientChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const isChecked = e.target.checked;
     setOnlyClient(isChecked);
-    setCheckboxState((prev) => ({
+    setCheckboxState((prev: CheckboxState) => ({
       ...prev,
       isManager: isChecked,
     }));
