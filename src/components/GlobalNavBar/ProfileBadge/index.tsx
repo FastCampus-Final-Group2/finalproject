@@ -6,6 +6,7 @@ import { userState } from "@/atoms/user";
 import Icon from "@/components/core/Icon";
 import useOnlyClient from "@/hooks/useOnlyClient";
 import useResetExcelDataAtoms from "@/hooks/useResetExcelDataAtoms";
+import useResetControlAtoms from "@/hooks/useResetControlAtoms";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
@@ -18,6 +19,7 @@ const ProfileBadge = () => {
   const [user, setUser] = useRecoilState(userState);
   const resetExcelDataAtoms = useResetExcelDataAtoms();
   const resetDispatchData = useResetRecoilState(dispatchDataState);
+  const resetControlAtoms = useResetControlAtoms();
 
   useEffect(() => {
     if (!user) {
@@ -30,6 +32,7 @@ const ProfileBadge = () => {
 
     resetExcelDataAtoms();
     resetDispatchData();
+    resetControlAtoms();
     setUser(null);
     router.push("/");
   };

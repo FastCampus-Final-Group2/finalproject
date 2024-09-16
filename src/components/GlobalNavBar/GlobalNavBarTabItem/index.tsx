@@ -11,6 +11,7 @@ import type { MouseEventHandler } from "react";
 import { cn } from "@/utils/cn";
 import { gnbTabContentVariants, gnbTabToggleIconVariants, gnbTabVariants } from "./index.variants";
 import { matchPathname } from "@/utils/validation/pathname";
+import useResetControlAtoms from "@/hooks/useResetControlAtoms";
 
 interface GlobalNavBarTabItem {
   tabName: SideNavBarLink["name"];
@@ -34,6 +35,7 @@ const GlobalNavBarTabItem = ({ isMyMenu, href, tabName }: GlobalNavBarTabItem) =
     [addMyMenu, isMyMenu, removeMyMenu, tabName],
   );
 
+  const resetControlAtoms = useResetControlAtoms();
   return (
     <div
       role="button"
@@ -60,6 +62,7 @@ const GlobalNavBarTabItem = ({ isMyMenu, href, tabName }: GlobalNavBarTabItem) =
           onClick={(event) => {
             event.stopPropagation();
             removeTab(tabName);
+            resetControlAtoms();
 
             // TODO
             if (tabStates.length === 1) router.push("/dispatch");
