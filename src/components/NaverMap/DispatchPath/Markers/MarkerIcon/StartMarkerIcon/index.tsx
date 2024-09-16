@@ -4,7 +4,14 @@ interface StartMarkerProps {
 
 const StartMarkerIcon = ({ color }: StartMarkerProps) => {
   return (
-    <svg width="37" height="37" viewBox="0 0 37 37" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <svg
+      width="37"
+      height="37"
+      viewBox="0 0 37 37"
+      fill="currentColor"
+      xmlns="http://www.w3.org/2000/svg"
+      className={"text-white group-hover:text-gray-900"}
+    >
       <rect x="2.11719" y="2.96875" width="32" height="32" rx="16" fill="white" />
       <rect x="2.11719" y="2.96875" width="32" height="32" rx="16" stroke={color} strokeWidth="4" />
       <g clipPath="url(#clip0_994_29341)">

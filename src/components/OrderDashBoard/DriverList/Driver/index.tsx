@@ -1,12 +1,11 @@
 import Icon from "@/components/core/Icon";
-import { DriverListProps } from "@/components/OrderDashBoard/DriverList";
 import { IconId } from "@/components/core/Icon";
 import { BG_350 } from "@/styles/smColor";
 import { useSetRecoilState } from "recoil";
 import { bgColorState } from "@/atoms/bgColorState";
 import { selectedDriverState } from "@/atoms/dispatchData";
 
-interface DriverProps extends DriverListProps {
+interface DriverProps {
   index: number;
   checkOrWarning?: boolean;
   name?: string;
@@ -29,7 +28,6 @@ const Driver = ({
   vehicleType = "",
   vehicleTon = 0,
   capacityRate = 0,
-  onClickToggle,
   bgColor,
 }: DriverProps) => {
   const checkOrWarningBgColor = checkOrWarning ? "bg-green-50" : "bg-red-600";
@@ -62,9 +60,6 @@ const Driver = ({
   const handleButtonClick = () => {
     setBgColor(bgColor); // 버튼 클릭 시 bgColor를 전역 상태로 설정
     setSelectedDriver(index);
-    if (onClickToggle) {
-      onClickToggle(); // 기존의 onClickToggle 함수도 호출
-    }
   };
 
   let capacityBgColor;

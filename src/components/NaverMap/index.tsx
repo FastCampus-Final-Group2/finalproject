@@ -3,16 +3,19 @@
 import { useRef, useState } from "react";
 import Script from "next/script";
 import DispatchPath from "./DispatchPath";
+import { useRecoilValue } from "recoil";
+import { startStopoverResponseSelector } from "@/atoms/dispatchData";
 
 const NaverMap = () => {
   const [map, setMap] = useState<naver.maps.Map | undefined>(undefined);
+  const startStopover = useRecoilValue(startStopoverResponseSelector);
 
   const mapElement = useRef<HTMLDivElement>(null);
 
   const loadNaverMap = () => {
     const mapOptions = {
-      center: new window.naver.maps.LatLng(36.5, 127.5),
-      zoom: 8,
+      center: new window.naver.maps.LatLng(startStopover?.lat || 36.5, startStopover?.lon || 127.5),
+      zoom: startStopover ? 12 : 8,
       zoomControl: true,
     };
 
@@ -30,11 +33,11 @@ const NaverMap = () => {
         onReady={loadNaverMap}
       />
       <div ref={mapElement} id="map" className="h-[884px] w-full" />
-      {map && (
+      {map ? (
         <>
           <DispatchPath map={map} />
         </>
-      )}
+      ) : null}
     </>
   );
 };

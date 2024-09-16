@@ -47,28 +47,20 @@ export interface ListStopOverData {
 }
 
 interface SideTapDriverDetailProps {
-  isSideTapExpanded: boolean;
-  onClose: () => void;
   listStopOverData: CourseDetailResponse[];
   isExpanded: boolean;
   toggleExpand: () => void;
 }
 
-const SideTapDriverDetail = ({
-  isSideTapExpanded,
-  onClose,
-  listStopOverData,
-  isExpanded,
-  toggleExpand,
-}: SideTapDriverDetailProps) => {
+const SideTapDriverDetail = ({ listStopOverData, isExpanded, toggleExpand }: SideTapDriverDetailProps) => {
   const bgColor = useRecoilValue(bgColorState);
-  const selectedDriver = useRecoilValue(selectedDriverState);
+  const [selectedDriver, setSelectedDriver] = useRecoilState(selectedDriverState);
 
   const [recoilDispatchData, setRecoilDispatchData] = useRecoilState<DispatchResponse | null>(dispatchDataState);
 
   return (
     <div>
-      {isSideTapExpanded && recoilDispatchData && (
+      {selectedDriver !== -1 && recoilDispatchData && (
         <div className="relative h-[884px] w-[440px]">
           {/* recoilDispatchData가 null이 아닌 경우에만 데이터를 접근 */}
           {recoilDispatchData.course && recoilDispatchData.course[selectedDriver] && (
@@ -93,7 +85,7 @@ const SideTapDriverDetail = ({
           />
           <button
             className={`absolute bottom-[326px] right-[-16px] flex h-[128px] w-[48px] -translate-y-1/2 transform items-center justify-center rounded-full ${BG_50[bgColor]} z-10`}
-            onClick={onClose}
+            onClick={() => setSelectedDriver(-1)}
           >
             <Icon id="arrowLargeDoubleLeft" size={24} className={TEXT_650[bgColor]} />
           </button>

@@ -17,13 +17,13 @@ const StartMarker = ({ map, index }: StartMarkerProps) => {
   useEffect(() => {
     if (!startStopover) return;
 
-    const markers: naver.maps.Marker[] = [];
-
     const markerOptions = {
       position: new window.naver.maps.LatLng(startStopover.lat, startStopover.lon),
       map: map,
       icon: {
-        content: ReactDOMServer.renderToString(<MarkerIcon index={index} type="start" coordinateIndex={0} />),
+        content: ReactDOMServer.renderToString(
+          <MarkerIcon index={index} type="start" coordinateIndex={0} startDetail={startStopover} />,
+        ),
         size: new naver.maps.Size(50, 50),
         anchor: new naver.maps.Point(25, 50),
       },
@@ -32,12 +32,8 @@ const StartMarker = ({ map, index }: StartMarkerProps) => {
 
     const marker = new window.naver.maps.Marker(markerOptions);
 
-    markers.push(marker);
-
     return () => {
-      markers.forEach((marker) => {
-        marker.setMap(null);
-      });
+      marker.setMap(null);
     };
   }, [index, map, startStopover]);
 

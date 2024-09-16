@@ -75,7 +75,9 @@ const PendingMarkers = ({ map }: PendingMarkersProps) => {
 
   return (
     <>
-      {Object.keys(modalInfo).length && <OrderModal id={-1} orderInfo={modalInfo} onClose={() => setModalInfo({})} />}
+      {Object.keys(modalInfo).length !== 0 && (
+        <OrderModal id={-1} orderInfo={modalInfo} onClose={() => setModalInfo({})} />
+      )}
     </>
   );
 };
