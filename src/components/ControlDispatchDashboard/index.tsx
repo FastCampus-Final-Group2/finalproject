@@ -83,7 +83,7 @@ const ControlDispatchDashboard = ({
           <div className="mt-[20px] flex max-h-[364px] min-h-[64px] w-[524px] justify-center">
             <IssuesList
               fetchedIssues={fetchedData.issueList ?? []}
-              onClickToggle={(color: ColorType, dispatchId: number) => openSideTap(color, dispatchId, null)}
+              onClickToggle={(color: ColorType, dispatchId: number) => openSideTap(color, dispatchId, -1)}
             />
           </div>
         </div>
