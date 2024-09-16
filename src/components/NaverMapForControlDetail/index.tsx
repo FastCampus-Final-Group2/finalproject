@@ -177,23 +177,23 @@ const NaverMapForControlDetail = ({
               }))();
           });
 
-          // stopOverListPoint 처리
-          stopOverListPoint?.forEach((stopOver) => {
-            stopOver.waypoints.forEach((waypoint, index) => {
-              (() =>
-                new window.naver.maps.Marker({
-                  position: new window.naver.maps.LatLng(waypoint.lat, waypoint.lon),
-                  map: map,
-                  icon: {
-                    content: ReactDOMServer.renderToString(
-                      <TransitMarkerIcon color={BG_COLOR_MAP[stopOver.bgColor]} index={index + 1} />,
-                    ),
-                    size: new naver.maps.Size(50, 50),
-                    anchor: new naver.maps.Point(25, 50),
-                  },
-                }))();
-            });
-          });
+          // stopOverListPoint 처리(주석처리. 기사를 선택하지 않았을 때는 stopOverListPoint가 보이지 않게 해야 함.)
+          // stopOverListPoint?.forEach((stopOver) => {
+          //   stopOver.waypoints.forEach((waypoint, index) => {
+          //     (() =>
+          //       new window.naver.maps.Marker({
+          //         position: new window.naver.maps.LatLng(waypoint.lat, waypoint.lon),
+          //         map: map,
+          //         icon: {
+          //           content: ReactDOMServer.renderToString(
+          //             <TransitMarkerIcon color={BG_COLOR_MAP[stopOver.bgColor]} index={index + 1} />,
+          //           ),
+          //           size: new naver.maps.Size(50, 50),
+          //           anchor: new naver.maps.Point(25, 50),
+          //         },
+          //       }))();
+          //   });
+          // });
         }
       })
       .catch((err) => {
