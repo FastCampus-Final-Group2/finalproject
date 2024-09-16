@@ -789,6 +789,9 @@ export interface CourseDetailResponse {
    * @example 5
    */
   productQuantity?: number;
+  // 휴게시간 위치 때문에 추가
+  breakStartTime?: LocalTime;
+  breakEndTime?: LocalTime;
 }
 
 export interface CourseResponse {
@@ -911,6 +914,18 @@ export interface DispatchResponse {
    * @example 85
    */
   totalFloorAreaRatio?: number;
+  /**
+   * 총 무게
+   * @format int32
+   * @example 2000
+   */
+  totalWeight?: number;
+  /**
+   * 총 부피
+   * @format int32
+   * @example 2000
+   */
+  totalVolume?: number;
   /**
    * 상차 시작 시간
    * @format date-time

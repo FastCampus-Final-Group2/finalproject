@@ -30,9 +30,9 @@ const Driver = ({
   capacityRate = 0,
   bgColor,
 }: DriverProps) => {
-  const checkOrWarningBgColor = checkOrWarning ? "bg-green-50" : "bg-red-600";
-  const checkOrWarningTextColor = checkOrWarning ? "text-green-500" : "text-white";
-  const checkOrWarningId = checkOrWarning ? "check" : "warning";
+  const checkOrWarningBgColor = !checkOrWarning ? "bg-green-50" : "bg-red-600";
+  const checkOrWarningTextColor = !checkOrWarning ? "text-green-500" : "text-white";
+  const checkOrWarningId = !checkOrWarning ? "check" : "warning";
 
   const dynamicIconId = (vehicleType: string, vehicleTon: number): IconId => {
     let prefix = "";

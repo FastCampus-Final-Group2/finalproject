@@ -3,10 +3,10 @@
 import Icon from "@/components/core/Icon";
 
 interface CopyButtonProps {
-  copyString: string;
+  copyString?: string;
 }
 
-const CopyButton = ({ copyString }: CopyButtonProps) => {
+const CopyButton = ({ copyString = "" }: CopyButtonProps) => {
   const handleCopyAddress = () => {
     navigator.clipboard
       .writeText(copyString)

@@ -27,7 +27,7 @@ const DriverList = () => {
   return (
     <div className="w-[460px] gap-[16px] rounded-[8px] bg-white p-[20px]">
       <div className="mb-2 flex justify-between">
-        <div className="text-T-18-B">기사 (10)</div>
+        <div className="text-T-18-B">기사 ({recoilDispatchData?.course?.length})</div>
         <button onClick={toggleExpand}>
           {isExpanded ? <Icon id="arrowUp" size={24} /> : <Icon id="arrowDown" size={24} />}
         </button>

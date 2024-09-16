@@ -9,43 +9,6 @@ import { bgColorState } from "@/atoms/bgColorState";
 import { dispatchDataState, selectedDriverState } from "@/atoms/dispatchData";
 import { DispatchResponse, CourseDetailResponse } from "@/models/ApiTypes";
 
-export interface ListStopOverData {
-  restrictedTonCode: boolean;
-  delayRequestTime: boolean;
-  overContractNum: boolean;
-  ett: number;
-  expectationOperationStartTime: string;
-  expectationOperationEndTime: string;
-  deliveryDestinationId: number;
-  managerName: string | null;
-  phoneNumber: string | null;
-  lat: number;
-  lon: number;
-  distance: number;
-  deliveryType: string;
-  smId: number;
-  smName: string;
-  shipmentNumber: string;
-  clientOrderKey: string;
-  orderType: string;
-  receivedDate: string;
-  serviceRequestDate: string;
-  serviceRequestTime: string;
-  clientName: string;
-  contact: string;
-  roadAddress: string;
-  lotNumberAddress: string;
-  detailAddress: string;
-  zipcode: string;
-  volume: number;
-  weight: number;
-  note: string;
-  expectedServiceDuration: number;
-  productName: string;
-  productCode: string;
-  productQuantity: number;
-}
-
 interface SideTapDriverDetailProps {
   listStopOverData: CourseDetailResponse[];
   isExpanded: boolean;
@@ -56,7 +19,7 @@ const SideTapDriverDetail = ({ listStopOverData, isExpanded, toggleExpand }: Sid
   const bgColor = useRecoilValue(bgColorState);
   const [selectedDriver, setSelectedDriver] = useRecoilState(selectedDriverState);
 
-  const [recoilDispatchData, setRecoilDispatchData] = useRecoilState<DispatchResponse | null>(dispatchDataState);
+  const [recoilDispatchData] = useRecoilState<DispatchResponse | null>(dispatchDataState);
 
   return (
     <div>

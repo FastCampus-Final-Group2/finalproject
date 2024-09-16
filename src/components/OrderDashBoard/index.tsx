@@ -8,6 +8,10 @@ import { DragDropContext } from "react-beautiful-dnd";
 import { useRecoilState } from "recoil";
 import ToggleExpandSwitch from "@/components/core/ToggleExpandSwitch";
 import { dispatchDataState, pendingOrderDataState, stopOverListSelector } from "@/atoms/dispatchData";
+import { LocalTime } from "@/models/ApiTypes";
+import axios from "@/utils/axios";
+import { requestBodyChangeDispatchDataState } from "@/atoms/requestBodyChangeDispatchData";
+import { useEffect, useState } from "react";
 
 // 리스트를 재정렬하는 함수
 const reorder = (list: any[], startIndex: number, endIndex: number) => {
@@ -37,7 +41,76 @@ const OrderDashBoard = () => {
   const [pendingOrderData, setPendingOrderData] = useRecoilState(pendingOrderDataState);
   const [stopOverList, setStopOverList] = useRecoilState(stopOverListSelector);
 
-  const onDragEnd = (result: any) => {
+  const [requestBodyChangeDispatchData, setRequestBodyChangeDispatchData] = useRecoilState(
+    requestBodyChangeDispatchDataState,
+  );
+
+  const [apiResponseData, setApiResponseData] = useState(null); // 응답 데이터를 저장할 상태
+  const [requestData, setRequestData] = useState(null); // 요청 데이터를 상태로 관리
+
+  // // 객체 변화 후 API 요청을 보낼 상태 값
+  // const [shouldSendRequest, setShouldSendRequest] = useState(false);
+  // useEffect(() => {
+  //   const updatedRequestBodyChangeDispatchData = {
+  //     smId: recoilDispatchData?.course?.[driverIndexState]?.smId ?? null,
+  //     smIdList: recoilDispatchData?.course?.map((course) => course.smId),
+  //     totalVolume: recoilDispatchData?.totalVolume,
+  //     totalWeight: recoilDispatchData?.totalWeight,
+  //     loadingStartTime: recoilDispatchData?.loadingStartTime ?? "",
+  //     orderList: listStopOverData
+  //       .filter((courseDetail) => courseDetail.roadAddress && courseDetail.lat && courseDetail.lon)
+  //       .map((courseDetail) => ({
+  //         roadAddress: courseDetail.roadAddress,
+  //         detailAddress: courseDetail.detailAddress,
+  //         volume: courseDetail.volume,
+  //         weight: courseDetail.weight,
+  //         lat: courseDetail.lat,
+  //         lon: courseDetail.lon,
+  //         expectedServiceDuration: courseDetail.expectedServiceDuration,
+  //         serviceRequestDate: courseDetail.serviceRequestDate,
+  //         serviceRequestTime: courseDetail.serviceRequestTime,
+  //       })),
+  //   };
+
+  //   // 전역 상태 업데이트
+  //   setRequestBodyChangeDispatchData(updatedRequestBodyChangeDispatchData);
+  //   setShouldSendRequest(true);
+  // }, [listStopOverData, recoilDispatchData, driverIndexState]);
+
+  // useEffect(() => {
+  //   if (recoilDispatchData && recoilDispatchData.course?.[driverIndexState]?.courseDetailResponseList) {
+  //     setListStopOverData(recoilDispatchData.course[driverIndexState].courseDetailResponseList);
+  //   }
+  // }, [recoilDispatchData, driverIndexState]);
+
+  // // restingPosition 값 앞에 새로운 객체 삽입
+  // const insertBreakTime = (restingPosition: number, breakStartTime: LocalTime, breakEndTime: LocalTime) => {
+  //   setListStopOverData((prevData) => {
+  //     const updatedData = [...prevData];
+  //     const breakTimeObject = { breakStartTime, breakEndTime };
+  //     updatedData.splice(restingPosition, 0, breakTimeObject); // 해당 위치에 새로운 객체 삽입
+  //     return updatedData;
+  //   });
+  // };
+
+  // useEffect(() => {
+  //   if (
+  //     recoilDispatchData &&
+  //     recoilDispatchData.course?.[driverIndexState]?.breakStartTime &&
+  //     recoilDispatchData.course?.[driverIndexState]?.breakEndTime
+  //   ) {
+  //     const restingPosition = recoilDispatchData.course[driverIndexState].restingPosition;
+  //     const breakStartTime = recoilDispatchData.course[driverIndexState].breakStartTime;
+  //     const breakEndTime = recoilDispatchData.course[driverIndexState].breakEndTime;
+
+  //     // 조건문을 사용하여 `undefined`를 처리
+  //     if (restingPosition !== undefined && breakStartTime !== undefined && breakEndTime !== undefined) {
+  //       insertBreakTime(restingPosition, breakStartTime, breakEndTime);
+  //     }
+  //   }
+  // }, [driverIndexState, recoilDispatchData]);
+
+  const onDragEnd = async (result: any) => {
     if (!result.destination) return; // 목적지가 없으면 종료
 
     const { source, destination } = result;
@@ -106,6 +179,31 @@ const OrderDashBoard = () => {
     }
   };
 
+  // useEffect(() => {
+  //   if (shouldSendRequest) {
+  //     const sendRequest = async () => {
+  //       try {
+  //         const response = await axios.put("/dispatch", requestBodyChangeDispatchData);
+  //         if (response.status === 200 || response.status === 201) {
+  //           console.log("성공적인 응답:", response.data);
+  //           setApiResponseData(response.data);
+  //           setRequestData(requestBodyChangeDispatchData);
+  //           updateDispatchData(); // 데이터 업데이트 호출
+  //         }
+  //       } catch (error) {
+  //         console.error("드래그 앤 드롭 요청 오류:", error);
+  //       }
+  //     };
+
+  //     // Promise를 처리하기 위해 await 사용
+  //     sendRequest().catch((error) => {
+  //       console.error("Promise 처리 중 에러:", error);
+  //     });
+
+  //     setShouldSendRequest(false);
+  //   }
+  // }, [shouldSendRequest, requestBodyChangeDispatchData]);
+
   return (
     <DragDropContext onDragEnd={onDragEnd}>
       <div className="flex">
@@ -129,9 +227,8 @@ const OrderDashBoard = () => {
           <SideTapDriverDetail listStopOverData={stopOverList} isExpanded={isExpanded} toggleExpand={toggleExpand} />
         </div>
       </div>
-
       {/* 변경된 배열 확인 */}
-      {/* <div>
+      <div>
         <h2>StopOverData 배열:</h2>
         <pre>{JSON.stringify(stopOverList, null, 2)}</pre>
       </div>
@@ -139,6 +236,24 @@ const OrderDashBoard = () => {
       <div>
         <h2>PendingOrderData 배열:</h2>
         <pre>{JSON.stringify(pendingOrderData, null, 2)}</pre>
+      </div>
+      {/* <div>
+        <h3>트루:</h3>
+        <pre>{JSON.stringify(shouldSendRequest, null, 2)}</pre>
+      </div> */}
+      {/* <div>
+        <h3>전송한 요청 데이터:</h3>
+        <pre>{JSON.stringify(requestData, null, 2)}</pre>
+      </div>
+      <div>
+        <pre>{JSON.stringify(requestBodyChangeDispatchData, null, 2)}</pre>
+      </div>
+      <div>
+        <h2>API 응답 데이터:</h2>
+        <pre>{apiResponseData ? JSON.stringify(apiResponseData, null, 2) : "데이터가 없습니다"}</pre>
+      </div>
+      <div>
+        <pre>{JSON.stringify(dispatchData, null, 2)}</pre>
       </div> */}
     </DragDropContext>
   );
