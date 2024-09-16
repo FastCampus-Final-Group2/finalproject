@@ -45,7 +45,7 @@ const DeliveryCompletedCard = ({
       iconId: "order",
       devide: "/",
     },
-    { title: "주행 거리", count: totalDistance.toFixed(2), unit: "km", iconId: "truck", devide: "" },
+    { title: "주행 거리", count: totalDistance.toFixed(1), unit: "km", iconId: "truck", devide: "" },
     {
       title: "주행 시간",
       count: (

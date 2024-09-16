@@ -38,7 +38,7 @@ const SearchTextInput = ({ inputValue, setInputValue, onSearch }: SearchTextInpu
         <button className="absolute right-[2px] top-[50%] translate-y-[-50%]">
           <Icon
             id="circleCancelFill"
-            className="text-gray-200 hover:text-red-250"
+            className={`text-gray-200 hover:text-red-250 ${inputValue ? "opacity-100" : "opacity-0"}`}
             size={20}
             onClick={handleClearInput}
           />

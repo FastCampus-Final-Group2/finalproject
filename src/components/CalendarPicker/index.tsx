@@ -7,8 +7,8 @@ import TimePicker from "@/components/CalendarPicker/TimePicker";
 import Button from "@/components/core/Button";
 
 interface CalendarPickerProps {
-  onSelectDate: (date: string, time: string | null) => void;
-  dateType: "start" | "end";
+  onSelectDate: (dateTime: string) => void;
+  dateType?: "start" | "end";
 }
 
 const CalendarPicker = ({ onSelectDate, dateType }: CalendarPickerProps) => {
@@ -26,8 +26,8 @@ const CalendarPicker = ({ onSelectDate, dateType }: CalendarPickerProps) => {
       const formattedTime =
         selectedHour !== null && selectedMinute !== null
           ? `${selectedHour.toString().padStart(2, "0")}:${selectedMinute.toString().padStart(2, "0")}`
-          : null;
-      onSelectDate(formattedDate, formattedTime);
+          : "--:--";
+      onSelectDate(`${formattedDate} ${formattedTime}`);
     } else {
       alert("날짜를 선택하세요.");
     }

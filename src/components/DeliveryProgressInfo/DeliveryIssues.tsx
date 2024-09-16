@@ -98,6 +98,7 @@ const DeliveryIssue = ({ issue, dispatchId }: { issue: string; dispatchId: numbe
           text={[{ type: "alert", value: "삭제 시, 복구되지 않습니다." }]}
           leftButtonText="아니오"
           rightButtonText="네"
+          doConfirm={true}
           onConfirm={handleDelete}
           onClickClose={() => setIsModalOpen(false)}
         />

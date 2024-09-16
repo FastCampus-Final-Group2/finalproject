@@ -77,6 +77,7 @@ const SelectedDelivery = ({ selectedOrders, refreshData }: SelectedDeliveryProps
           text={[{ type: "alert", value: "배송 취소 시, 복구되지 않습니다." }]}
           leftButtonText="아니오"
           rightButtonText="네"
+          doConfirm={true}
           onConfirm={handleCancel}
           onClickClose={() => setIsModalOpen(false)}
         />

@@ -14,6 +14,7 @@ export const deliveryStatusClass = cva(
         DELIVERY_DELAY: "text-white",
         RESTING: "text-orange-500",
         RESTING_TIME: "text-gray-700",
+        TRANSPORTATION_COMPLETED: "text-blue-400",
       },
       background: {
         default: "bg-blue-400",
@@ -25,6 +26,7 @@ export const deliveryStatusClass = cva(
         DELIVERY_DELAY: "bg-red-500",
         RESTING: "bg-orange-100",
         RESTING_TIME: "bg-gray-100",
+        TRANSPORTATION_COMPLETED: "bg-blue-30",
       },
     },
     compoundVariants: [
@@ -60,6 +62,10 @@ export const deliveryStatusClass = cva(
       {
         vehicleStatus: "RESTING_TIME",
         className: "text-gray-700 bg-gray-100 text-B-14-M",
+      },
+      {
+        vehicleStatus: "TRANSPORTATION_COMPLETED",
+        className: "text-blue-400 bg-blue-30",
       },
     ],
     defaultVariants: {

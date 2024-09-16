@@ -12,6 +12,7 @@ interface SearchDateProps {
   onEndDateChange: (date: string) => void;
   todayDate: string;
   sevenDaysLater: string;
+  onSearch: () => void;
 }
 
 const SearchDate = ({
@@ -21,6 +22,7 @@ const SearchDate = ({
   onEndDateChange,
   todayDate,
   sevenDaysLater,
+  onSearch,
 }: SearchDateProps) => {
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
   const [dateType, setDateType] = useState<"start" | "end">("start");
@@ -43,29 +45,45 @@ const SearchDate = ({
     };
   }, []);
 
-  const handleDateConfirm = (selectedDate: string, selectedTime: string | null) => {
+  const handleDateConfirm = (selectedDateTime: string) => {
+    const [selectedDate, selectedTime] = selectedDateTime.split(" ");
     let formattedDate: string;
     const date = dayjs(selectedDate);
 
     if (dateType === "start") {
-      formattedDate = selectedTime ? date.format(`YYYY-MM-DD ${selectedTime}`) : date.format("YYYY-MM-DD 00:00");
+      formattedDate = selectedTime !== "--:--" ? selectedDateTime : `${selectedDate} 00:00`;
 
       if (endDate && dayjs(endDate).diff(date, "day") > 31) {
         alert("31일 기간을 범위로 검색해야 합니다.");
         return;
       }
+
+      // 시작일이 종료일보다 큰지 확인
+      if (endDate && date.isAfter(dayjs(endDate))) {
+        alert("시작일은 종료일보다 클 수 없습니다.");
+        return;
+      }
+
       onStartDateChange(formattedDate);
     } else {
-      formattedDate = selectedTime ? date.format(`YYYY-MM-DD ${selectedTime}`) : date.format("YYYY-MM-DD 23:59");
+      formattedDate = selectedTime !== "--:--" ? selectedDateTime : `${selectedDate} 23:59`;
 
       if (startDate && date.diff(dayjs(startDate), "day") > 31) {
         alert("31일 기간을 범위로 검색해야 합니다.");
         return;
       }
+
+      // 종료일이 시작일보다 작은지 확인
+      if (startDate && date.isBefore(dayjs(startDate))) {
+        alert("종료일은 시작일보다 작을 수 없습니다.");
+        return;
+      }
+
       onEndDateChange(formattedDate);
     }
 
     setIsCalendarOpen(false);
+    onSearch();
   };
 
   const toggleCalendar = (type: "start" | "end") => {

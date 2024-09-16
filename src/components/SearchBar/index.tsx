@@ -5,12 +5,18 @@ import {
   controlOnlyClientState,
   searchStartTimeState,
   searchEndTimeState,
+  controlCheckboxState, // searchParamsState를 추가로 import
 } from "@/atoms/control";
 import SearchDate from "./SearchDate";
 import SearchOption from "./SearchOption";
 import SearchTextInput from "./SearchTextInput";
 import CheckBox from "@/components/core/CheckBox";
-import dayjs from "dayjs";
+
+// 파일 상단에 타입 정의 추가
+interface CheckboxState {
+  isManager: boolean;
+  // 다른 필요한 속성들...
+}
 
 interface SearchBarsProps {
   onSearch: () => void;
@@ -25,6 +31,17 @@ const SearchBars = ({ onSearch, onClear, todayDate, sevenDaysLater }: SearchBars
   const [onlyClient, setOnlyClient] = useRecoilState(controlOnlyClientState);
   const [startDate, setStartDate] = useRecoilState(searchStartTimeState);
   const [endDate, setEndDate] = useRecoilState(searchEndTimeState);
+  const [checkboxState, setCheckboxState] = useRecoilState<CheckboxState>(controlCheckboxState);
+
+  const handleOnlyClientChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const isChecked = e.target.checked;
+    setOnlyClient(isChecked);
+    setCheckboxState((prev: CheckboxState) => ({
+      ...prev,
+      isManager: isChecked,
+    }));
+    onSearch(); // 체크박스 상태가 변경될 때마다 검색 수행
+  };
 
   return (
     <div className="flex items-center gap-[14px]">
@@ -35,13 +52,14 @@ const SearchBars = ({ onSearch, onClear, todayDate, sevenDaysLater }: SearchBars
         sevenDaysLater={sevenDaysLater}
         onStartDateChange={(date) => setStartDate(date)}
         onEndDateChange={(date) => setEndDate(date)}
+        onSearch={onSearch}
       />
       <div className="flex w-fit items-center gap-[12px] rounded-[8px] border border-gray-200 p-[12px] text-T-16-B">
         <SearchOption selectedOption={searchOption} setSelectedOption={(option) => setSearchOption(option)} />
         <SearchTextInput inputValue={searchKeyword} setInputValue={setSearchKeyword} onSearch={onSearch} />
       </div>
       <div className="flex gap-[12px] p-[16px] text-SB-14-M">
-        <CheckBox label="내 담당 주문만 보기" checked={onlyClient} onChange={(e) => setOnlyClient(e.target.checked)} />
+        <CheckBox label="내 담당 주문만 보기" checked={onlyClient} onChange={handleOnlyClientChange} />
       </div>
     </div>
   );

@@ -52,8 +52,12 @@ const DeliveryRoutineDetail = ({ selectedOrders, setSelectedOrders, fetchData }:
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedDestinationId, setSelectedDestinationId] = useState<number | null>(null);
   const handleAddressInfo = (item: DeliveryRoutineDetailStatusItem) => {
-    setSelectedDestinationId(item.destinationId);
-    setIsModalOpen(true);
+    if (item.destinationId > 0) {
+      setSelectedDestinationId(item.destinationId);
+      setIsModalOpen(true);
+      return;
+    }
+    alert("배송처 정보 없음");
   };
 
   let orderCounter = 0;
@@ -177,6 +181,7 @@ const DeliveryRoutineDetail = ({ selectedOrders, setSelectedOrders, fetchData }:
           const shouldDisplayOrder =
             item.dispatchDetailStatus !== "CANCELED" && item.dispatchDetailStatus !== "RESTING";
           const orderNumber = shouldDisplayOrder ? ++orderCounter : undefined;
+          const isDisabled = item.destinationId === 0 && item.dispatchDetailStatus !== "CANCELED";
 
           return (
             <React.Fragment key={index}>
@@ -200,8 +205,8 @@ const DeliveryRoutineDetail = ({ selectedOrders, setSelectedOrders, fetchData }:
                         <p
                           className={`cursor-pointer text-nowrap border-b border-blue-500 -tracking-[-1px] text-T-16-M ${
                             item.dispatchDetailStatus === "CANCELED" ? "border-gray-300 text-gray-300" : "text-blue-500"
-                          } ${item.dispatchDetailStatus === "RESTING" ? "hidden" : ""} `}
-                          onClick={() => handleAddressInfo(item)}
+                          } ${item.dispatchDetailStatus === "RESTING" ? "hidden" : ""} ${isDisabled ? "!cursor-default border-none text-gray-700" : ""}`}
+                          onClick={!isDisabled ? () => handleAddressInfo(item) : undefined}
                           style={{ letterSpacing: "-1px" }}
                         >
                           {address}
