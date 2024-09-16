@@ -103,6 +103,9 @@ const ControlDetailPage = ({ params }: { params: { dispatchCodeId: number } }) =
           refreshDashboardData={async () => {
             await refetch();
           }}
+          refreshSideTabData={async () => {
+            await refetch();
+          }}
           onDriverSelect={setSelectedDriverIndex}
           // onModalOpen={handleModalOpen}
           // onModalClose={handleModalClose}

@@ -24,10 +24,12 @@ type VehicleStatusType =
 const ControlDispatchDashboard = ({
   fetchedData,
   refreshDashboardData,
+  refreshSideTabData,
   onDriverSelect,
 }: {
   fetchedData: DispatchListResponse;
   refreshDashboardData: () => Promise<void>;
+  refreshSideTabData: () => Promise<void>;
   onDriverSelect: (index: number | null) => void;
 }) => {
   const smColors: ColorType[] = ["lime", "sky", "violet", "redwood", "peanut", "brown", "forest", "yale", "olive"];
@@ -105,6 +107,7 @@ const ControlDispatchDashboard = ({
           selectedColor={selectedColor}
           dispatchId={selectedDispatchId}
           refreshDashboardData={refreshDashboardData}
+          refreshSideTabData={refreshSideTabData}
           selectedDestinationId={selectedDestinationId}
         />
       </div>
