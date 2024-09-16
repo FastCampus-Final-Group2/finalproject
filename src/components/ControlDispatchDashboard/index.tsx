@@ -34,6 +34,7 @@ const ControlDispatchDashboard = ({
   const [selectedColor, setSelectedColor] = useState(smColors[0]);
   const [selectedDispatchId, setSelectedDispatchId] = useState<number | null>(null);
   const [selectedDriverIndex, setSelectedDriverIndex] = useState<number | null>(null);
+  const [selectedDestinationId, setSelectedDestinationId] = useState<number | null>(null);
 
   const [sideTabState, setSideTabState] = useRecoilState(controlSideTabState);
 
@@ -44,13 +45,13 @@ const ControlDispatchDashboard = ({
     }
   }, [sideTabState]);
 
-  const openSideTap = (color: ColorType, dispatchId: number, index: number) => {
+  const openSideTap = (color: ColorType, dispatchId: number, index: number, destinationId?: number) => {
     setSelectedColor(color);
     setSelectedDispatchId(dispatchId);
     setSelectedDriverIndex(index);
+    setSelectedDestinationId(destinationId ?? null);
     setSideTabState({ isExpanded: true, color, dispatchId });
     onDriverSelect(index);
-    console.log(dispatchId, index);
   };
 
   const closeSideTap = () => {
@@ -83,7 +84,9 @@ const ControlDispatchDashboard = ({
           <div className="mt-[20px] flex max-h-[364px] min-h-[64px] w-[524px] justify-center">
             <IssuesList
               fetchedIssues={fetchedData.issueList ?? []}
-              onClickToggle={(color: ColorType, dispatchId: number) => openSideTap(color, dispatchId, -1)}
+              onClickToggle={(color: ColorType, dispatchId: number, destinationId?: number) =>
+                openSideTap(color, dispatchId, -1, destinationId)
+              }
             />
           </div>
         </div>
@@ -95,6 +98,7 @@ const ControlDispatchDashboard = ({
           selectedColor={selectedColor}
           dispatchId={selectedDispatchId}
           refreshData={refreshData}
+          selectedDestinationId={selectedDestinationId}
         />
       </div>
     </div>

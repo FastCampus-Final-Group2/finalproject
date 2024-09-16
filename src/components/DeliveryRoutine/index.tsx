@@ -25,13 +25,13 @@ const formatTime = (dateTimeString: string): string => {
   return `${hours}:${minutes}`;
 };
 
-const DeliveryRoutine = ({
-  fetchData,
-  refreshData,
-}: {
+interface DeliveryRoutineProps {
   fetchData: FetchRoutineData;
   refreshData: () => Promise<void>;
-}) => {
+  selectedDestinationId: number | null;
+}
+
+const DeliveryRoutine = ({ fetchData, refreshData, selectedDestinationId }: DeliveryRoutineProps) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const handleModalOpen = () => {
     setIsModalOpen(true);
@@ -79,6 +79,7 @@ const DeliveryRoutine = ({
                 selectedOrders={selectedOrders}
                 setSelectedOrders={setSelectedOrders}
                 fetchData={fetchData}
+                selectedDestinationId={selectedDestinationId}
               />
             )}
           </React.Fragment>

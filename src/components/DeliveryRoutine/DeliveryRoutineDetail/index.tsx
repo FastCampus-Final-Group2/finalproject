@@ -2,7 +2,7 @@ import Icon, { IconId } from "@/components/core/Icon";
 import DeliveryStatusTag from "@/components/DeliveryStatusTag";
 import DeliveryStopoverListCard from "@/components/DeliveryRoutine/DeliveryStopoverListCard";
 import CircleCheckbox from "./CircleCheckbox";
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import IAmMoving from "./IAmMoving";
 import DeliveryModal from "@/components/detailModal/DeliveryModal";
 import IAmResting from "./IAmResting";
@@ -46,14 +46,31 @@ interface DeliveryRoutineDetailProps {
       departureTime: LocalTime;
     };
   };
+  selectedDestinationId: number | null;
 }
 
-const DeliveryRoutineDetail = ({ selectedOrders, setSelectedOrders, fetchData }: DeliveryRoutineDetailProps) => {
+const DeliveryRoutineDetail = ({
+  selectedOrders,
+  setSelectedOrders,
+  fetchData,
+  selectedDestinationId,
+}: DeliveryRoutineDetailProps) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedDestinationId, setSelectedDestinationId] = useState<number | null>(null);
+  const [selectedDestinationIdForModal, setSelectedDestinationIdForModal] = useState<number | null>(null);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (selectedDestinationId && scrollContainerRef.current) {
+      const element = document.getElementById(`delivery-item-${selectedDestinationId}`);
+      if (element) {
+        element.scrollIntoView({ behavior: "smooth", block: "center" });
+      }
+    }
+  }, [selectedDestinationId]);
+
   const handleAddressInfo = (item: DeliveryRoutineDetailStatusItem) => {
     if (item.destinationId > 0) {
-      setSelectedDestinationId(item.destinationId);
+      setSelectedDestinationIdForModal(item.destinationId);
       setIsModalOpen(true);
       return;
     }
@@ -141,7 +158,7 @@ const DeliveryRoutineDetail = ({ selectedOrders, setSelectedOrders, fetchData }:
 
   return (
     <>
-      <div className="flex flex-col gap-[12px] overflow-scroll scrollbar-hide">
+      <div ref={scrollContainerRef} className="flex flex-col gap-[12px] overflow-scroll scrollbar-hide">
         {shouldInsertResting && (
           <IAmResting breakStartTime={changedBreakStartTime} breakEndTime={changedBreakEndTime} />
         )}
@@ -182,11 +199,14 @@ const DeliveryRoutineDetail = ({ selectedOrders, setSelectedOrders, fetchData }:
             item.dispatchDetailStatus !== "CANCELED" && item.dispatchDetailStatus !== "RESTING";
           const orderNumber = shouldDisplayOrder ? ++orderCounter : undefined;
           const isDisabled = item.destinationId === 0 && item.dispatchDetailStatus !== "CANCELED";
-
+          const isHighlighted = item.destinationId === selectedDestinationId;
+          console.log("item.destinationId", item.destinationId);
+          console.log("selectedDestinationId", selectedDestinationId);
+          console.log("isHighlighted", isHighlighted);
           return (
             <React.Fragment key={index}>
               {index === 0 && item.dispatchDetailStatus === "WORK_WAITING" && <IAmMoving ett={fetchData.ett ?? 0} />}
-              <div className="flex w-[430px] justify-between">
+              <div id={`delivery-item-${item.destinationId}`} className="flex w-[430px] justify-between">
                 <CircleCheckbox
                   status={item.dispatchDetailStatus}
                   order={orderNumber ?? -1}
@@ -195,8 +215,11 @@ const DeliveryRoutineDetail = ({ selectedOrders, setSelectedOrders, fetchData }:
                   delayedTime={item.delayedTime}
                 />
                 <DeliveryStopoverListCard
-                  className={item.delayedTime ? "border-red-500 bg-red-30" : ""}
-                  background={item.dispatchDetailStatus === "default" ? "start" : undefined}
+                  className={`${item.delayedTime ? "border-red-500 bg-red-30" : ""}`}
+                  background={isHighlighted ? "delayed" : item.dispatchDetailStatus === "default" ? "start" : undefined}
+                  border={
+                    isHighlighted ? "delayed" : item.dispatchDetailStatus === "CANCELED" ? "restOrCancel" : undefined
+                  }
                 >
                   <div className="flex flex-col gap-[8px]">
                     <ul className={`${item.dispatchDetailStatus === "CANCELED" ? "text-gray-300" : ""} `}>
@@ -272,11 +295,7 @@ const DeliveryRoutineDetail = ({ selectedOrders, setSelectedOrders, fetchData }:
         )}
       </div>
       {isModalOpen && (
-        <DeliveryModal
-          id={fetchData.dispatchDetailList[0].destinationId}
-          isCenter={false}
-          onClose={() => setIsModalOpen(false)}
-        />
+        <DeliveryModal id={selectedDestinationIdForModal ?? 0} isCenter={false} onClose={() => setIsModalOpen(false)} />
       )}
     </>
   );

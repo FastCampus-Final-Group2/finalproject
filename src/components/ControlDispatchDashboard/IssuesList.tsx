@@ -12,7 +12,7 @@ const IssuesList = ({
   onClickToggle,
 }: {
   fetchedIssues: Issue[];
-  onClickToggle: (color: ColorType, dispatchId: number) => void;
+  onClickToggle: (color: ColorType, dispatchId: number, destinationId?: number) => void;
 }) => {
   const { isExpanded, toggleExpand } = ToggleExpandSwitch(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -24,7 +24,8 @@ const IssuesList = ({
     e.stopPropagation();
     // 이 부분에서 onClickToggle을 호출하여 DeliveryProgressSideTab을 열도록 합니다.
     // 색상은 임의로 'lime'으로 설정했지만, 실제 사용 시 적절한 색상을 선택해야 합니다.
-    onClickToggle("lime", issue.dispatchId ?? 0);
+    onClickToggle("lime", issue.dispatchId ?? 0, issue.deliveryDestinationId ?? 0);
+    console.log("issue destinationId", issue.deliveryDestinationId);
   };
 
   const handleAddressClick = (e: React.MouseEvent, issue: Issue) => {
