@@ -6,9 +6,14 @@ import DriverList from "@/components/OrderDashBoard/DriverList";
 import PendingOrderList from "@/components/OrderDashBoard/PendingOrderList";
 import SideTapDriverDetail from "@/components/SideTapDriverDetail";
 import { DragDropContext } from "react-beautiful-dnd";
-import { useRecoilState } from "recoil";
+import { useRecoilState, useSetRecoilState } from "recoil";
 import ToggleExpandSwitch from "@/components/core/ToggleExpandSwitch";
-import { dispatchDataState, pendingOrderDataState, stopOverListSelector } from "@/atoms/dispatchData";
+import {
+  dispatchDataState,
+  pendingOrderDataState,
+  selectedDriverState,
+  stopOverListSelector,
+} from "@/atoms/dispatchData";
 
 // 리스트를 재정렬하는 함수
 const reorder = (list: any[], startIndex: number, endIndex: number) => {
@@ -35,12 +40,16 @@ const OrderDashBoard = () => {
   const [isSideTapExpanded, setSideTapExpanded] = useState(false);
   const { isExpanded, toggleExpand } = ToggleExpandSwitch(false);
 
-  const openSideTap = () => setSideTapExpanded(true);
-  const closeSideTap = () => setSideTapExpanded(false);
-
   const [dispatchData, setDispatchData] = useRecoilState(dispatchDataState);
   const [pendingOrderData, setPendingOrderData] = useRecoilState(pendingOrderDataState);
   const [stopOverList, setStopOverList] = useRecoilState(stopOverListSelector);
+  const setSelectedDriver = useSetRecoilState(selectedDriverState);
+
+  const openSideTap = () => setSideTapExpanded(true);
+  const closeSideTap = () => {
+    setSideTapExpanded(false);
+    setSelectedDriver(-1);
+  };
 
   console.log(dispatchData);
   console.log(pendingOrderData);

@@ -6,8 +6,6 @@ import CourseMarker from "./CourseMarker";
 interface MarkerProps {
   map: naver.maps.Map;
   index: number;
-  isSelected: boolean;
-  isPending: boolean;
 }
 
 const Markers = ({ map, index }: MarkerProps) => {

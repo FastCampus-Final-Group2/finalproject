@@ -16,7 +16,7 @@ export const pendingOrderDataState = atom<CourseDetailResponse[]>({
 
 export const selectedDriverState = atom<number>({
   key: "selectedDriverState",
-  default: 0,
+  default: -1,
   effects_UNSTABLE: [persistAtom],
 });
 
@@ -32,7 +32,7 @@ export const stopOverListSelector = selector<CourseDetailResponse[]>({
     const dispatchData = get(dispatchDataState);
     const selectedDriver = get(selectedDriverState);
 
-    if (!dispatchData) return [];
+    if (!dispatchData || selectedDriver === -1) return [];
 
     return dispatchData.course[selectedDriver].courseDetailResponseList;
   },
@@ -40,7 +40,7 @@ export const stopOverListSelector = selector<CourseDetailResponse[]>({
     const dispatchData = get(dispatchDataState);
     const selectedDriver = get(selectedDriverState);
 
-    if (!dispatchData) return;
+    if (!dispatchData || selectedDriver === -1) return;
 
     set(dispatchDataState, {
       ...dispatchData,

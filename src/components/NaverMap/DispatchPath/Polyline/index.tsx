@@ -26,6 +26,10 @@ const Polyline = ({ map, index }: PolylineProps) => {
       strokeWeight: 4,
       strokeStyle: "solid",
     });
+
+    return () => {
+      polyline.setMap(null);
+    };
   });
 
   return <></>;
