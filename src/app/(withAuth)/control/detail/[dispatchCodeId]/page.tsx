@@ -75,7 +75,7 @@ const ControlDetailPage = ({ params }: { params: { dispatchCodeId: number } }) =
         ],
       };
     }) ?? [];
-  console.log("waypointGroups", waypointGroups);
+  // console.log("waypointGroups", waypointGroups);
 
   const stopOverListPoint =
     fetchedData?.dispatchList?.map((dispatch, index) => {
@@ -88,7 +88,7 @@ const ControlDetailPage = ({ params }: { params: { dispatchCodeId: number } }) =
         })),
       };
     }) ?? [];
-  console.log("stopOverListPoint", stopOverListPoint);
+  // console.log("stopOverListPoint", stopOverListPoint);
 
   return (
     <>

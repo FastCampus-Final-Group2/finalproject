@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Icon from "@/components/core/Icon";
 import SelectedDelivery from "@/components/SelectedDelivery";
 import DeliveryRoutineDetail, {
@@ -48,9 +48,18 @@ const DeliveryRoutine = ({ fetchData, refreshData, selectedDestinationId }: Deli
   ];
   const [selectedOrders, setSelectedOrders] = useState<DeliveryRoutineDetailStatusItem[]>([]);
 
+  const handleRefreshData = async () => {
+    await refreshData();
+    setSelectedOrders([]); // refreshData 후 selectedOrders 초기화
+  };
+
   return (
     <>
-      <SelectedDelivery selectedOrders={selectedOrders} refreshData={refreshData} />
+      <SelectedDelivery
+        selectedOrders={selectedOrders}
+        refreshData={handleRefreshData}
+        resetSelectedOrders={() => setSelectedOrders([])}
+      />
       <div className="flex h-fit max-h-[500px] flex-col gap-[6px] py-[8px] text-T-18-B">
         {startEnd.map((data, index) => (
           <React.Fragment key={data.status}>
@@ -80,6 +89,7 @@ const DeliveryRoutine = ({ fetchData, refreshData, selectedDestinationId }: Deli
                 setSelectedOrders={setSelectedOrders}
                 fetchData={fetchData}
                 selectedDestinationId={selectedDestinationId}
+                refreshData={handleRefreshData}
               />
             )}
           </React.Fragment>

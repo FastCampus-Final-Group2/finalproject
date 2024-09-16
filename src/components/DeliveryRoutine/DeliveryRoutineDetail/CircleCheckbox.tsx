@@ -58,7 +58,7 @@ const CircleCheckbox = React.forwardRef<HTMLInputElement, CircleCheckboxProps>(
           <input type="checkbox" checked={isChecked} className="hidden" onChange={handleCheckboxChange} ref={ref} />
           <Icon
             id={iconId}
-            className={`${isChecked ? "text-blue-500" : ""} ${status === "CANCELED" || status === "WORK_COMPLETED" || status === "RESTING" ? "cursor-default hover:text-gray-400" : ""} ${status === "RESTING" ? "text-white hover:text-white" : ""}`}
+            className={`${isChecked ? "text-blue-500" : ""} ${status === "CANCELED" || status === "WORK_COMPLETED" || status === "RESTING" ? "cursor-default text-gray-400 hover:text-gray-400" : ""} ${status === "RESTING" ? "text-white hover:text-white" : ""}`}
             size={status === "CANCELED" || status === "WORK_COMPLETED" || status === "RESTING" ? 16 : 24}
           />
           <p

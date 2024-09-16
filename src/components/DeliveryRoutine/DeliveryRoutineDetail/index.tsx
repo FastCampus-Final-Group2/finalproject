@@ -47,6 +47,7 @@ interface DeliveryRoutineDetailProps {
     };
   };
   selectedDestinationId: number | null;
+  refreshData: () => Promise<void>;
 }
 
 const DeliveryRoutineDetail = ({
@@ -54,6 +55,7 @@ const DeliveryRoutineDetail = ({
   setSelectedOrders,
   fetchData,
   selectedDestinationId,
+  refreshData,
 }: DeliveryRoutineDetailProps) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedDestinationIdForModal, setSelectedDestinationIdForModal] = useState<number | null>(null);
@@ -200,9 +202,9 @@ const DeliveryRoutineDetail = ({
           const orderNumber = shouldDisplayOrder ? ++orderCounter : undefined;
           const isDisabled = item.destinationId === 0 && item.dispatchDetailStatus !== "CANCELED";
           const isHighlighted = item.destinationId === selectedDestinationId;
-          console.log("item.destinationId", item.destinationId);
-          console.log("selectedDestinationId", selectedDestinationId);
-          console.log("isHighlighted", isHighlighted);
+          // console.log("item.destinationId", item.destinationId);
+          // console.log("selectedDestinationId", selectedDestinationId);
+          // console.log("isHighlighted", isHighlighted);
           return (
             <React.Fragment key={index}>
               {index === 0 && item.dispatchDetailStatus === "WORK_WAITING" && <IAmMoving ett={fetchData.ett ?? 0} />}

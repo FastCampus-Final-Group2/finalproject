@@ -11,10 +11,11 @@ interface DispatchCancel extends DispatchCancelRequest {
 
 interface SelectedDeliveryProps {
   selectedOrders: DeliveryRoutineDetailStatusItem[];
-  refreshData: () => void;
+  refreshData: () => Promise<void>;
+  resetSelectedOrders: () => void;
 }
 
-const SelectedDelivery = ({ selectedOrders, refreshData }: SelectedDeliveryProps) => {
+const SelectedDelivery = ({ selectedOrders, refreshData, resetSelectedOrders }: SelectedDeliveryProps) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleCancel = async () => {
@@ -41,13 +42,14 @@ const SelectedDelivery = ({ selectedOrders, refreshData }: SelectedDeliveryProps
         alert(`배송 취소 중 오류가 발생했습니다: ${error.type || "알 수 없는 오류"}`);
       } else if (response) {
         alert("배송 취소가 완료되었습니다.");
+        resetSelectedOrders(); // 선택된 주문 초기화
       }
     } catch (error) {
       console.error("예외 발생:", error);
       alert("서버 오류가 발생했습니다.");
     } finally {
       setIsModalOpen(false);
-      refreshData();
+      await refreshData();
     }
   };
 
