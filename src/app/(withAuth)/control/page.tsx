@@ -10,12 +10,12 @@ import SearchBars from "@/components/SearchBar";
 import Pagination from "@/components/core/Pagination";
 import { useSetRecoilState, useRecoilValue, useRecoilState } from "recoil";
 import {
+  // controlSearchOptionState,
+  // searchTextInputState,
+  // searchStartTimeState,
+  // searchEndTimeState,
   lastVisitedControlPageState,
-  controlSearchOptionState,
-  searchTextInputState,
   controlOnlyClientState,
-  searchStartTimeState,
-  searchEndTimeState,
   searchDataState,
   searchParamsState,
   controlTabState,
@@ -24,15 +24,6 @@ import {
 } from "@/atoms/control";
 import { useRouter } from "next/navigation";
 import ListSelectionCount from "@/components/ListSelectionCount";
-import dayjs from "dayjs";
-
-/* todos: 
-  1. 내 담당 주문 보기 기능 구현하기
-  10. 이슈 메모 저장 후 저장된 내용 출력 기능 재확인
-  13. 새로고침 버튼 클릭 시 recoil reset
-  14. 달력 선택 recoil status 만들기
-  15. 캘린더 확인 클릭 시 검색 parameter를 고쳐서 보내야 하는데 그렇게 하지 못하고 있는 모양임.
-*/
 
 interface DispatchData {
   status?: "IN_TRANSIT" | "WAITING" | "COMPLETED";
@@ -56,30 +47,27 @@ const ControlPage = () => {
   const lastVisitedControlPage = useRecoilValue(lastVisitedControlPageState);
   const router = useRouter();
 
+  // const [searchOption] = useRecoilState(controlSearchOptionState);
+  // const [searchKeyword] = useRecoilState(searchTextInputState);
+  // const [startDate] = useRecoilState(searchStartTimeState);
+  // const [endDate] = useRecoilState(searchEndTimeState);
   const [page, setPage] = useState(1);
   const [selectedItemsCount, setSelectedItemsCount] = useState(0);
   const [selectedDispatchIds, setSelectedDispatchIds] = useState<number[]>([]);
-  const [searchOption] = useRecoilState(controlSearchOptionState);
-  const [searchKeyword] = useRecoilState(searchTextInputState);
-  const [onlyClient] = useRecoilState(controlOnlyClientState);
-  const [startDate] = useRecoilState(searchStartTimeState);
-  const [endDate] = useRecoilState(searchEndTimeState);
+  const [onlyClient, setOnlyClient] = useRecoilState(controlOnlyClientState);
   const [searchData, setSearchData] = useRecoilState(searchDataState);
   const [searchParams, setSearchParams] = useRecoilState(searchParamsState);
   const [selectedState, setSelectedState] = useRecoilState(controlTabState);
   const [todayDate, setTodayDate] = useRecoilState(todayDateState);
   const [sevenDaysLater, setSevenDaysLater] = useRecoilState(sevenDaysLaterState);
 
-  useEffect(() => {
-    setLastVisitedControlPage((prev) => ({ ...prev, general: "/control" }));
-    if (lastVisitedControlPage.detail) {
-      router.push(lastVisitedControlPage.detail);
-    }
-  }, [setLastVisitedControlPage, lastVisitedControlPage.detail, router]);
-
   const fetchDispatchData = useCallback(async () => {
     const { error, results } = await DispatchNumberApi.search({
-      request: searchParams,
+      request: {
+        ...searchParams,
+        searchOption: searchParams.searchOption || undefined,
+        searchKeyword: searchParams.searchKeyword || undefined,
+      },
     });
 
     if (error) throw new Error(error.type || "데이터 가져오기 중 오류 발생");
@@ -97,6 +85,17 @@ const ControlPage = () => {
     refetchOnWindowFocus: false,
     retry: 3,
   });
+
+  useEffect(() => {
+    setLastVisitedControlPage((prev) => ({ ...prev, general: "/control" }));
+    if (lastVisitedControlPage.detail) {
+      router.push(lastVisitedControlPage.detail);
+    }
+  }, [setLastVisitedControlPage, lastVisitedControlPage.detail, router]);
+
+  const handleSearch = useCallback(async () => {
+    await refetch();
+  }, [refetch]);
 
   useEffect(() => {
     if (displayData.results.length > 0) {
@@ -125,40 +124,25 @@ const ControlPage = () => {
     }
   };
 
-  const handleSearch = async () => {
-    let formattedStartDate = todayDate;
-    let formattedEndDate = sevenDaysLater;
-
-    if (startDate && dayjs(startDate).isValid()) {
-      formattedStartDate = dayjs(startDate).format("YYYY-MM-DDTHH:mm:ss");
-    }
-    if (endDate && dayjs(endDate).isValid()) {
-      formattedEndDate = dayjs(endDate).format("YYYY-MM-DDTHH:mm:ss");
-    }
-
-    setSearchParams({
-      status: selectedState === "주행중" ? "IN_TRANSIT" : selectedState === "주행대기" ? "WAITING" : "COMPLETED",
-      isManager: false,
-      startDateTime: formattedStartDate,
-      endDateTime: formattedEndDate,
-      searchOption: searchOption || "",
-      searchKeyword,
-    });
-  };
-
   const handleClearSearch = () => {
     setSearchParams({
       status: selectedState === "주행중" ? "IN_TRANSIT" : selectedState === "주행대기" ? "WAITING" : "COMPLETED",
-      isManager: false,
+      isManager: onlyClient,
       startDateTime: todayDate,
       endDateTime: sevenDaysLater,
       searchOption: "",
       searchKeyword: "",
     });
+    setOnlyClient(false);
+    // setSearchOption("");
+    // setSearchKeyword("");
   };
 
   if (isLoading) return <div>Loading...</div>;
   if (error instanceof Error) return <div>Error: {error.message}</div>;
+
+  console.log("searchParams", searchParams);
+  console.log("onlyClient", onlyClient);
 
   return (
     <div className="h-[calc(100vh-104px)] overflow-y-auto p-[48px]">
