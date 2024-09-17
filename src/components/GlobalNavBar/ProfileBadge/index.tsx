@@ -11,6 +11,7 @@ import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
 import { useRecoilState, useResetRecoilState } from "recoil";
+import { useTabStateContext } from "@/contexts/TabStateContext";
 
 const ProfileBadge = () => {
   const isClient = useOnlyClient();
@@ -20,6 +21,7 @@ const ProfileBadge = () => {
   const resetExcelDataAtoms = useResetExcelDataAtoms();
   const resetDispatchData = useResetRecoilState(dispatchDataState);
   const resetControlAtoms = useResetControlAtoms();
+  const { resetTabState } = useTabStateContext();
 
   useEffect(() => {
     if (!user) {
@@ -33,6 +35,7 @@ const ProfileBadge = () => {
     resetExcelDataAtoms();
     resetDispatchData();
     resetControlAtoms();
+    resetTabState();
     setUser(null);
     router.push("/");
   };
