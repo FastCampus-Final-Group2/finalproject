@@ -92,7 +92,7 @@ const Driver = ({
             <div className="max-w-6 text-right">{orderCount}</div>
             <div className="text-center">건</div>
             <div>・</div>
-            <div className="max-w-7 text-right">{kiloMeter}</div>
+            <div className="max-w-7 text-right">{kiloMeter?.toFixed(1)}</div>
             <div className="text-center">km</div>
             <div>・</div>
             <div className="max-w-7 text-right">{hours}</div>

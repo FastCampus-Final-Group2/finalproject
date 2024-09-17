@@ -1,6 +1,7 @@
 import { LocalTime } from "@/models/ApiTypes";
 
 interface PendingOrderProps extends LocalTime {
+  index: number;
   address?: string;
   meter?: number;
   kilogram?: number;
@@ -8,7 +9,7 @@ interface PendingOrderProps extends LocalTime {
   serviceRequestTime?: string;
 }
 const PendingOrder = ({
-  // index,
+  index,
   address,
   meter,
   kilogram,

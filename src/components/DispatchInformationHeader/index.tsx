@@ -8,10 +8,11 @@ import ConfirmModal from "@/components/ConfirmModal";
 import dayjs from "dayjs";
 import axios from "@/utils/axios";
 import { useRecoilState } from "recoil";
-import { dispatchDataState } from "@/atoms/dispatchData";
+import { dispatchDataState, pendingOrderDataState } from "@/atoms/dispatchData";
 
 const DispatchInformationHeader = () => {
   const [recoilDispatchData, setRecoilDispatchData] = useRecoilState(dispatchDataState);
+  const [, setPendingOrderData] = useRecoilState(pendingOrderDataState);
 
   const [isCancelModalOpen, setIsCancelModalOpen] = useState(false);
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
@@ -38,6 +39,7 @@ const DispatchInformationHeader = () => {
     // 배차 취소 확인 시 동작
     console.log("배차 취소가 확인되었습니다.");
     setRecoilDispatchData(null);
+    setPendingOrderData([]);
     setIsCancelModalOpen(false);
     router.push("/dispatch");
   };
@@ -103,6 +105,8 @@ const DispatchInformationHeader = () => {
       console.error("배차 확정 중 오류가 발생했습니다.", error);
     } finally {
       setIsConfirmModalOpen(false); // 모달 닫기
+      setRecoilDispatchData(null);
+      setPendingOrderData([]);
     }
   };
 

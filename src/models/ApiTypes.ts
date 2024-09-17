@@ -203,6 +203,15 @@ export interface ErrorResponse {
 }
 
 export interface DispatchDetailResponse {
+  expectationOperationStartTime: string | undefined;
+  expectationOperationEndTime: string | undefined;
+  ett: number | undefined;
+  expectedServiceDuration: number | undefined;
+  distance: number | undefined;
+  delayRequestTime: boolean | undefined;
+  overContractNum: boolean | undefined;
+  overFloorAreaRatio: boolean | undefined;
+  entryRestricted: any;
   /**
    * 기사 명
    * @example "1"
@@ -299,16 +308,16 @@ export interface DispatchUpdateResponse {
    */
   restingStopover?: number;
   /**
-   * 최대 계약 초과 오류
-   * @example true
-   */
-  maxContractOver?: boolean;
-  /**
    * 전체 주문 or 거리
    * @format int32
    * @example 20
    */
   totalOrderOrDistanceNum?: number;
+  /**
+   * 용적률
+   * @example true
+   */
+  floorAreaRatio?: number;
   /**
    * 가용 주문
    * @format int32
@@ -610,6 +619,7 @@ export interface CoordinatesResponse {
 
 /** 경로의 상세 정보 리스트 */
 export interface CourseDetailResponse {
+  entryRestricted: any;
   /**
    * 톤코드 오류 여부
    * @example false
@@ -625,6 +635,11 @@ export interface CourseDetailResponse {
    * @example false
    */
   overContractNum?: boolean;
+  /**
+   * 용적률 초과 여부
+   * @example false
+   */
+  overFloorAreaRatio?: boolean;
   /**
    * 예상 이동 시간 (분)
    * @format int32
@@ -880,6 +895,7 @@ export interface CourseResponse {
 }
 
 export interface DispatchResponse {
+  coordinatesResponseList: Record<string, number>[] | undefined;
   /**
    * 배차코드 = 배차번호
    * @example "D123456789"

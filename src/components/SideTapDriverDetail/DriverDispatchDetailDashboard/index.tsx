@@ -85,7 +85,7 @@ const DriverDispatchDetailDashboard = ({
               </div>
               <div className="flex items-center justify-start">
                 <div className="inline-flex flex-col items-start justify-center">
-                  <div className={`${TEXT_650[bgColor]} text-T-20-B`}>{mileage}</div>
+                  <div className={`${TEXT_650[bgColor]} text-T-20-B`}>{mileage?.toFixed(1)}</div>
                 </div>
                 <div className="inline-flex flex-col items-center justify-center gap-3 pb-0.5 pt-[3px]">
                   <div className="self-stretch text-justify text-gray-700 text-T-16-B">km</div>

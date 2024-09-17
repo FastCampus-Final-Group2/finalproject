@@ -7,7 +7,7 @@ export interface RequestBodyChangeDispatchData {
   smIdList: (number | null)[];
   totalVolume: number | null;
   totalWeight: number | null;
-  loadingStartTime: LocalTime | null; // LocalTime 타입 사용
+  loadingStartTime: string | null; // LocalTime 타입 사용
   orderList: {
     roadAddress: string | null;
     detailAddress: string | null;
@@ -29,7 +29,7 @@ export const requestBodyChangeDispatchDataState = atom<RequestBodyChangeDispatch
     smIdList: [], // 기본값으로 빈 배열 설정
     totalVolume: 0, // 기본값으로 0 설정
     totalWeight: 0, // 기본값으로 0 설정
-    loadingStartTime: { hour: 0, minute: 0 }, // LocalTime에 맞는 기본값 설정
+    loadingStartTime: "",
     orderList: [],
   },
 });
