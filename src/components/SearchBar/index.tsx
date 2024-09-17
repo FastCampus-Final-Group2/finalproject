@@ -6,17 +6,15 @@ import {
   searchStartTimeState,
   searchEndTimeState,
   controlCheckboxState,
-  searchParamsState, // searchParamsState를 추가로 import
+  searchParamsState,
 } from "@/atoms/control";
 import SearchDate from "./SearchDate";
 import SearchOption from "./SearchOption";
 import SearchTextInput from "./SearchTextInput";
-import CheckBox from "@/components/core/CheckBox";
+import MyOrderCheck from "./MyOrderCheck";
 
-// 파일 상단에 타입 정의 추가
 interface CheckboxState {
   isManager: boolean;
-  // 다른 필요한 속성들...
 }
 
 interface SearchBarsProps {
@@ -26,7 +24,6 @@ interface SearchBarsProps {
   sevenDaysLater: string;
 }
 
-// 파일 상단에 타입 정의 추가
 interface SearchParams {
   isManager: boolean;
   searchOption: string;
@@ -94,7 +91,7 @@ const SearchBars = ({ onSearch, onClear, todayDate, sevenDaysLater }: SearchBars
         <SearchTextInput inputValue={searchKeyword} setInputValue={handleSearchKeywordChange} onSearch={handleSearch} />
       </div>
       <div className="flex gap-[12px] p-[16px] text-SB-14-M">
-        <CheckBox label="내 담당 주문만 보기" checked={onlyClient} onChange={handleOnlyClientChange} />
+        <MyOrderCheck label="내 담당 주문만 보기" checked={onlyClient} onChange={handleOnlyClientChange} />
       </div>
     </div>
   );

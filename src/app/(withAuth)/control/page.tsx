@@ -24,12 +24,6 @@ import {
 } from "@/atoms/control";
 import { useRouter } from "next/navigation";
 import ListSelectionCount from "@/components/ListSelectionCount";
-// import dayjs from "dayjs";
-
-/* todos: 
-  1. 내 담당 주문 보기 기능 구현하기
-  13. 새로고침 버튼 클릭 시 recoil reset
-*/
 
 interface DispatchData {
   status?: "IN_TRANSIT" | "WAITING" | "COMPLETED";
@@ -53,14 +47,14 @@ const ControlPage = () => {
   const lastVisitedControlPage = useRecoilValue(lastVisitedControlPageState);
   const router = useRouter();
 
+  // const [searchOption] = useRecoilState(controlSearchOptionState);
+  // const [searchKeyword] = useRecoilState(searchTextInputState);
+  // const [startDate] = useRecoilState(searchStartTimeState);
+  // const [endDate] = useRecoilState(searchEndTimeState);
   const [page, setPage] = useState(1);
   const [selectedItemsCount, setSelectedItemsCount] = useState(0);
   const [selectedDispatchIds, setSelectedDispatchIds] = useState<number[]>([]);
-  // const [searchOption] = useRecoilState(controlSearchOptionState);
-  // const [searchKeyword] = useRecoilState(searchTextInputState);
   const [onlyClient, setOnlyClient] = useRecoilState(controlOnlyClientState);
-  // const [startDate] = useRecoilState(searchStartTimeState);
-  // const [endDate] = useRecoilState(searchEndTimeState);
   const [searchData, setSearchData] = useRecoilState(searchDataState);
   const [searchParams, setSearchParams] = useRecoilState(searchParamsState);
   const [selectedState, setSelectedState] = useRecoilState(controlTabState);
