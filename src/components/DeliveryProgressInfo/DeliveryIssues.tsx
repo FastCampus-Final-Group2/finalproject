@@ -56,6 +56,17 @@ const DeliveryIssue = ({ issue, dispatchId }: { issue: string; dispatchId: numbe
     setIsModalOpen(false);
   };
 
+  const truncateIssue = (text: string) => {
+    const lines = text.split("\n");
+    if (text.length > 70 || lines.length > 2) {
+      if (lines.length > 2) {
+        return lines.slice(0, 2).join("\n") + " ..."; // 한 칸 띄우고 줄임표 적용함
+      }
+      return text.slice(0, 70) + " ..."; // 한 칸 띄우고 줄임표 적용함
+    }
+    return text;
+  };
+
   return (
     <>
       <div className="w-[418px] rounded-[8px] border px-[12px] py-[8px] text-B-14-M">
@@ -69,8 +80,8 @@ const DeliveryIssue = ({ issue, dispatchId }: { issue: string; dispatchId: numbe
                 className="h-[150px] w-full resize-none whitespace-pre-line scrollbar-hide"
               />
             ) : (
-              <p className="whitespace-pre-line text-gray-600">
-                {savedIssue || "배송이슈 및 기타 메모 입력\n(300자 이내)"}
+              <p className="issue-text max-h-[40px] overflow-hidden whitespace-pre-line text-gray-600">
+                {savedIssue ? truncateIssue(savedIssue) : "배송이슈 및 기타 메모 입력\n(300자 이내)"}
               </p>
             )}
           </li>
