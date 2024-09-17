@@ -1,5 +1,6 @@
 import { ExcelData } from "@/types/excel";
 import dayjs from "dayjs";
+import { formatPhoneNumber } from "./phoneNumber";
 
 export const formatTransportOrderRequest = (loadingStartTime: string, dispatchName: string, excelData: ExcelData[]) => {
   return {
@@ -18,13 +19,7 @@ export const formatTransportOrderRequest = (loadingStartTime: string, dispatchNa
             }
 
             if (key === "contact") {
-              if (value.length === 9) {
-                return [key, value.replace(/^(\d{2})(\d{3})(\d{4})$/, "$1-$2-$3")];
-              } else if (value.length === 10) {
-                return [key, value.replace(/^(\d{3})(\d{4})(\d{4})$/, "$1-$2-$3")];
-              } else if (value.length === 11) {
-                return [key, value.replace(/^(\d{2,3})(\d{4})(\d{4})$/, "$1-$2-$3")];
-              }
+              return [key, formatPhoneNumber(value)];
             }
 
             if (key === "expectedServiceDuration" || key === "productQuantity") {
