@@ -11,7 +11,6 @@ const useResetControlAtoms = () => {
   const resetControlSearchOptionState = useResetRecoilState(controlSearchOptionState);
   const resetControlOnlyClientState = useResetRecoilState(controlOnlyClientState);
   const resetControlCheckboxState = useResetRecoilState(controlCheckboxState);
-  // const resetIssuesListState = useResetRecoilState(issuesListState);
   const resetControlSideTabDataState = useResetRecoilState(controlSideTabDataState);
   const resetControlSideTabState = useResetRecoilState(controlSideTabState);
   const resetSearchParamsState = useResetRecoilState(searchParamsState);

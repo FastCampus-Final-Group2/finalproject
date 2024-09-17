@@ -88,9 +88,7 @@ const NaverMapForControlDetail = ({
                 position: new window.naver.maps.LatLng(selectedGroup.waypoints[0].lat, selectedGroup.waypoints[0].lon),
                 map: map,
                 icon: {
-                  content: ReactDOMServer.renderToString(
-                    <StartMarkerIcon color={BG_COLOR_MAP[selectedGroup.bgColor]} />,
-                  ),
+                  content: ReactDOMServer.renderToString(<StartMarkerIcon color="black" />),
                   size: new naver.maps.Size(50, 50),
                   anchor: new naver.maps.Point(20, 30),
                 },
@@ -147,7 +145,7 @@ const NaverMapForControlDetail = ({
                 position: new window.naver.maps.LatLng(group.waypoints[0].lat, group.waypoints[0].lon),
                 map: map,
                 icon: {
-                  content: ReactDOMServer.renderToString(<StartMarkerIcon color={BG_COLOR_MAP[group.bgColor]} />),
+                  content: ReactDOMServer.renderToString(<StartMarkerIcon color="black" />),
                   size: new naver.maps.Size(50, 50),
                   anchor: new naver.maps.Point(20, 30),
                 },

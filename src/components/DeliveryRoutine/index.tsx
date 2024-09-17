@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Icon from "@/components/core/Icon";
 import SelectedDelivery from "@/components/SelectedDelivery";
 import DeliveryRoutineDetail, {
@@ -42,7 +42,47 @@ const DeliveryRoutine = ({
   const handleModalOpen = () => {
     setIsModalOpen(true);
   };
-  // todo: 운송 종료 데이터 나중에 추가하기
+  // 운송 종료 시간 출력하기
+  // 1. dispatchDetailList의 가장 마지막 index의 status가 WORK_WAITING 또는 WORK_START인 경우, expectationOperationEndTime을 사용하여 종료 시간 계산
+  // 2. dispatchDetailList의 가장 마지막 index의 status가 WORK_COMPLETED인 경우, operationEndTime을 사용하여 종료 시간 계산
+  // 3. dispatchDetailList의 가장 마지막 index의 status가 DELIVERY_DELAY인 경우, 종료 시간을 "--"으로 설정
+  // 4. dispatchDetailList의 가장 마지막 index의 status가 CANCELED인 경우, 종료 시간은 마지막에서 두번째 데이터의 operationEndTime 또는 expectationOperationEndTime을 사용하여 종료 시간 계산
+  // 5. dispatchDetailList의 마지막에서 두 번째 index의 status가 CANCELED인 경우, 종료 시간은 마지막에서 세 번째 데이터의 operationEndTime 또는 expectationOperationEndTime을 사용하여 종료 시간 계산...(반복)
+
+  console.log(fetchData.dispatchDetailList[fetchData.dispatchDetailList.length - 1].expectationOperationEndTime);
+
+  const calculateEndTime = (
+    dispatchDetailList: DeliveryRoutineDetailStatusItem[],
+  ): { time: string; timetext: string } => {
+    for (let i = dispatchDetailList.length - 1; i >= 0; i--) {
+      const item = dispatchDetailList[i];
+
+      switch (item.dispatchDetailStatus) {
+        case "WORK_WAITING":
+        case "WORK_START":
+          return item.expectationOperationEndTime
+            ? { time: formatTime(item.expectationOperationEndTime), timetext: "종료 예정" }
+            : { time: "--:--", timetext: "종료 예정" };
+
+        case "WORK_COMPLETED":
+          return item.operationEndTime
+            ? { time: formatTime(item.operationEndTime), timetext: "종료" }
+            : { time: "--:--", timetext: "종료" };
+
+        case "DELIVERY_DELAY":
+          return { time: "--:--", timetext: "종료 예정" };
+
+        case "CANCELED":
+          continue;
+
+        default:
+          return { time: "--:--", timetext: "종료 예정" };
+      }
+    }
+
+    return { time: "--:--", timetext: "종료 예정" };
+  };
+
   const startEnd = [
     {
       status: "운송 시작",
@@ -50,7 +90,12 @@ const DeliveryRoutine = ({
       timetext: "시작",
       time: fetchData.startStopover?.departureTime ? formatTime(fetchData.startStopover.departureTime.toString()) : "",
     },
-    { status: "운송 종료", centerName: "", timetext: "종료 예정", time: "20:00" },
+    {
+      status: "운송 종료",
+      centerName: "",
+      timetext: calculateEndTime(fetchData.dispatchDetailList).timetext,
+      time: calculateEndTime(fetchData.dispatchDetailList).time,
+    },
   ];
   const [selectedOrders, setSelectedOrders] = useState<DeliveryRoutineDetailStatusItem[]>([]);
 
