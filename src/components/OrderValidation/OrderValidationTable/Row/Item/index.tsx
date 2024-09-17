@@ -84,7 +84,9 @@ const Item = ({ rowId, header }: ItemProps) => {
   return (
     <input
       value={excelDataCell.value}
-      className={cn(itemVariants({ isValid: excelDataCell.isValid }))}
+      className={cn(
+        itemVariants({ isValid: excelDataCell.isValid, isAddress: header === "address" || header === "detailAddress" }),
+      )}
       onChange={handleInputChange}
     />
   );
