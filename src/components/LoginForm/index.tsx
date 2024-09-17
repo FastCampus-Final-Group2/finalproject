@@ -8,22 +8,16 @@ import { useRouter } from "next/navigation";
 import { LOGIN_ERROR_MESSAGE, LOGIN_FORMS } from "./index.constants";
 import LoginFormInput from "./LoginFormInput";
 import { UsersAPI } from "@/apis/users";
-import { useRecoilState, useResetRecoilState } from "recoil";
+import { useRecoilState } from "recoil";
 import { userState } from "@/atoms/user";
 import localStorage from "@/service/localStorage";
 import { useEffect, useState } from "react";
-import { useTabStateContext } from "@/contexts/TabStateContext";
-import useResetExcelDataAtoms from "@/hooks/useResetExcelDataAtoms";
-import { dispatchDataState } from "@/atoms/dispatchData";
 import { loginRequestValid } from "@/utils/validation/login";
 
 const LoginForm = () => {
   const router = useRouter();
   const [errorMessage, setErrorMessage] = useState("");
   const [user, setUser] = useRecoilState(userState);
-  const resetExcelDataAtoms = useResetExcelDataAtoms();
-  const resetDispatchData = useResetRecoilState(dispatchDataState);
-  const { resetTabState } = useTabStateContext();
 
   useEffect(() => {
     if (user) {
@@ -66,9 +60,6 @@ const LoginForm = () => {
     const [error, loginData] = await UsersAPI.login(loginRequest);
 
     if (loginData) {
-      resetExcelDataAtoms();
-      resetDispatchData();
-      resetTabState();
       setUser(loginData.name);
       router.push("/dispatch");
     }

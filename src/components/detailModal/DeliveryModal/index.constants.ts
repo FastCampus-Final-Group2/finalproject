@@ -3,7 +3,7 @@ export const DELIVERY_INFO_LABEL = {
     adminName: "담당자명",
     phoneNumber: "연락처",
     zipCode: "우편번호",
-    "latitude/longitude": "위도/경도",
+    "latitude/longitude": "위도 / 경도",
     address: "상세주소",
     detailAddress: "",
   },

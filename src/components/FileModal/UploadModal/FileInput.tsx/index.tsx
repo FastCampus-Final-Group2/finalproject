@@ -87,7 +87,7 @@ const FileInput = ({ setIsError }: FileInputProps) => {
       <label className="relative">
         {excelFile ? (
           <div className="w-[276px]">
-            <ProgressBar awaitFn={handleFileInput} barColor="bg-blue-500" bgColor="bg-white" />
+            <ProgressBar awaitFn={handleFileInput} />
           </div>
         ) : (
           <button
