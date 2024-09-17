@@ -10,12 +10,12 @@ import SearchBars from "@/components/SearchBar";
 import Pagination from "@/components/core/Pagination";
 import { useSetRecoilState, useRecoilValue, useRecoilState } from "recoil";
 import {
+  // controlSearchOptionState,
+  // searchTextInputState,
+  // searchStartTimeState,
+  // searchEndTimeState,
   lastVisitedControlPageState,
-  controlSearchOptionState,
-  searchTextInputState,
   controlOnlyClientState,
-  searchStartTimeState,
-  searchEndTimeState,
   searchDataState,
   searchParamsState,
   controlTabState,
@@ -29,8 +29,6 @@ import ListSelectionCount from "@/components/ListSelectionCount";
 /* todos: 
   1. 내 담당 주문 보기 기능 구현하기
   13. 새로고침 버튼 클릭 시 recoil reset
-  14. 달력 선택 recoil status 만들기
-  15. 캘린더 확인 클릭 시 검색 parameter를 고쳐서 보내야 하는데 그렇게 하지 못하고 있는 모양임.
 */
 
 interface DispatchData {
@@ -101,8 +99,8 @@ const ControlPage = () => {
     }
   }, [setLastVisitedControlPage, lastVisitedControlPage.detail, router]);
 
-  const handleSearch = useCallback(() => {
-    refetch();
+  const handleSearch = useCallback(async () => {
+    await refetch();
   }, [refetch]);
 
   useEffect(() => {
@@ -142,8 +140,8 @@ const ControlPage = () => {
       searchKeyword: "",
     });
     setOnlyClient(false);
-    setSearchOption("");
-    setSearchKeyword("");
+    // setSearchOption("");
+    // setSearchKeyword("");
   };
 
   if (isLoading) return <div>Loading...</div>;

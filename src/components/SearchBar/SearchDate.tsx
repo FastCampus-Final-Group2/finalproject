@@ -6,6 +6,7 @@ import { searchStartTimeState, searchEndTimeState, searchParamsState } from "@/a
 import CalendarPicker from "@/components/CalendarPicker";
 import Icon from "@/components/core/Icon";
 import dayjs from "dayjs";
+import { SearchDispatchesParams } from "@/models/ApiTypes";
 
 interface SearchDateProps {
   startDate: string | null;
@@ -71,7 +72,7 @@ const SearchDate = ({
 
       setSearchStartTime(formattedDate);
       onStartDateChange(formattedDate);
-      setSearchParams((prev) => ({ ...prev, startDateTime: formattedDate }));
+      setSearchParams((prev: SearchDispatchesParams) => ({ ...prev, startDateTime: formattedDate }));
     } else {
       formattedDate = selectedTime !== "--:--" ? `${selectedDate}T${selectedTime}:00` : `${selectedDate}T23:59:59`;
 
@@ -87,7 +88,7 @@ const SearchDate = ({
 
       setSearchEndTime(formattedDate);
       onEndDateChange(formattedDate);
-      setSearchParams((prev) => ({ ...prev, endDateTime: formattedDate }));
+      setSearchParams((prev: SearchDispatchesParams) => ({ ...prev, endDateTime: formattedDate }));
     }
 
     setIsCalendarOpen(false);

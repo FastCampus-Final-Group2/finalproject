@@ -26,6 +26,15 @@ interface SearchBarsProps {
   sevenDaysLater: string;
 }
 
+// 파일 상단에 타입 정의 추가
+interface SearchParams {
+  isManager: boolean;
+  searchOption: string;
+  searchKeyword: string;
+  startDateTime: string;
+  endDateTime: string;
+}
+
 const SearchBars = ({ onSearch, onClear, todayDate, sevenDaysLater }: SearchBarsProps) => {
   const [searchOption, setSearchOption] = useRecoilState(controlSearchOptionState);
   const [searchKeyword, setSearchKeyword] = useRecoilState(searchTextInputState);
@@ -33,7 +42,7 @@ const SearchBars = ({ onSearch, onClear, todayDate, sevenDaysLater }: SearchBars
   const [startDate, setStartDate] = useRecoilState(searchStartTimeState);
   const [endDate, setEndDate] = useRecoilState(searchEndTimeState);
   const [checkboxState, setCheckboxState] = useRecoilState<CheckboxState>(controlCheckboxState);
-  const setSearchParams = useSetRecoilState(searchParamsState);
+  const setSearchParams = useSetRecoilState<SearchParams>(searchParamsState);
 
   const handleOnlyClientChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const isChecked = e.target.checked;
@@ -42,7 +51,7 @@ const SearchBars = ({ onSearch, onClear, todayDate, sevenDaysLater }: SearchBars
       ...prev,
       isManager: isChecked,
     }));
-    setSearchParams((prev) => ({ ...prev, isManager: isChecked }));
+    setSearchParams((prev: SearchParams) => ({ ...prev, isManager: isChecked }));
     onSearch();
   };
 
