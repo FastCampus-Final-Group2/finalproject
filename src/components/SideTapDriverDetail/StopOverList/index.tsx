@@ -7,32 +7,32 @@ import StopOver from "@/components/SideTapDriverDetail/StopOverList/StopOver";
 import StopOverStartCenter from "@/components/SideTapDriverDetail/StopOverList/StopOverStartCenter";
 import { BG_50 } from "@/styles/smColor";
 import { StrictModeDroppable } from "@/components/DragDrop/StrictModeDroppable";
-import { CourseDetailResponse } from "@/models/ApiTypes";
+import { stopOverListSelector } from "@/atoms/dispatchData";
+import { useRecoilState } from "recoil";
 
 export interface ColorProps {
   bgColor: keyof typeof BG_50;
 }
 
 interface StopOverListProps {
-  listStopOverData: CourseDetailResponse[];
   isExpanded: boolean;
   toggleExpand: () => void;
   bgColor: keyof typeof BG_50;
 }
 
-const StopOverList = ({ bgColor, listStopOverData, isExpanded, toggleExpand }: StopOverListProps) => {
+const StopOverList = ({ bgColor, isExpanded, toggleExpand }: StopOverListProps) => {
   const [errorCount, setErrorCount] = useState(0);
-
+  const [stopOverList] = useRecoilState(stopOverListSelector);
   useEffect(() => {
-    if (!listStopOverData) return;
+    if (!stopOverList) return;
 
-    const count = Array.from(listStopOverData).filter(
+    const count = Array.from(stopOverList).filter(
       (stopOver) => stopOver.restrictedTonCode || stopOver.delayRequestTime || stopOver.overContractNum,
     ).length;
     setErrorCount(count);
-  }, [isExpanded, listStopOverData]);
+  }, [isExpanded, stopOverList]);
 
-  if (!listStopOverData) return;
+  if (!stopOverList) return;
 
   return (
     <div className={`inline-flex h-[656px] items-start justify-start gap-[12px] ${BG_50[bgColor]} px-[32px] pb-[24px]`}>
@@ -74,7 +74,7 @@ const StopOverList = ({ bgColor, listStopOverData, isExpanded, toggleExpand }: S
                   <>
                     {<StopOverStartCenter />}
 
-                    {listStopOverData.map((stopOver, index) => (
+                    {stopOverList.map((stopOver, index) => (
                       <Draggable key={stopOver.shipmentNumber} draggableId={`${stopOver.shipmentNumber}`} index={index}>
                         {(provided) => (
                           <div ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
@@ -83,7 +83,7 @@ const StopOverList = ({ bgColor, listStopOverData, isExpanded, toggleExpand }: S
                               delayRequestTime={stopOver.delayRequestTime}
                               overContractNum={stopOver.overContractNum}
                               index={index}
-                              totalLength={listStopOverData.length}
+                              totalLength={stopOverList.length}
                               bgColor={bgColor}
                               roadAddress={stopOver.roadAddress}
                               detailAddress={stopOver.detailAddress}
@@ -95,6 +95,7 @@ const StopOverList = ({ bgColor, listStopOverData, isExpanded, toggleExpand }: S
                               isExpanded={isExpanded}
                               lat={0}
                               lon={0}
+                              entryRestricted={undefined}
                             />
                           </div>
                         )}
@@ -103,7 +104,7 @@ const StopOverList = ({ bgColor, listStopOverData, isExpanded, toggleExpand }: S
                   </>
                 ) : (
                   <>
-                    {listStopOverData
+                    {stopOverList
                       .filter(
                         (stopOver) =>
                           stopOver.restrictedTonCode || stopOver.delayRequestTime || stopOver.overContractNum,
@@ -121,7 +122,7 @@ const StopOverList = ({ bgColor, listStopOverData, isExpanded, toggleExpand }: S
                                 delayRequestTime={stopOver.delayRequestTime}
                                 overContractNum={stopOver.overContractNum}
                                 index={index}
-                                totalLength={listStopOverData.length}
+                                totalLength={stopOverList.length}
                                 bgColor={bgColor}
                                 roadAddress={stopOver.roadAddress}
                                 detailAddress={stopOver.detailAddress}
@@ -133,6 +134,7 @@ const StopOverList = ({ bgColor, listStopOverData, isExpanded, toggleExpand }: S
                                 isExpanded={isExpanded}
                                 lat={0}
                                 lon={0}
+                                entryRestricted={undefined}
                               />
                             </div>
                           )}
@@ -145,7 +147,7 @@ const StopOverList = ({ bgColor, listStopOverData, isExpanded, toggleExpand }: S
             )}
           </StrictModeDroppable>
         </div>
-        {/* <pre>{JSON.stringify(listStopOverData, null, 2)}</pre> */}
+        {/* <pre>{JSON.stringify(requestBodyChangeDispatchData, null, 2)}</pre> */}
       </div>
     </div>
   );

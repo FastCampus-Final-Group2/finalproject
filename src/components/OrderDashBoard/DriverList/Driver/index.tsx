@@ -30,9 +30,9 @@ const Driver = ({
   capacityRate = 0,
   bgColor,
 }: DriverProps) => {
-  const checkOrWarningBgColor = checkOrWarning ? "bg-green-50" : "bg-red-600";
-  const checkOrWarningTextColor = checkOrWarning ? "text-green-500" : "text-white";
-  const checkOrWarningId = checkOrWarning ? "check" : "warning";
+  const checkOrWarningBgColor = !checkOrWarning ? "bg-green-50" : "bg-red-600";
+  const checkOrWarningTextColor = !checkOrWarning ? "text-green-500" : "text-white";
+  const checkOrWarningId = !checkOrWarning ? "check" : "warning";
 
   const dynamicIconId = (vehicleType: string, vehicleTon: number): IconId => {
     let prefix = "";
@@ -92,7 +92,7 @@ const Driver = ({
             <div className="max-w-6 text-right">{orderCount}</div>
             <div className="text-center">건</div>
             <div>・</div>
-            <div className="max-w-7 text-right">{kiloMeter}</div>
+            <div className="max-w-7 text-right">{kiloMeter?.toFixed(1)}</div>
             <div className="text-center">km</div>
             <div>・</div>
             <div className="max-w-7 text-right">{hours}</div>
