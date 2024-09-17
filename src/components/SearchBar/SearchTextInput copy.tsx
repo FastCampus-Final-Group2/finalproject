@@ -46,11 +46,6 @@ const SearchTextInput = ({ inputValue, setInputValue, onSearch }: SearchTextInpu
     }
   };
 
-  const handleClickSearch = () => {
-    setInputValue(localInputValue);
-    onSearch();
-  };
-
   const handleClearInput = () => {
     setLocalInputValue("");
     setInputValue("");
@@ -77,7 +72,7 @@ const SearchTextInput = ({ inputValue, setInputValue, onSearch }: SearchTextInpu
           />
         </button>
       </div>
-      <button onClick={handleClickSearch}>
+      <button onClick={onSearch}>
         <Icon id="search" />
       </button>
     </div>
