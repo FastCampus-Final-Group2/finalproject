@@ -1,7 +1,6 @@
 "use client";
 
 import { UsersAPI } from "@/apis/users";
-import { dispatchDataState } from "@/atoms/dispatchData";
 import { userState } from "@/atoms/user";
 import Icon from "@/components/core/Icon";
 import useOnlyClient from "@/hooks/useOnlyClient";
@@ -9,9 +8,9 @@ import useResetExcelDataAtoms from "@/hooks/useResetExcelDataAtoms";
 import useResetControlAtoms from "@/hooks/useResetControlAtoms";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
-
-import { useRecoilState, useResetRecoilState } from "recoil";
+import { useRecoilState } from "recoil";
 import { useTabStateContext } from "@/contexts/TabStateContext";
+import useResetDispatchManualAtoms from "@/hooks/useResetDispatchManualAtoms";
 
 const ProfileBadge = () => {
   const isClient = useOnlyClient();
@@ -19,8 +18,8 @@ const ProfileBadge = () => {
   const router = useRouter();
   const [user, setUser] = useRecoilState(userState);
   const resetExcelDataAtoms = useResetExcelDataAtoms();
-  const resetDispatchData = useResetRecoilState(dispatchDataState);
   const resetControlAtoms = useResetControlAtoms();
+  const resetDispatchManualAtoms = useResetDispatchManualAtoms();
   const { resetTabState } = useTabStateContext();
 
   useEffect(() => {
@@ -33,7 +32,7 @@ const ProfileBadge = () => {
     await UsersAPI.logout();
 
     resetExcelDataAtoms();
-    resetDispatchData();
+    resetDispatchManualAtoms();
     resetControlAtoms();
     resetTabState();
     setUser(null);
