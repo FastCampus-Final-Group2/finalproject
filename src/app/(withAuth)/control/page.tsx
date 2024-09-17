@@ -86,13 +86,6 @@ const ControlPage = () => {
     retry: 3,
   });
 
-  useEffect(() => {
-    setLastVisitedControlPage((prev) => ({ ...prev, general: "/control" }));
-    if (lastVisitedControlPage.detail) {
-      router.push(lastVisitedControlPage.detail);
-    }
-  }, [setLastVisitedControlPage, lastVisitedControlPage.detail, router]);
-
   const handleSearch = useCallback(async () => {
     await refetch();
   }, [refetch]);
@@ -123,6 +116,13 @@ const ControlPage = () => {
         return 0;
     }
   };
+
+  useEffect(() => {
+    setLastVisitedControlPage((prev) => ({ ...prev, general: "/control" }));
+    if (lastVisitedControlPage.detail) {
+      router.push(lastVisitedControlPage.detail);
+    }
+  }, [setLastVisitedControlPage, lastVisitedControlPage.detail, router]);
 
   const handleClearSearch = () => {
     setSearchParams({

@@ -51,31 +51,36 @@ const DeliveryRoutine = ({
 
   console.log(fetchData.dispatchDetailList[fetchData.dispatchDetailList.length - 1].expectationOperationEndTime);
 
-  const calculateEndTime = (dispatchDetailList: DeliveryRoutineDetailStatusItem[]): string => {
+  const calculateEndTime = (
+    dispatchDetailList: DeliveryRoutineDetailStatusItem[],
+  ): { time: string; timetext: string } => {
     for (let i = dispatchDetailList.length - 1; i >= 0; i--) {
       const item = dispatchDetailList[i];
 
       switch (item.dispatchDetailStatus) {
         case "WORK_WAITING":
         case "WORK_START":
-          return item.expectationOperationEndTime ? formatTime(item.expectationOperationEndTime) : "--:--";
+          return item.expectationOperationEndTime
+            ? { time: formatTime(item.expectationOperationEndTime), timetext: "종료 예정" }
+            : { time: "--:--", timetext: "종료 예정" };
 
         case "WORK_COMPLETED":
-          return item.operationEndTime ? formatTime(item.operationEndTime) : "--:--";
+          return item.operationEndTime
+            ? { time: formatTime(item.operationEndTime), timetext: "종료" }
+            : { time: "--:--", timetext: "종료" };
 
         case "DELIVERY_DELAY":
-          return "--:--";
+          return { time: "--:--", timetext: "종료 예정" };
 
         case "CANCELED":
-          // 다음 유효한 항목을 찾기 위해 계속 진행
           continue;
 
         default:
-          return "--:--"; // 알 수 없는 상태의 경우
+          return { time: "--:--", timetext: "종료 예정" };
       }
     }
 
-    return "--:--"; // 모든 항목이 CANCELED이거나 리스트가 비어있는 경우
+    return { time: "--:--", timetext: "종료 예정" };
   };
 
   const startEnd = [
@@ -88,8 +93,8 @@ const DeliveryRoutine = ({
     {
       status: "운송 종료",
       centerName: "",
-      timetext: "종료 예정",
-      time: calculateEndTime(fetchData.dispatchDetailList),
+      timetext: calculateEndTime(fetchData.dispatchDetailList).timetext,
+      time: calculateEndTime(fetchData.dispatchDetailList).time,
     },
   ];
   const [selectedOrders, setSelectedOrders] = useState<DeliveryRoutineDetailStatusItem[]>([]);
