@@ -13,7 +13,7 @@ import {
   selectedDriverState,
   stopOverListSelector,
 } from "@/atoms/dispatchData";
-import { DispatchUpdateResponse, LocalTime, DispatchResponse } from "@/models/ApiTypes";
+import { DispatchUpdateResponse, LocalTime, DispatchResponse, CourseDetailResponse } from "@/models/ApiTypes";
 import axios from "@/utils/axios";
 import { requestBodyChangeDispatchDataState } from "@/atoms/requestBodyChangeDispatchData";
 import { useEffect, useState } from "react";
@@ -133,7 +133,7 @@ const OrderDashBoard = () => {
     ];
 
     // stopOverList 배열 업데이트
-    setStopOverList(updatedStopOverList);
+    setStopOverList(updatedStopOverList as CourseDetailResponse[]);
   }, [selectedDriver]); // 감지할 상태 목록
 
   const updateDispatchData = (
