@@ -5,9 +5,12 @@ import { DispatchListResponse } from "@/models/ApiTypes";
 import { useSetRecoilState } from "recoil";
 import { lastVisitedControlPageState } from "@/atoms/control";
 import useResetControlAtoms from "@/hooks/useResetControlAtoms";
-// todo: 날짜, 택배, 빠진 정보 추가하기
 
-const ControlDiapstchHeader = ({ fetchedData }: { fetchedData: DispatchListResponse }) => {
+interface DispatchListResponses extends DispatchListResponse {
+  orderType: string;
+}
+
+const ControlDiapstchHeader = ({ fetchedData }: { fetchedData: DispatchListResponses }) => {
   const setLastVisitedControlPage = useSetRecoilState(lastVisitedControlPageState);
   const resetControlAtoms = useResetControlAtoms();
   const handleBackToList = () => {
@@ -20,20 +23,20 @@ const ControlDiapstchHeader = ({ fetchedData }: { fetchedData: DispatchListRespo
     if (dateMatch) {
       // 'YYYYMMDD' 형식인 경우
       const [, year, month, day] = dateMatch;
-      return `${year}.${month}.${day}`;
+      return `${year}년 ${month}월 ${day}일`;
     }
 
     dateMatch = dispatchCode.match(/^(\d{2})(\d{2})(\d{2})/);
     if (dateMatch) {
       // 'YYMMDD' 형식인 경우
       const [, year, month, day] = dateMatch;
-      return `20${year}.${month}.${day}`;
+      return `20${year}년 ${month}월 ${day}일`;
     }
 
     throw new Error("Invalid dispatch code format");
   };
   const formattedDate = convertDispatchCodeToDate(fetchedData.dispatchCode ?? "");
-
+  console.log("헤더 데이터", fetchedData);
   return (
     <div className="flex h-[92px] items-center justify-between border-b px-[40px] pb-[24px] pt-[28px]">
       <ul className="flex items-center gap-[16px]">
@@ -44,7 +47,9 @@ const ControlDiapstchHeader = ({ fetchedData }: { fetchedData: DispatchListRespo
         <li className="text-T-18-M">{fetchedData.dispatchName ?? ""}</li>
         <li className="flex gap-[8px]">
           <p className="rounded-[4px] bg-gray-100 p-[8px] text-gray-700 text-B-14-M">{formattedDate}</p>
-          <p className="rounded-[4px] bg-gray-700 p-[8px] text-white text-B-14-M">택배</p>
+          <p className="rounded-[4px] bg-gray-700 p-[8px] text-white text-B-14-M">
+            {fetchedData.orderType ? fetchedData.orderType : "택배"}
+          </p>
         </li>
       </ul>
       <Link href="/control" className="flex items-center gap-[4px] hover:text-blue-500" onClick={handleBackToList}>

@@ -14,6 +14,7 @@ import { useState } from "react";
 type ColorType = "lime" | "sky" | "violet" | "redwood" | "peanut" | "brown" | "forest" | "yale" | "olive";
 
 interface FetchData extends DispatchListResponse {
+  orderType: string; // 이 줄을 추가
   dispatchList: {
     stopoverList: {
       lon: number;

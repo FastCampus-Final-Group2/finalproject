@@ -29,14 +29,14 @@ interface DeliveryRoutineProps {
   fetchData: FetchRoutineData;
   refreshDashboardData: () => Promise<void>;
   refreshSideTabData: () => Promise<void>;
-  selectedDestinationId: number | null;
+  selectedDispatchDetailId: number | null;
 }
 
 const DeliveryRoutine = ({
   fetchData,
   refreshDashboardData,
   refreshSideTabData,
-  selectedDestinationId,
+  selectedDispatchDetailId,
 }: DeliveryRoutineProps) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const handleModalOpen = () => {
@@ -140,7 +140,7 @@ const DeliveryRoutine = ({
                 selectedOrders={selectedOrders}
                 setSelectedOrders={setSelectedOrders}
                 fetchData={fetchData}
-                selectedDestinationId={selectedDestinationId}
+                selectedDispatchDetailId={selectedDispatchDetailId}
                 refreshSideTabData={handleRefreshData}
               />
             )}
