@@ -16,9 +16,9 @@ interface PendingMarkerProps {
 
 const PendingMarker = ({ pendingIndex, pendingOrder, isSelected }: PendingMarkerProps) => {
   return (
-    <div className="group relative flex flex-col justify-end">
+    <div className="group relative flex flex-col justify-end hover:z-50">
       <div
-        className={`absolute bottom-[53px] z-50 w-max flex-col gap-1 rounded-4 border border-gray-200 bg-white px-4 py-3 ${isSelected ? "flex" : "hidden group-hover:flex"}`}
+        className={`absolute bottom-[53px] w-max flex-col gap-1 rounded-4 border border-gray-200 bg-white px-4 py-3 ${isSelected ? "flex" : "hidden group-hover:flex"}`}
       >
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">

@@ -29,9 +29,9 @@ const MarkerIcon = ({
 }: MarkerIconProps) => {
   if (type === "start") {
     return (
-      <div className="group relative">
+      <div className="group relative hover:z-50">
         {startDetail && (
-          <div className="absolute bottom-[67px] z-50 hidden w-max flex-col gap-1 rounded-4 border border-gray-200 bg-white px-4 py-3 group-hover:flex">
+          <div className="absolute bottom-[42px] hidden w-max flex-col gap-1 rounded-4 border border-gray-200 bg-white px-4 py-3 group-hover:flex">
             <div className="flex items-center">
               <div className="flex items-center gap-2">
                 <div className="flex h-6 w-6 items-center justify-center rounded-full bg-gray-700 text-white">S</div>
@@ -40,16 +40,16 @@ const MarkerIcon = ({
             </div>
           </div>
         )}
-        <StartMarkerIcon color={colors[SM_COLOR_MAP[index]][350]} isSelected={isSelected} />;
+        <StartMarkerIcon color={colors[SM_COLOR_MAP[index]][350]} isSelected={isSelected} />
       </div>
     );
   }
 
   if (type === "path") {
     return (
-      <div className="group relative">
+      <div className="group relative hover:z-50">
         {courseDetail && (
-          <div className="absolute bottom-[53px] z-50 hidden w-max flex-col gap-1 rounded-4 border border-gray-200 bg-white px-4 py-3 group-hover:flex">
+          <div className="absolute bottom-[53px] hidden w-max flex-col gap-1 rounded-4 border border-gray-200 bg-white px-4 py-3 group-hover:flex">
             <div className="flex items-center">
               <div className="flex items-center gap-2">
                 <div className="flex h-6 w-6 items-center justify-center rounded-full bg-gray-700 text-white">

@@ -1,6 +1,7 @@
 import { bgColorState } from "@/atoms/bgColorState";
 import {
   dispatchDataState,
+  isClickPendingOrderListState,
   pendingOrderDataState,
   selectedDriverState,
   selectedPendingState,
@@ -15,6 +16,7 @@ const useResetDispatchManualAtoms = () => {
   const resetPendingOrderDataState = useResetRecoilState(pendingOrderDataState);
   const resetSelectedDriverState = useResetRecoilState(selectedDriverState);
   const resetSelectedPendingState = useResetRecoilState(selectedPendingState);
+  const resetIsClickPendingOrderListState = useResetRecoilState(isClickPendingOrderListState);
 
   const resetDispatchManualAtoms = () => {
     resetBgColorState();
@@ -23,6 +25,7 @@ const useResetDispatchManualAtoms = () => {
     resetPendingOrderDataState();
     resetSelectedDriverState();
     resetSelectedPendingState();
+    resetIsClickPendingOrderListState();
   };
 
   return resetDispatchManualAtoms;
