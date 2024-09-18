@@ -6,7 +6,7 @@ const { persistAtom } = recoilPersist();
 interface ClickedIssue {
   dispatchCodeId: number;
   dispatchId: number;
-  deliveryDestinationId: number;
+  dispatchDetailId: number;
 }
 
 export const issueCheckState = atom<ClickedIssue[]>({

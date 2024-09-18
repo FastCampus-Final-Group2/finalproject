@@ -2,7 +2,7 @@
 
 import Icon from "@/components/core/Icon";
 import ToggleExpandSwitch from "@/components/core/ToggleExpandSwitch";
-import { useMemo, useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import DeliveryModal from "@/components/detailModal/DeliveryModal";
 import { Issue } from "@/models/ApiTypes";
 import { useRecoilState } from "recoil";
@@ -13,17 +13,21 @@ type ColorType = "lime" | "sky" | "violet" | "redwood" | "peanut" | "brown" | "f
 interface ClickedIssue {
   dispatchCodeId: number;
   dispatchId: number;
-  deliveryDestinationId: number;
+  dispatchDetailId: number;
+}
+
+interface IssueWithDispatchDetailId extends Issue {
+  dispatchDetailId: number;
 }
 
 const IssuesList = ({
   fetchedIssues,
   onClickToggle,
-  onIssueSelect, // 새로운 prop 추가
+  onIssueSelect,
 }: {
-  fetchedIssues: Issue[];
-  onClickToggle: (color: ColorType, dispatchId: number, destinationId?: number) => void;
-  onIssueSelect: (dispatchId: number) => void; // 새로운 prop 타입 정의
+  fetchedIssues: IssueWithDispatchDetailId[];
+  onClickToggle: (color: ColorType, dispatchId: number, dispatchDetailId?: number) => void;
+  onIssueSelect: (dispatchId: number) => void;
 }) => {
   const { isExpanded, toggleExpand } = ToggleExpandSwitch(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -47,7 +51,7 @@ const IssuesList = ({
           (readIssue: ClickedIssue) =>
             readIssue.dispatchCodeId === Number(dispatchCodeId) &&
             readIssue.dispatchId === issue.dispatchId &&
-            readIssue.deliveryDestinationId === issue.deliveryDestinationId,
+            readIssue.dispatchDetailId === issue.dispatchDetailId,
         ),
     );
     setUnreadIssues(newUnreadIssues);
@@ -58,15 +62,15 @@ const IssuesList = ({
     updateUnreadIssues();
   }, [fetchedIssues, dispatchCodeId]);
 
-  const handleItemClick = (e: React.MouseEvent, issue: Issue) => {
+  const handleItemClick = (e: React.MouseEvent, issue: IssueWithDispatchDetailId) => {
     e.stopPropagation();
-    onClickToggle("lime", issue.dispatchId ?? 0, issue.deliveryDestinationId ?? 0);
-    onIssueSelect(issue.dispatchId ?? 0); // 이슈 선택 시 해당 기사의 dispatchId 전달
+    onClickToggle("lime", issue.dispatchId ?? 0, issue.dispatchDetailId ?? 0);
+    onIssueSelect(issue.dispatchId ?? 0);
 
-    const newClickedIssue = {
+    const newClickedIssue: ClickedIssue = {
       dispatchCodeId: Number(dispatchCodeId),
       dispatchId: issue.dispatchId ?? 0,
-      deliveryDestinationId: issue.deliveryDestinationId ?? 0,
+      dispatchDetailId: issue.dispatchDetailId ?? 0, // deliveryDestinationId를 dispatchDetailId로 변경
     };
 
     const updatedClickedIssues = [...clickedIssues, newClickedIssue];
@@ -84,7 +88,8 @@ const IssuesList = ({
     setSelectedDeliveryDestinationId(issue.deliveryDestinationId || null);
     setIsModalOpen(true);
   };
-
+  // todo: distinationId는 모달창 열 때 쓰기
+  // todo: dispatchDetailId로 컴포넌트 추적하기
   return (
     <>
       <div className="max-h-[344px] min-h-[64px] w-[460px] gap-[16px] rounded-[8px] bg-white p-[20px]">
@@ -111,7 +116,7 @@ const IssuesList = ({
                   (clickedIssue) =>
                     clickedIssue.dispatchCodeId === Number(dispatchCodeId) &&
                     clickedIssue.dispatchId === issue.dispatchId &&
-                    clickedIssue.deliveryDestinationId === issue.deliveryDestinationId,
+                    clickedIssue.dispatchDetailId === issue.dispatchDetailId,
                 );
                 return (
                   <li

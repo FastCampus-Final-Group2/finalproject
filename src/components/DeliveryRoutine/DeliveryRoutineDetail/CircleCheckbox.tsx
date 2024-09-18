@@ -9,10 +9,11 @@ interface CircleCheckboxProps {
   initialState?: boolean;
   onChange?: (event: ChangeEvent<HTMLInputElement>, checked: boolean, status: string) => void;
   delayedTime?: number;
+  destinationComment?: string;
 }
 
 const CircleCheckbox = React.forwardRef<HTMLInputElement, CircleCheckboxProps>(
-  ({ status, order, delayedTime, initialState = false, onChange }, ref) => {
+  ({ status, order, delayedTime, destinationComment, initialState = false, onChange }, ref) => {
     const [isChecked, toggleCheckBox] = useReducer((v) => !v, initialState);
 
     const handleCheckboxChange = useCallback(
@@ -48,7 +49,9 @@ const CircleCheckbox = React.forwardRef<HTMLInputElement, CircleCheckboxProps>(
 
     return (
       <div
-        className={`relative flex ${delayedTime ? "h-[92px]" : "h-[88px]"} w-[46px] items-start justify-center pt-[16px] before:absolute before:left-1/2 before:top-[50px] before:h-[56px] before:-translate-x-1/2 before:border-l-[2px] before:border-dashed before:border-gray-400`}
+        className={`relative flex w-[46px] items-start justify-center pt-[16px] ${
+          delayedTime && destinationComment ? "h-[124px] before:h-[92px]" : "h-[88px] before:h-[56px]"
+        } before:absolute before:left-1/2 before:top-[50px] before:-translate-x-1/2 before:border-l-[2px] before:border-dashed before:border-gray-400`}
       >
         <div
           className={`relative flex cursor-pointer items-center justify-center rounded-full text-gray-400 hover:text-blue-500 ${status === "RESTING" ? "h-[20px] w-[20px] cursor-default bg-orange-500" : ""}`}
