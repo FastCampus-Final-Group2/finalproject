@@ -34,7 +34,6 @@ const StartMarker = ({ map, index }: StartMarkerProps) => {
         size: new naver.maps.Size(50, 50),
         anchor: new naver.maps.Point(25, 50),
       },
-      title: `Group ${index + 1} - Waypoint 0`,
     };
 
     const marker = new window.naver.maps.Marker(markerOptions);

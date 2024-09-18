@@ -36,7 +36,6 @@ const PendingMarkers = ({ map }: PendingMarkersProps) => {
           size: new naver.maps.Size(50, 50),
           anchor: new naver.maps.Point(25, 50),
         },
-        title: `Group Pending - Waypoint ${String.fromCharCode(65 + pendingIndex)}`,
       };
 
       const marker = new window.naver.maps.Marker(markerOptions);
