@@ -20,7 +20,7 @@ const RootLayout = ({
 }>) => {
   return (
     <html lang="ko">
-      <body>
+      <body className="overflow-hidden">
         <RecoilRootProvider>
           <QueryProvider>
             <TabStateContextProvider>{children}</TabStateContextProvider>
