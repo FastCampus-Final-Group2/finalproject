@@ -71,6 +71,7 @@ const OrderDashBoard = () => {
   );
 
   const [apiResponseData, setApiResponseData] = useState(null); // 응답 데이터를 저장할 상태
+  const [prevRequestBody, setPrevRequestBody] = useState<RequestBodyChangeDispatchData | null>(null);
 
   // // 객체 변화 후 API 요청을 보낼 상태 값
   const [shouldSendRequest, setShouldSendRequest] = useState(false);
@@ -100,44 +101,41 @@ const OrderDashBoard = () => {
     };
 
     // 전역 상태 업데이트
-    setRequestBodyChangeDispatchData(updatedRequestBodyChangeDispatchData);
-    setShouldSendRequest(true);
+    // 이전 요청 본문과 현재 요청 본문을 비교
+    if (JSON.stringify(updatedRequestBodyChangeDispatchData) !== JSON.stringify(prevRequestBody)) {
+      setRequestBodyChangeDispatchData(updatedRequestBodyChangeDispatchData);
+      setPrevRequestBody(updatedRequestBodyChangeDispatchData);
+      setShouldSendRequest(true);
+    }
   }, [stopOverList, dispatchData, selectedDriver]);
 
-  // useEffect(() => {
-  //   if (dispatchData && dispatchData.course?.[selectedDriver]?.courseDetailResponseList) {
-  //     setStopOverList(dispatchData.course[selectedDriver].courseDetailResponseList);
-  //   }
-  // }, [dispatchData, selectedDriver]);
+  useEffect(() => {
+    if (!dispatchData || selectedDriver === -1) return;
 
-  // // restingPosition 값 앞에 새로운 객체 삽입
-  // const insertBreakTime = (restingPosition: number, breakStartTime: LocalTime, breakEndTime: LocalTime) => {
-  //   setStopOverList((prevData) => {
-  //     const updatedData = [...prevData];
-  //     const breakTimeObject = { breakStartTime, breakEndTime };
-  //     updatedData.splice(restingPosition, 0, breakTimeObject); // 해당 위치에 새로운 객체 삽입
-  //     return updatedData;
-  //   });
-  // };
+    const restingPosition = dispatchData.course[selectedDriver]?.restingPosition;
+    const breakStartTime = dispatchData.course[selectedDriver]?.breakStartTime;
+    const breakEndTime = dispatchData.course[selectedDriver]?.breakEndTime;
 
-  // useEffect(() => {
-  //   if (
-  //     dispatchData &&
-  //     dispatchData.course?.[selectedDriver]?.breakStartTime &&
-  //     dispatchData.course?.[selectedDriver]?.breakEndTime
-  //   ) {
-  //     const restingPosition = dispatchData.course[selectedDriver].restingPosition;
-  //     const breakStartTime = dispatchData.course[selectedDriver].breakStartTime;
-  //     const breakEndTime = dispatchData.course[selectedDriver].breakEndTime;
+    // 기존에 같은 인덱스에 휴게시간 객체가 있는지 확인하고 제거
+    const filteredStopOverList = stopOverList.filter((item) => !(item.breakStartTime && item.breakEndTime));
 
-  //     // 조건문을 사용하여 `undefined`를 처리
-  //     if (restingPosition !== undefined && breakStartTime !== undefined && breakEndTime !== undefined) {
-  //       insertBreakTime(restingPosition, breakStartTime, breakEndTime);
-  //     }
-  //   }
-  // }, [selectedDriver, dispatchData]);
+    // 새로운 휴게시간 객체 생성
+    const newBreakTimeObject = {
+      breakStartTime,
+      breakEndTime,
+    };
 
-  // 데이터 업데이트 함수
+    // 휴게시간 객체를 restingPosition 인덱스에 삽입
+    const updatedStopOverList = [
+      ...filteredStopOverList.slice(0, restingPosition),
+      newBreakTimeObject,
+      ...filteredStopOverList.slice(restingPosition),
+    ];
+
+    // stopOverList 배열 업데이트
+    setStopOverList(updatedStopOverList);
+  }, [selectedDriver]); // 감지할 상태 목록
+
   const updateDispatchData = (
     prevData: DispatchResponse | null,
     newData: DispatchUpdateResponse,
@@ -159,24 +157,43 @@ const OrderDashBoard = () => {
                 totalOrderOrDistanceNum: newData.totalOrderOrDistanceNum ?? course.totalOrderOrDistanceNum,
                 floorAreaRatio: newData.floorAreaRatio ?? course.floorAreaRatio,
                 availableNum: newData.availableNum ?? course.availableNum,
-                breakStartTime: newData.breakStartTime ?? course.breakStartTime,
-                breakEndTime: newData.breakEndTime ?? course.breakEndTime,
                 restingPosition: newData.restingStopover ?? course.restingPosition,
-                courseDetailResponseList: course.courseDetailResponseList.map((detail, idx) => ({
-                  ...detail,
-                  expectationOperationStartTime:
-                    dispatchDetailList[idx]?.expectationOperationStartTime ?? detail.expectationOperationStartTime,
-                  expectationOperationEndTime:
-                    dispatchDetailList[idx]?.expectationOperationEndTime ?? detail.expectationOperationEndTime,
-                  ett: dispatchDetailList[idx]?.ett ?? detail.ett,
-                  expectedServiceDuration:
-                    dispatchDetailList[idx]?.expectedServiceDuration ?? detail.expectedServiceDuration,
-                  distance: dispatchDetailList[idx]?.distance ?? detail.distance,
-                  delayRequestTime: dispatchDetailList[idx]?.delayRequestTime ?? detail.delayRequestTime,
-                  overContractNum: dispatchDetailList[idx]?.overContractNum ?? detail.overContractNum,
-                  overFloorAreaRatio: dispatchDetailList[idx]?.overFloorAreaRatio ?? detail.overFloorAreaRatio,
-                  entryRestricted: dispatchDetailList[idx]?.entryRestricted ?? detail.entryRestricted,
-                })),
+                courseDetailResponseList: (() => {
+                  let dispatchIdx = 0; // dispatchDetailList의 인덱스를 관리하기 위한 변수
+
+                  return course.courseDetailResponseList.map((detail) => {
+                    // 휴게시간 객체를 건너뛰기 위한 조건
+                    if (detail.breakStartTime && detail.breakEndTime) {
+                      // 휴게시간 객체는 그대로 유지하고 dispatchIdx는 증가하지 않음
+                      return detail;
+                    }
+
+                    // dispatchDetailList의 해당 인덱스 값으로 업데이트
+                    const updatedDetail = {
+                      ...detail,
+                      expectationOperationStartTime:
+                        dispatchDetailList[dispatchIdx]?.expectationOperationStartTime ??
+                        detail.expectationOperationStartTime,
+                      expectationOperationEndTime:
+                        dispatchDetailList[dispatchIdx]?.expectationOperationEndTime ??
+                        detail.expectationOperationEndTime,
+                      ett: dispatchDetailList[dispatchIdx]?.ett ?? detail.ett,
+                      expectedServiceDuration:
+                        dispatchDetailList[dispatchIdx]?.expectedServiceDuration ?? detail.expectedServiceDuration,
+                      distance: dispatchDetailList[dispatchIdx]?.distance ?? detail.distance,
+                      delayRequestTime: dispatchDetailList[dispatchIdx]?.delayRequestTime ?? detail.delayRequestTime,
+                      overContractNum: dispatchDetailList[dispatchIdx]?.overContractNum ?? detail.overContractNum,
+                      overFloorAreaRatio:
+                        dispatchDetailList[dispatchIdx]?.overFloorAreaRatio ?? detail.overFloorAreaRatio,
+                      entryRestricted: dispatchDetailList[dispatchIdx]?.entryRestricted ?? detail.entryRestricted,
+                    };
+
+                    // 다음 dispatchDetailList 인덱스로 이동
+                    dispatchIdx += 1;
+
+                    return updatedDetail;
+                  });
+                })(),
                 coordinatesResponseList:
                   newData.coordinates?.map((coord) => ({
                     lat: coord.lat,
@@ -268,14 +285,16 @@ const OrderDashBoard = () => {
     }
   };
 
-  // useEffect 수정
   useEffect(() => {
     if (shouldSendRequest) {
       const sendRequest = async () => {
         try {
           const response = await axios.put("/dispatch", requestBodyChangeDispatchData);
           if (response.status === 200 || response.status === 201) {
-            console.log("성공적인 응답:", response.data);
+            // 개발 모드에서만 로그 출력
+            if (process.env.NODE_ENV === "development") {
+              console.log("성공적인 응답:", response.data);
+            }
             setApiResponseData(response.data);
           }
         } catch (error) {
@@ -290,7 +309,6 @@ const OrderDashBoard = () => {
       setShouldSendRequest(false);
     }
   }, [shouldSendRequest, requestBodyChangeDispatchData]);
-
   return (
     <DragDropContext onDragEnd={onDragEnd}>
       <div className="flex">
@@ -315,10 +333,10 @@ const OrderDashBoard = () => {
         </div>
       </div>
       {/* 변경된 배열 확인 */}
-      {/* <div>
+      <div>
         <h2>StopOverData 배열:</h2>
         <pre>{JSON.stringify(stopOverList, null, 2)}</pre>
-      </div> */}
+      </div>
 
       {/* <div>
         <h2>PendingOrderData 배열:</h2>
@@ -330,8 +348,8 @@ const OrderDashBoard = () => {
       </div> */}
       {/* <div>
         <pre>{JSON.stringify(requestBodyChangeDispatchData, null, 2)}</pre>
-      </div>
-      <div>
+      </div> */}
+      {/* <div>
         <h2>API 응답 데이터:</h2>
         <pre>{apiResponseData ? JSON.stringify(apiResponseData, null, 2) : "데이터가 없습니다"}</pre>
       </div>
