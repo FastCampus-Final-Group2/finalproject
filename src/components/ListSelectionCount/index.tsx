@@ -67,6 +67,7 @@ const ListSelectionCount = ({
           text={[{ type: "alert", value: "배차 강제 종료 시, 복구되지 않습니다." }]}
           leftButtonText="아니오"
           rightButtonText="네"
+          doConfirm={true}
           onConfirm={handleDeletdDispatchCode} // 삭제 처리 함수 호출
           onClickClose={() => setIsModalOpen(false)}
         />

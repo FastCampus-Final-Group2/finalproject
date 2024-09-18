@@ -2,15 +2,16 @@ import Icon, { IconId } from "@/components/core/Icon";
 import DeliveryStatusTag from "@/components/DeliveryStatusTag";
 import DeliveryStopoverListCard from "@/components/DeliveryRoutine/DeliveryStopoverListCard";
 import CircleCheckbox from "./CircleCheckbox";
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import IAmMoving from "./IAmMoving";
 import DeliveryModal from "@/components/detailModal/DeliveryModal";
+import OrderModal from "@/components/detailModal/OrderModal";
 import IAmResting from "./IAmResting";
 import { LocalTime } from "@/models/ApiTypes";
 
 // DeliveryRoutineDetailStatusItem 정의 추가
 export interface DeliveryRoutineDetailStatusItem {
-  dispatchDetailId: number;
+  dispatchDetailId?: number;
   destinationId: number; // 이 줄을 추가
   dispatchDetailStatus:
     | "DELIVERY_DELAY"
@@ -32,6 +33,7 @@ export interface DeliveryRoutineDetailStatusItem {
   destinationComment?: string;
   delayedTime?: number;
   isDelay?: boolean;
+  transportOrderId?: number;
 }
 
 interface DeliveryRoutineDetailProps {
@@ -46,14 +48,50 @@ interface DeliveryRoutineDetailProps {
       departureTime: LocalTime;
     };
   };
+  selectedDestinationId: number | null;
+  refreshSideTabData: () => Promise<void>;
 }
 
-const DeliveryRoutineDetail = ({ selectedOrders, setSelectedOrders, fetchData }: DeliveryRoutineDetailProps) => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedDestinationId, setSelectedDestinationId] = useState<number | null>(null);
-  const handleAddressInfo = (item: DeliveryRoutineDetailStatusItem) => {
-    setSelectedDestinationId(item.destinationId);
-    setIsModalOpen(true);
+const DeliveryRoutineDetail = ({
+  selectedOrders,
+  setSelectedOrders,
+  fetchData,
+  selectedDestinationId,
+  refreshSideTabData,
+}: DeliveryRoutineDetailProps) => {
+  const [isDeliveryModalOpen, setIsDeliveryModalOpen] = useState(false);
+  const [isOrderModalOpen, setIsOrderModalOpen] = useState(false);
+  const [selectedDestinationIdForModal, setSelectedDestinationIdForModal] = useState<number | null>(null);
+  const [selectedTransportOrderId, setSelectedTransportOrderId] = useState<number | null>(null);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (selectedDestinationId && scrollContainerRef.current) {
+      const element = document.getElementById(`delivery-item-${selectedDestinationId}`);
+      if (element) {
+        element.scrollIntoView({ behavior: "smooth", block: "center" });
+      }
+    }
+  }, [selectedDestinationId]);
+
+  const handleAddressInfo = (item: DeliveryRoutineDetailStatusItem, event: React.MouseEvent) => {
+    event.stopPropagation(); // 이벤트 버블링 방지
+    if (item.destinationId > 0) {
+      setSelectedDestinationIdForModal(item.destinationId);
+      setIsDeliveryModalOpen(true);
+    } else {
+      alert("배송처 정보 없음");
+    }
+  };
+
+  const handleOrderInfo = (item: DeliveryRoutineDetailStatusItem) => {
+    if (item.transportOrderId && item.transportOrderId > 0) {
+      setSelectedTransportOrderId(item.transportOrderId);
+      setIsOrderModalOpen(true);
+      console.log("item.transportOrderId", item.transportOrderId);
+    } else {
+      alert("주문 정보 없음");
+    }
   };
 
   let orderCounter = 0;
@@ -68,11 +106,11 @@ const DeliveryRoutineDetail = ({ selectedOrders, setSelectedOrders, fetchData }:
     return `${hours}:${minutes}`;
   };
 
-  const parseAddress = (fullAddress: string): { address: string; addressDetail: string } => {
+  const parseAddress = (fullAddress: string): { address: string } => {
     // 특별시, 광역시, 특별자치시, 특별자치도를 간단히 표시하는 함수
     const simplifyCity = (city: string): string => {
       return city
-        .replace(/특별시|광역시|특별자치시/, "")
+        .replace(/특별시|광역시|특별자치시/, "시")
         .replace(/특별자치도/, "도")
         .replace(/경상북도/, "경북")
         .replace(/경상남도/, "경남")
@@ -88,15 +126,13 @@ const DeliveryRoutineDetail = ({ selectedOrders, setSelectedOrders, fetchData }:
     if (match) {
       const simplifiedCity = simplifyCity(match[1]);
       return {
-        address: `${simplifiedCity} ${match[2]}`,
-        addressDetail: match[3],
+        address: `${simplifiedCity} ${match[2]} ${match[3]}`,
       };
     }
 
     // 매칭되지 않으면 원래 주소를 간단히 표시하여 반환
     return {
       address: simplifyCity(fullAddress),
-      addressDetail: "",
     };
   };
 
@@ -135,14 +171,20 @@ const DeliveryRoutineDetail = ({ selectedOrders, setSelectedOrders, fetchData }:
     lastItem.expectationOperationEndTime &&
     changedBreakStartTime > lastItem.expectationOperationEndTime;
 
+  const truncateAddress = (address: string, maxLength: number) => {
+    return address.length > maxLength ? address.slice(0, maxLength) + "..." : address;
+  };
+
   return (
     <>
-      <div className="flex flex-col gap-[12px] overflow-scroll scrollbar-hide">
+      <div ref={scrollContainerRef} className="flex flex-col gap-[12px] overflow-scroll scrollbar-hide">
         {shouldInsertResting && (
           <IAmResting breakStartTime={changedBreakStartTime} breakEndTime={changedBreakEndTime} />
         )}
         {fetchListItems.map((item, index) => {
-          const { address, addressDetail } = parseAddress(item.address);
+          const { address } = parseAddress(item.address);
+          const maxLength = item.dispatchDetailStatus === "CANCELED" ? 20 : 13;
+          const displayAddress = truncateAddress(address, maxLength);
           let startTimeLabel = "시작";
           let endTimeLabel = "종료";
           let displayStartTime = formatTime(item.operationStartTime);
@@ -177,11 +219,12 @@ const DeliveryRoutineDetail = ({ selectedOrders, setSelectedOrders, fetchData }:
           const shouldDisplayOrder =
             item.dispatchDetailStatus !== "CANCELED" && item.dispatchDetailStatus !== "RESTING";
           const orderNumber = shouldDisplayOrder ? ++orderCounter : undefined;
-
+          const isDisabled = item.destinationId === 0 && item.dispatchDetailStatus !== "CANCELED";
+          const isHighlighted = item.destinationId === selectedDestinationId;
           return (
             <React.Fragment key={index}>
               {index === 0 && item.dispatchDetailStatus === "WORK_WAITING" && <IAmMoving ett={fetchData.ett ?? 0} />}
-              <div className="flex w-[430px] justify-between">
+              <div id={`delivery-item-${item.destinationId}`} className="flex w-[430px] justify-between">
                 <CircleCheckbox
                   status={item.dispatchDetailStatus}
                   order={orderNumber ?? -1}
@@ -190,28 +233,28 @@ const DeliveryRoutineDetail = ({ selectedOrders, setSelectedOrders, fetchData }:
                   delayedTime={item.delayedTime}
                 />
                 <DeliveryStopoverListCard
-                  className={item.delayedTime ? "border-red-500 bg-red-30" : ""}
-                  background={item.dispatchDetailStatus === "default" ? "start" : undefined}
+                  onClick={() => handleOrderInfo(item)}
+                  className={`${item.delayedTime ? "border-red-500 bg-red-30" : ""}`}
+                  background={isHighlighted ? "delayed" : item.dispatchDetailStatus === "default" ? "start" : undefined}
+                  border={
+                    isHighlighted ? "delayed" : item.dispatchDetailStatus === "CANCELED" ? "restOrCancel" : undefined
+                  }
                 >
                   <div className="flex flex-col gap-[8px]">
                     <ul className={`${item.dispatchDetailStatus === "CANCELED" ? "text-gray-300" : ""} `}>
                       <li className="flex items-center gap-[8px]">
                         <DeliveryStatusTag vehicleStatus={item.dispatchDetailStatus || "default"}></DeliveryStatusTag>
                         <p
-                          className={`cursor-pointer text-nowrap border-b border-blue-500 -tracking-[-1px] text-T-16-M ${
-                            item.dispatchDetailStatus === "CANCELED" ? "border-gray-300 text-gray-300" : "text-blue-500"
-                          } ${item.dispatchDetailStatus === "RESTING" ? "hidden" : ""} `}
-                          onClick={() => handleAddressInfo(item)}
+                          className={`cursor-pointer border-b border-blue-500 -tracking-[-1px] text-T-16-M ${
+                            item.dispatchDetailStatus === "CANCELED"
+                              ? "border-gray-300 text-gray-300"
+                              : "text-ellipsis whitespace-nowrap text-blue-500"
+                          } ${item.dispatchDetailStatus === "RESTING" ? "hidden" : ""} ${isDisabled ? "!cursor-default border-none text-gray-700" : ""}`}
+                          onClick={!isDisabled ? (event) => handleAddressInfo(item, event) : undefined}
                           style={{ letterSpacing: "-1px" }}
+                          title={address}
                         >
-                          {address}
-                        </p>
-                        <p
-                          className={`overflow-hidden text-ellipsis whitespace-nowrap text-B-14-M ${
-                            item.dispatchDetailStatus === "CANCELED" ? "text-gray-300" : "text-gray-500"
-                          } ${maxWClass} ${item.dispatchDetailStatus === "RESTING" ? "hidden" : ""}`}
-                        >
-                          {addressDetail}
+                          {displayAddress}
                         </p>
                       </li>
                     </ul>
@@ -266,12 +309,15 @@ const DeliveryRoutineDetail = ({ selectedOrders, setSelectedOrders, fetchData }:
           <IAmResting breakStartTime={changedBreakStartTime} breakEndTime={changedBreakEndTime} />
         )}
       </div>
-      {isModalOpen && (
+      {isDeliveryModalOpen && selectedDestinationIdForModal && (
         <DeliveryModal
-          id={fetchData.dispatchDetailList[0].destinationId}
+          id={selectedDestinationIdForModal}
           isCenter={false}
-          onClose={() => setIsModalOpen(false)}
+          onClose={() => setIsDeliveryModalOpen(false)}
         />
+      )}
+      {isOrderModalOpen && selectedTransportOrderId && (
+        <OrderModal id={selectedTransportOrderId} onClose={() => setIsOrderModalOpen(false)} />
       )}
     </>
   );

@@ -85,6 +85,7 @@ const PendingOrderList = ({ pendingOrderData }: PendingOrderDataProps) => {
                   {(provided) => (
                     <div ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
                       <PendingOrder
+                        index={index}
                         address={order.roadAddress}
                         meter={order.volume}
                         kilogram={order.weight}

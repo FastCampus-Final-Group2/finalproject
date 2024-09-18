@@ -49,7 +49,7 @@ const SearchOption = ({ selectedOption, setSelectedOption }: SearchOptionProps) 
   };
 
   const handleCategorySelect = (option: { name: string; value: string }) => {
-    setSelectedOption(option.value); // value를 저장
+    setSelectedOption(option.value);
     setIsOpen(false);
   };
 

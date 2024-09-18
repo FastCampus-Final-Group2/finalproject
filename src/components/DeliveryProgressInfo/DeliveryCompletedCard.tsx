@@ -8,7 +8,7 @@ interface DeliveryCompletedCardProps {
   totalTime: string;
   progressionRate: number;
   totalDistance: number;
-  refreshData: () => Promise<void>;
+  refreshSideTabData: () => Promise<void>;
 }
 
 const formatTotalTime = (totalTime: string): { hours: number; minutes: number } => {
@@ -45,7 +45,7 @@ const DeliveryCompletedCard = ({
       iconId: "order",
       devide: "/",
     },
-    { title: "주행 거리", count: totalDistance.toFixed(2), unit: "km", iconId: "truck", devide: "" },
+    { title: "주행 거리", count: totalDistance.toFixed(1), unit: "km", iconId: "truck", devide: "" },
     {
       title: "주행 시간",
       count: (

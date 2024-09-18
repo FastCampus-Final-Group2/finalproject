@@ -6,97 +6,42 @@ import Icon from "@/components/core/Icon";
 import { TEXT_650, BG_50 } from "@/styles/smColor";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { bgColorState } from "@/atoms/bgColorState";
-import { transportOrderState } from "@/atoms/transportOrder";
-import { driverIndex } from "@/atoms/driverIndex";
-import { dispatchDataState } from "@/atoms/dispatchData";
-import { DispatchResponse, CourseDetailResponse } from "@/models/ApiTypes";
-
-export interface ListStopOverData {
-  restrictedTonCode: boolean;
-  delayRequestTime: boolean;
-  overContractNum: boolean;
-  ett: number;
-  expectationOperationStartTime: string;
-  expectationOperationEndTime: string;
-  deliveryDestinationId: number;
-  managerName: string | null;
-  phoneNumber: string | null;
-  lat: number;
-  lon: number;
-  distance: number;
-  deliveryType: string;
-  smId: number;
-  smName: string;
-  shipmentNumber: string;
-  clientOrderKey: string;
-  orderType: string;
-  receivedDate: string;
-  serviceRequestDate: string;
-  serviceRequestTime: string;
-  clientName: string;
-  contact: string;
-  roadAddress: string;
-  lotNumberAddress: string;
-  detailAddress: string;
-  zipcode: string;
-  volume: number;
-  weight: number;
-  note: string;
-  expectedServiceDuration: number;
-  productName: string;
-  productCode: string;
-  productQuantity: number;
-}
+import { dispatchDataState, selectedDriverState } from "@/atoms/dispatchData";
 
 interface SideTapDriverDetailProps {
-  isSideTapExpanded: boolean;
-  onClose: () => void;
-  listStopOverData: CourseDetailResponse[];
   isExpanded: boolean;
   toggleExpand: () => void;
 }
 
-const SideTapDriverDetail = ({
-  isSideTapExpanded,
-  onClose,
-  listStopOverData,
-  isExpanded,
-  toggleExpand,
-}: SideTapDriverDetailProps) => {
+const SideTapDriverDetail = ({ isExpanded, toggleExpand }: SideTapDriverDetailProps) => {
   const bgColor = useRecoilValue(bgColorState);
-  const driverIndexState = useRecoilValue(driverIndex);
-  const dispatchData = useRecoilValue(transportOrderState);
+  const [selectedDriver, setSelectedDriver] = useRecoilState(selectedDriverState);
 
-  const [recoilDispatchData, setRecoilDispatchData] = useRecoilState<DispatchResponse | null>(dispatchDataState);
+  const [dispatchData] = useRecoilState(dispatchDataState);
 
   return (
     <div>
-      {isSideTapExpanded && recoilDispatchData && (
+      {selectedDriver !== -1 && dispatchData && (
         <div className="relative h-[884px] w-[440px]">
           {/* recoilDispatchData가 null이 아닌 경우에만 데이터를 접근 */}
-          {recoilDispatchData.course && recoilDispatchData.course[driverIndexState] && (
+          {dispatchData.course && dispatchData.course[selectedDriver] && (
             <DriverDispatchDetailDashboard
-              drivingTime={recoilDispatchData.course[driverIndexState].totalTime}
-              mileage={recoilDispatchData.course[driverIndexState].mileage}
-              totalOrder={recoilDispatchData.course[driverIndexState].orderNum}
-              availabilityOrder={80}
-              floorAreaRatio={recoilDispatchData.course[driverIndexState].floorAreaRatio}
-              driverName={recoilDispatchData.course[driverIndexState].smName}
-              driverPhoneNumber={recoilDispatchData.course[driverIndexState].smPhoneNumber}
-              vehicleType={recoilDispatchData.course[driverIndexState].vehicleType}
-              vehicleTon={recoilDispatchData.course[driverIndexState].vehicleTon}
+              drivingTime={dispatchData.course[selectedDriver].totalTime}
+              mileage={dispatchData.course[selectedDriver].mileage}
+              totalOrder={dispatchData.course[selectedDriver].orderNum}
+              availabilityOrder={dispatchData.course[selectedDriver].availableNum}
+              floorAreaRatio={dispatchData.course[selectedDriver].floorAreaRatio}
+              driverName={dispatchData.course[selectedDriver].smName}
+              driverPhoneNumber={dispatchData.course[selectedDriver].smPhoneNumber}
+              vehicleType={dispatchData.course[selectedDriver].vehicleType}
+              vehicleTon={dispatchData.course[selectedDriver].vehicleTon}
               bgColor={bgColor}
             />
           )}
-          <StopOverList
-            bgColor={bgColor}
-            listStopOverData={listStopOverData}
-            isExpanded={isExpanded}
-            toggleExpand={toggleExpand}
-          />
+          <StopOverList bgColor={bgColor} isExpanded={isExpanded} toggleExpand={toggleExpand} />
           <button
             className={`absolute bottom-[326px] right-[-16px] flex h-[128px] w-[48px] -translate-y-1/2 transform items-center justify-center rounded-full ${BG_50[bgColor]} z-10`}
-            onClick={onClose}
+            onClick={() => setSelectedDriver(-1)}
           >
             <Icon id="arrowLargeDoubleLeft" size={24} className={TEXT_650[bgColor]} />
           </button>

@@ -10,12 +10,12 @@ import SearchBars from "@/components/SearchBar";
 import Pagination from "@/components/core/Pagination";
 import { useSetRecoilState, useRecoilValue, useRecoilState } from "recoil";
 import {
+  // controlSearchOptionState,
+  // searchTextInputState,
+  // searchStartTimeState,
+  // searchEndTimeState,
   lastVisitedControlPageState,
-  controlSearchOptionState,
-  searchTextInputState,
   controlOnlyClientState,
-  searchStartTimeState,
-  searchEndTimeState,
   searchDataState,
   searchParamsState,
   controlTabState,
@@ -24,18 +24,6 @@ import {
 } from "@/atoms/control";
 import { useRouter } from "next/navigation";
 import ListSelectionCount from "@/components/ListSelectionCount";
-import dayjs from "dayjs";
-
-/* todos: 
-  1. 내 담당 주문 보기 기능 구현하기
-  2. 사이드탭 열었을 때 지도에 순서 아이콘 표시하기(1)
-  3. 특정 운송 목록을 취소할 때 대시보드와 사이드바가 모두 새로고침되게 하기
-  4. 이슈상황 모아보기 작업하기(목록을 클릭해서 사이드탭을 열면 특정 listcard가 포커스되고 bg 색상이 연빨강으로 변함. 이때 한 번 빨강으로 표시된 부분은 다음에는 더 이상 색상이 표시되지 않음)(2)
-  5. 예정 시간을 지나치면 작업 속도 늦어짐 메시지를 넣어야 하나?
-  6. UT 플로우를 따를 때 운송 목록이 지정된 시간을 지나치면 자동으로 컴포넌트가 바뀌어야 하는지 물어보기
-  7. 탭 닫았다가 다시 열면 처음 상태로 돌아가기(useReset 추가)
-  
-*/
 
 interface DispatchData {
   status?: "IN_TRANSIT" | "WAITING" | "COMPLETED";
@@ -59,30 +47,27 @@ const ControlPage = () => {
   const lastVisitedControlPage = useRecoilValue(lastVisitedControlPageState);
   const router = useRouter();
 
+  // const [searchOption] = useRecoilState(controlSearchOptionState);
+  // const [searchKeyword] = useRecoilState(searchTextInputState);
+  // const [startDate] = useRecoilState(searchStartTimeState);
+  // const [endDate] = useRecoilState(searchEndTimeState);
   const [page, setPage] = useState(1);
   const [selectedItemsCount, setSelectedItemsCount] = useState(0);
   const [selectedDispatchIds, setSelectedDispatchIds] = useState<number[]>([]);
-  const [searchOption] = useRecoilState(controlSearchOptionState);
-  const [searchKeyword] = useRecoilState(searchTextInputState);
-  const [onlyClient] = useRecoilState(controlOnlyClientState);
-  const [startDate] = useRecoilState(searchStartTimeState);
-  const [endDate] = useRecoilState(searchEndTimeState);
+  const [onlyClient, setOnlyClient] = useRecoilState(controlOnlyClientState);
   const [searchData, setSearchData] = useRecoilState(searchDataState);
   const [searchParams, setSearchParams] = useRecoilState(searchParamsState);
   const [selectedState, setSelectedState] = useRecoilState(controlTabState);
   const [todayDate, setTodayDate] = useRecoilState(todayDateState);
   const [sevenDaysLater, setSevenDaysLater] = useRecoilState(sevenDaysLaterState);
 
-  useEffect(() => {
-    setLastVisitedControlPage((prev) => ({ ...prev, general: "/control" }));
-    if (lastVisitedControlPage.detail) {
-      router.push(lastVisitedControlPage.detail);
-    }
-  }, [setLastVisitedControlPage, lastVisitedControlPage.detail, router]);
-
   const fetchDispatchData = useCallback(async () => {
     const { error, results } = await DispatchNumberApi.search({
-      request: searchParams,
+      request: {
+        ...searchParams,
+        searchOption: searchParams.searchOption || undefined,
+        searchKeyword: searchParams.searchKeyword || undefined,
+      },
     });
 
     if (error) throw new Error(error.type || "데이터 가져오기 중 오류 발생");
@@ -100,6 +85,10 @@ const ControlPage = () => {
     refetchOnWindowFocus: false,
     retry: 3,
   });
+
+  const handleSearch = useCallback(async () => {
+    await refetch();
+  }, [refetch]);
 
   useEffect(() => {
     if (displayData.results.length > 0) {
@@ -128,40 +117,32 @@ const ControlPage = () => {
     }
   };
 
-  const handleSearch = async () => {
-    let formattedStartDate = todayDate;
-    let formattedEndDate = sevenDaysLater;
-
-    if (startDate && dayjs(startDate).isValid()) {
-      formattedStartDate = dayjs(startDate).format("YYYY-MM-DDTHH:mm:ss");
+  useEffect(() => {
+    setLastVisitedControlPage((prev) => ({ ...prev, general: "/control" }));
+    if (lastVisitedControlPage.detail) {
+      router.push(lastVisitedControlPage.detail);
     }
-    if (endDate && dayjs(endDate).isValid()) {
-      formattedEndDate = dayjs(endDate).format("YYYY-MM-DDTHH:mm:ss");
-    }
-
-    setSearchParams({
-      status: selectedState === "주행중" ? "IN_TRANSIT" : selectedState === "주행대기" ? "WAITING" : "COMPLETED",
-      isManager: false,
-      startDateTime: formattedStartDate,
-      endDateTime: formattedEndDate,
-      searchOption: searchOption || "",
-      searchKeyword,
-    });
-  };
+  }, [setLastVisitedControlPage, lastVisitedControlPage.detail, router]);
 
   const handleClearSearch = () => {
     setSearchParams({
       status: selectedState === "주행중" ? "IN_TRANSIT" : selectedState === "주행대기" ? "WAITING" : "COMPLETED",
-      isManager: false,
+      isManager: onlyClient,
       startDateTime: todayDate,
       endDateTime: sevenDaysLater,
       searchOption: "",
       searchKeyword: "",
     });
+    setOnlyClient(false);
+    // setSearchOption("");
+    // setSearchKeyword("");
   };
 
   if (isLoading) return <div>Loading...</div>;
   if (error instanceof Error) return <div>Error: {error.message}</div>;
+
+  console.log("searchParams", searchParams);
+  console.log("onlyClient", onlyClient);
 
   return (
     <div className="h-[calc(100vh-104px)] overflow-y-auto p-[48px]">

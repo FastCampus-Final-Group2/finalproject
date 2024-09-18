@@ -13,9 +13,10 @@ type VehicleStatusType =
   | "CANCELED"
   | "DELIVERY_DELAY"
   | "RESTING"
-  | "RESTING_TIME";
+  | "RESTING_TIME"
+  | "TRANSPORTATION_COMPLETED";
 
-interface DeliveryStatusTagProps extends VariantProps<typeof deliveryStatusClass> {
+interface DeliveryStatusTagProps extends Omit<VariantProps<typeof deliveryStatusClass>, "vehicleStatus"> {
   children?: string;
   vehicleStatus: VehicleStatusType;
   restDisplay?: boolean;
@@ -23,8 +24,6 @@ interface DeliveryStatusTagProps extends VariantProps<typeof deliveryStatusClass
 
 // 상태값과 한국어 텍스트를 매핑한다.
 const statusTextMap: Record<VehicleStatusType, string> = {
-  // "TRANSPORTATION_START": "운송 시작",
-  // "TRANSPORTATION_COMPLETED": "운송 완료",
   default: "",
   WORK_START: "작업시작",
   WORK_WAITING: "작업대기",
@@ -33,6 +32,7 @@ const statusTextMap: Record<VehicleStatusType, string> = {
   RESTING: "휴게 중",
   DELIVERY_DELAY: "배송지연",
   CANCELED: "배송취소",
+  TRANSPORTATION_COMPLETED: "운송종료",
   RESTING_TIME: "60분",
 };
 

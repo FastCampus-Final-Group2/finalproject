@@ -1,7 +1,7 @@
 "use client";
 
 import { cn } from "@/utils/cn";
-import { itemVariants } from "./index.variants";
+import { containerVariants, itemVariants } from "./index.variants";
 import { ExcelDataHeader } from "@/types/excel";
 import { useRecoilState, useSetRecoilState } from "recoil";
 import { excelDataCellSelector } from "@/atoms/excelData";
@@ -82,11 +82,25 @@ const Item = ({ rowId, header }: ItemProps) => {
   };
 
   return (
-    <input
-      value={excelDataCell.value}
-      className={cn(itemVariants({ isValid: excelDataCell.isValid }))}
-      onChange={handleInputChange}
-    />
+    <div
+      className={cn(
+        containerVariants({
+          isValid: excelDataCell.isValid,
+          isAddress: header === "address" || header === "detailAddress",
+        }),
+      )}
+    >
+      <input
+        value={excelDataCell.value}
+        className={cn(
+          itemVariants({
+            isValid: excelDataCell.isValid,
+          }),
+        )}
+        onChange={handleInputChange}
+        spellCheck={false}
+      />
+    </div>
   );
 };
 

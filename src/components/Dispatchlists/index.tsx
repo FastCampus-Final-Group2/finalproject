@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import ListHeader from "./ListHeader";
 import Lists from "./Lists";
 import { DispatchResult } from "@/models/ApiTypes";
@@ -20,7 +20,14 @@ const DispatchLists = ({ results, onSelectedItemsCountChange, onSelectedDispatch
   const perPage = 10;
   const startIndex = (currentPage - 1) * perPage;
   const endIndex = startIndex + perPage;
-  const currentResults = results.slice(startIndex, endIndex);
+  const sortedResults = useMemo(() => {
+    return [...results].sort((a, b) => {
+      if (!a.startDateTime || !b.startDateTime) return 0;
+      return new Date(b.startDateTime).getTime() - new Date(a.startDateTime).getTime();
+    });
+  }, [results]);
+
+  const currentResults = sortedResults.slice(startIndex, endIndex);
 
   const emptyItem = {
     progress: 0,
@@ -38,9 +45,9 @@ const DispatchLists = ({ results, onSelectedItemsCountChange, onSelectedDispatch
   );
 
   const initializeCheckStatus = useCallback(() => {
-    setCheckedItems(new Array(results.length).fill(false));
+    setCheckedItems(new Array(sortedResults.length).fill(false));
     setIsAllChecked(false);
-  }, [results.length]);
+  }, [sortedResults.length]);
 
   useEffect(() => {
     initializeCheckStatus();
@@ -82,12 +89,12 @@ const DispatchLists = ({ results, onSelectedItemsCountChange, onSelectedDispatch
     const selectedCount = checkedItems.filter(Boolean).length;
     onSelectedItemsCountChange(selectedCount);
 
-    const selectedIds = results
+    const selectedIds = sortedResults
       .filter((_, index) => checkedItems[index])
       .map((result) => result.dispatchNumberId)
       .filter((id): id is number => id !== undefined);
     onSelectedDispatchIdsChange(selectedIds);
-  }, [checkedItems, results, onSelectedItemsCountChange, onSelectedDispatchIdsChange]);
+  }, [checkedItems, sortedResults, onSelectedItemsCountChange, onSelectedDispatchIdsChange]);
 
   return (
     <div>

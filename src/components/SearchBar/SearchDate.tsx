@@ -1,9 +1,12 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
+import { useSetRecoilState } from "recoil";
+import { searchStartTimeState, searchEndTimeState, searchParamsState } from "@/atoms/control";
 import CalendarPicker from "@/components/CalendarPicker";
 import Icon from "@/components/core/Icon";
 import dayjs from "dayjs";
+import { SearchDispatchesParams } from "@/models/ApiTypes";
 
 interface SearchDateProps {
   startDate: string | null;
@@ -12,6 +15,7 @@ interface SearchDateProps {
   onEndDateChange: (date: string) => void;
   todayDate: string;
   sevenDaysLater: string;
+  onSearch: () => void;
 }
 
 const SearchDate = ({
@@ -21,6 +25,7 @@ const SearchDate = ({
   onEndDateChange,
   todayDate,
   sevenDaysLater,
+  onSearch,
 }: SearchDateProps) => {
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
   const [dateType, setDateType] = useState<"start" | "end">("start");
@@ -29,6 +34,10 @@ const SearchDate = ({
   const startDateRef = useRef<HTMLParagraphElement>(null);
   const endDateRef = useRef<HTMLParagraphElement>(null);
   const calendarRef = useRef<HTMLDivElement>(null);
+
+  const setSearchStartTime = useSetRecoilState(searchStartTimeState);
+  const setSearchEndTime = useSetRecoilState(searchEndTimeState);
+  const setSearchParams = useSetRecoilState(searchParamsState);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -43,29 +52,47 @@ const SearchDate = ({
     };
   }, []);
 
-  const handleDateConfirm = (selectedDate: string, selectedTime: string | null) => {
+  const handleDateConfirm = (selectedDateTime: string) => {
+    const [selectedDate, selectedTime] = selectedDateTime.split(" ");
     let formattedDate: string;
     const date = dayjs(selectedDate);
 
     if (dateType === "start") {
-      formattedDate = selectedTime ? date.format(`YYYY-MM-DD ${selectedTime}`) : date.format("YYYY-MM-DD 00:00");
+      formattedDate = selectedTime !== "--:--" ? `${selectedDate}T${selectedTime}:00` : `${selectedDate}T00:00:00`;
 
       if (endDate && dayjs(endDate).diff(date, "day") > 31) {
         alert("31일 기간을 범위로 검색해야 합니다.");
         return;
       }
+
+      if (endDate && date.isAfter(dayjs(endDate))) {
+        alert("시작일은 종료일보다 클 수 없습니다.");
+        return;
+      }
+
+      setSearchStartTime(formattedDate);
       onStartDateChange(formattedDate);
+      setSearchParams((prev: SearchDispatchesParams) => ({ ...prev, startDateTime: formattedDate }));
     } else {
-      formattedDate = selectedTime ? date.format(`YYYY-MM-DD ${selectedTime}`) : date.format("YYYY-MM-DD 23:59");
+      formattedDate = selectedTime !== "--:--" ? `${selectedDate}T${selectedTime}:00` : `${selectedDate}T23:59:59`;
 
       if (startDate && date.diff(dayjs(startDate), "day") > 31) {
         alert("31일 기간을 범위로 검색해야 합니다.");
         return;
       }
+
+      if (startDate && date.isBefore(dayjs(startDate))) {
+        alert("종료일은 시작일보다 작을 수 없습니다.");
+        return;
+      }
+
+      setSearchEndTime(formattedDate);
       onEndDateChange(formattedDate);
+      setSearchParams((prev: SearchDispatchesParams) => ({ ...prev, endDateTime: formattedDate }));
     }
 
     setIsCalendarOpen(false);
+    onSearch();
   };
 
   const toggleCalendar = (type: "start" | "end") => {

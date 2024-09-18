@@ -1,9 +1,9 @@
 import Icon from "@/components/core/Icon";
-import { useRecoilState } from "recoil";
-import { dispatchDataState } from "@/atoms/dispatchData";
+import { useRecoilValue } from "recoil";
+import { startStopoverResponseSelector } from "@/atoms/dispatchData";
 
 const StopOverStartCenter = () => {
-  const [recoilDispatchData] = useRecoilState(dispatchDataState);
+  const startStopover = useRecoilValue(startStopoverResponseSelector);
 
   return (
     <div className="inline-flex h-[52px] items-start justify-start gap-5">
@@ -17,9 +17,7 @@ const StopOverStartCenter = () => {
         <div className="flex h-[51px] w-full flex-col items-start justify-start gap-3 rounded-lg bg-white p-4">
           <div className="flex h-[19px] flex-col items-start justify-start gap-1 self-stretch">
             <div className="inline-flex items-center justify-start gap-2 self-stretch">
-              <button className="text-center text-blue-500 text-T-16-M">
-                {recoilDispatchData?.startStopoverResponse?.centerName}
-              </button>
+              <button className="text-center text-blue-500 text-T-16-M">{startStopover?.centerName}</button>
             </div>
           </div>
         </div>

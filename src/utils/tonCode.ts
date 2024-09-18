@@ -1,8 +1,6 @@
 import { RestrictedTonObject, Ton } from "@/types/tonCode";
 
 export const parseRestrictedTonString = (restrictedTonCode: string): RestrictedTonObject => {
-  const tonCodes = restrictedTonCode.split(",");
-
   const restrictedTonObject = {
     "1": false,
     "1.2": false,
@@ -13,6 +11,10 @@ export const parseRestrictedTonString = (restrictedTonCode: string): RestrictedT
     "8": false,
     "11": false,
   };
+
+  if (restrictedTonCode === "") return restrictedTonObject;
+
+  const tonCodes = restrictedTonCode.split(",");
 
   tonCodes.forEach((tonCode) => {
     restrictedTonObject[tonCode as Ton] = true;
