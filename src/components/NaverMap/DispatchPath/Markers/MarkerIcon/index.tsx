@@ -17,14 +17,15 @@ interface MarkerIconProps {
   coordinateIndex: number;
   courseDetail?: CourseDetailResponse;
   startDetail?: StartStopoverResponse;
+  isSelected: boolean;
 }
 
-const MarkerIcon = ({ index, type, coordinateIndex, courseDetail, startDetail }: MarkerIconProps) => {
+const MarkerIcon = ({ index, type, coordinateIndex, courseDetail, startDetail, isSelected }: MarkerIconProps) => {
   if (type === "start") {
     return (
       <div className="group relative">
         {startDetail && (
-          <div className="absolute bottom-[63px] z-50 hidden w-max flex-col gap-1 rounded-4 border border-gray-200 bg-white px-4 py-3 group-hover:flex">
+          <div className="absolute bottom-[67px] z-50 hidden w-max flex-col gap-1 rounded-4 border border-gray-200 bg-white px-4 py-3 group-hover:flex">
             <div className="flex items-center">
               <div className="flex items-center gap-2">
                 <div className="flex h-6 w-6 items-center justify-center rounded-full bg-gray-700 text-white">S</div>
@@ -33,7 +34,7 @@ const MarkerIcon = ({ index, type, coordinateIndex, courseDetail, startDetail }:
             </div>
           </div>
         )}
-        <StartMarkerIcon color={colors[SM_COLOR_MAP[index]][350]} />;
+        <StartMarkerIcon color={colors[SM_COLOR_MAP[index]][350]} isSelected={isSelected} />;
       </div>
     );
   }
