@@ -19,6 +19,7 @@ import { requestBodyChangeDispatchDataState } from "@/atoms/requestBodyChangeDis
 import { useEffect, useState } from "react";
 import {
   plusMinusEstimatedTimetState,
+  plusMinusTotalErrorOrdertState,
   plusMinusTotalOrdertState,
   plusMinusVolumeState,
   plusMinusWeightState,
@@ -83,6 +84,7 @@ const OrderDashBoard = () => {
   const [plusMinusWeight, setPlusMinusWeight] = useRecoilState(plusMinusWeightState);
   const [plusMinusTotalOrder, setPlusMinusTotalOrder] = useRecoilState(plusMinusTotalOrdertState);
   const [plusMinusEstimatedTime, setPlusMinusEstimatedTime] = useRecoilState(plusMinusEstimatedTimetState);
+  const [plusMinusTotalErrorOrdert] = useRecoilState(plusMinusTotalErrorOrdertState);
 
   // // 객체 변화 후 API 요청을 보낼 상태 값
   const [shouldSendRequest, setShouldSendRequest] = useState(false);
@@ -121,32 +123,32 @@ const OrderDashBoard = () => {
     }
   }, [stopOverList, dispatchData, selectedDriver]);
 
-  useEffect(() => {
-    if (!dispatchData || selectedDriver === -1) return;
+  // useEffect(() => {
+  //   if (!dispatchData || selectedDriver === -1) return;
 
-    const restingPosition = dispatchData.course[selectedDriver]?.restingPosition;
-    const breakStartTime = dispatchData.course[selectedDriver]?.breakStartTime;
-    const breakEndTime = dispatchData.course[selectedDriver]?.breakEndTime;
+  //   const restingPosition = dispatchData.course[selectedDriver]?.restingPosition;
+  //   const breakStartTime = dispatchData.course[selectedDriver]?.breakStartTime;
+  //   const breakEndTime = dispatchData.course[selectedDriver]?.breakEndTime;
 
-    // 기존에 같은 인덱스에 휴게시간 객체가 있는지 확인하고 제거
-    const filteredStopOverList = stopOverList.filter((item) => !(item.breakStartTime && item.breakEndTime));
+  //   // 기존에 같은 인덱스에 휴게시간 객체가 있는지 확인하고 제거
+  //   const filteredStopOverList = stopOverList.filter((item) => !(item.breakStartTime && item.breakEndTime));
 
-    // 새로운 휴게시간 객체 생성
-    const newBreakTimeObject = {
-      breakStartTime,
-      breakEndTime,
-    };
+  //   // 새로운 휴게시간 객체 생성
+  //   const newBreakTimeObject = {
+  //     breakStartTime,
+  //     breakEndTime,
+  //   };
 
-    // 휴게시간 객체를 restingPosition 인덱스에 삽입
-    const updatedStopOverList = [
-      ...filteredStopOverList.slice(0, restingPosition),
-      newBreakTimeObject,
-      ...filteredStopOverList.slice(restingPosition),
-    ];
+  //   // 휴게시간 객체를 restingPosition 인덱스에 삽입
+  //   const updatedStopOverList = [
+  //     ...filteredStopOverList.slice(0, restingPosition),
+  //     newBreakTimeObject,
+  //     ...filteredStopOverList.slice(restingPosition),
+  //   ];
 
-    // stopOverList 배열 업데이트
-    setStopOverList(updatedStopOverList as CourseDetailResponse[]);
-  }, [selectedDriver]); // 감지할 상태 목록
+  //   // stopOverList 배열 업데이트
+  //   setStopOverList(updatedStopOverList as CourseDetailResponse[]);
+  // }, [selectedDriver]); // 감지할 상태 목록
 
   const updateDispatchData = (
     prevData: DispatchResponse | null,
@@ -165,6 +167,7 @@ const OrderDashBoard = () => {
           index === selectedDriver // selectedDriver 인덱스가 일치하는 경우만 업데이트
             ? {
                 ...course,
+                errorYn: newData.errorYn ?? course.errorYn,
                 mileage: newData.mileage ?? course.mileage,
                 totalTime: newData.totalTime ?? course.totalTime,
                 totalOrderOrDistanceNum: newData.totalOrderOrDistanceNum ?? course.totalOrderOrDistanceNum,
@@ -354,6 +357,8 @@ const OrderDashBoard = () => {
         {plusMinusTotalOrder}
         <br></br>
         {plusMinusEstimatedTime}
+        <br></br>
+        {plusMinusTotalErrorOrdert}
         <h2>StopOverData 배열:</h2>
         <pre>{JSON.stringify(stopOverList, null, 2)}</pre>
       </div> */}

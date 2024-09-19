@@ -285,6 +285,10 @@ export interface DispatchDetailResponse {
 }
 
 export interface DispatchUpdateResponse {
+  errorYn: boolean;
+  /**
+   * 오류주문 보유
+   */
   totalFloorAreaRatio: number | undefined;
   /**
    * 주행거리 (km)
