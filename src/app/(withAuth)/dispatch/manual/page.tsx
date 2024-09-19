@@ -7,7 +7,6 @@ import useOnlyClient from "@/hooks/useOnlyClient";
 import { useRecoilState } from "recoil";
 import { dispatchDataState } from "@/atoms/dispatchData";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
 // import ConfirmModal from "@/components/ConfirmModal";
 
 const Page = () => {
@@ -16,23 +15,10 @@ const Page = () => {
   const router = useRouter();
   const isClient = useOnlyClient();
 
-  useEffect(() => {
-    // dispatchData가 없으면 모달을 보여주고 3초 후에 리디렉션
-    if (!dispatchData) {
-      // setShowModal(true); // 모달 표시
-      // const timer = setTimeout(() => {
-      //   setShowModal(false); // 모달 숨기기
-      //   router.push("/"); // 홈페이지로 리디렉션
-      // }, 3000); // 3초 후 리디렉션
-      router.push("/");
-      // return () => clearTimeout(timer); // 컴포넌트 언마운트 시 타이머 해제
-    }
-  }, [dispatchData, router]);
-
   if (!isClient) return null;
 
   if (!dispatchData) {
-    return null; // dispatchData가 없으면 null 반환
+    router.push("/dispatch");
   }
   return (
     <div className="w-full">
