@@ -8,23 +8,26 @@ interface CellProps {
   onClick: () => void;
   children: React.ReactNode;
   isSunday: boolean;
+  disabled: boolean;
 }
 
-const Cell = ({ isStartDate, isToday, isPast, isCurrentMonth, onClick, children, isSunday }: CellProps) => {
+const Cell = ({ isStartDate, isToday, isPast, isCurrentMonth, onClick, children, isSunday, disabled }: CellProps) => {
   if (!isCurrentMonth) {
     return <div className="flex-1" />;
   }
   return (
     <div
       role="button"
-      onClick={onClick}
-      className={`flex h-[26px] w-[26px] flex-1 cursor-pointer items-center justify-center text-B-14-M hover:border-blue-500 ${
+      onClick={disabled ? undefined : onClick}
+      className={`flex-2 flex h-[26px] w-[26px] items-center justify-center rounded-full text-B-14-M ${
+        disabled ? "cursor-not-allowed text-gray-300" : "cursor-pointer hover:border-blue-500"
+      } ${
         isStartDate
           ? "rounded-full bg-blue-500 text-white text-B-14-B"
-          : isPast
+          : isPast && !disabled
             ? "text-gray-400"
             : isToday
-              ? "rounded-full border border-blue-250 text-B-14-B"
+              ? "border border-blue-250 text-B-14-B"
               : isSunday
                 ? "text-red-500"
                 : ""

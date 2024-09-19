@@ -8,6 +8,7 @@ import {
 } from "@/atoms/dispatchData";
 import {
   plusMinusEstimatedTimetState,
+  plusMinusTotalErrorOrdertState,
   plusMinusTotalOrdertState,
   plusMinusVolumeState,
   plusMinusWeightState,
@@ -28,6 +29,7 @@ const useResetDispatchManualAtoms = () => {
   const resetPlusMinusWeight = useResetRecoilState(plusMinusWeightState);
   const resetPlusMinusTotalOrder = useResetRecoilState(plusMinusTotalOrdertState);
   const resetPlusMinusEstimatedTime = useResetRecoilState(plusMinusEstimatedTimetState);
+  const resetPlusMinusTotalErrorOrdert = useResetRecoilState(plusMinusTotalErrorOrdertState);
 
   const resetDispatchManualAtoms = () => {
     resetBgColorState();
@@ -41,6 +43,7 @@ const useResetDispatchManualAtoms = () => {
     resetPlusMinusWeight();
     resetPlusMinusTotalOrder();
     resetPlusMinusEstimatedTime();
+    resetPlusMinusTotalErrorOrdert();
   };
 
   return resetDispatchManualAtoms;

@@ -936,13 +936,13 @@ export interface DispatchResponse {
    * @format int32
    * @example 2000
    */
-  totalWeight?: number;
+  totalWeight: number;
   /**
    * 총 부피
    * @format int32
    * @example 2000
    */
-  totalVolume?: number;
+  totalVolume: number;
   /**
    * 상차 시작 시간
    * @format date-time
