@@ -7,14 +7,14 @@ import PendingOrder from "@/components/OrderDashBoard/PendingOrderList/PendingOr
 import ToggleExpandSwitch from "@/components/core/ToggleExpandSwitch";
 import { CourseDetailResponse } from "@/models/ApiTypes";
 import * as XLSX from "xlsx";
-import { useEffect } from "react";
-import {
-  plusMinusVolumeState,
-  plusMinusWeightState,
-  plusMinusTotalOrdertState,
-  plusMinusEstimatedTimetState,
-} from "@/atoms/plusMinus";
-import { useRecoilState } from "recoil";
+// import { useEffect } from "react";
+// import {
+//   plusMinusVolumeState,
+//   plusMinusWeightState,
+//   plusMinusTotalOrdertState,
+//   plusMinusEstimatedTimetState,
+// } from "@/atoms/plusMinus";
+// import { useRecoilState } from "recoil";
 
 interface PendingOrderDataProps {
   pendingOrderData: CourseDetailResponse[];
@@ -22,10 +22,10 @@ interface PendingOrderDataProps {
 
 const PendingOrderList = ({ pendingOrderData }: PendingOrderDataProps) => {
   const { isExpanded, toggleExpand } = ToggleExpandSwitch(false);
-  const [, setPlusMinusVolume] = useRecoilState(plusMinusVolumeState);
-  const [, setPlusMinusWeight] = useRecoilState(plusMinusWeightState);
-  const [, setPlusMinusTotalOrder] = useRecoilState(plusMinusTotalOrdertState);
-  const [, setPlusMinusEstimatedTime] = useRecoilState(plusMinusEstimatedTimetState);
+  // const [, setPlusMinusVolume] = useRecoilState(plusMinusVolumeState);
+  // const [, setPlusMinusWeight] = useRecoilState(plusMinusWeightState);
+  // const [, setPlusMinusTotalOrder] = useRecoilState(plusMinusTotalOrdertState);
+  // const [, setPlusMinusEstimatedTime] = useRecoilState(plusMinusEstimatedTimetState);
 
   // 보류 주문 데이터를 엑셀로 변환 및 다운로드하는 함수
   const downloadPendingOrders = () => {
@@ -47,37 +47,37 @@ const PendingOrderList = ({ pendingOrderData }: PendingOrderDataProps) => {
     XLSX.writeFile(workbook, "pending_orders.xlsx");
   };
 
-  // pendingOrderData가 변경될 때마다 plusMinusVolume 업데이트
-  useEffect(() => {
-    const totalVolume = pendingOrderData.reduce((acc, order) => {
-      return acc + (order.volume || 0) * (order.productQuantity || 0);
-    }, 0);
-    setPlusMinusVolume(totalVolume);
-  }, [pendingOrderData, setPlusMinusVolume]);
+  // // pendingOrderData가 변경될 때마다 plusMinusVolume 업데이트
+  // useEffect(() => {
+  //   const totalVolume = pendingOrderData.reduce((acc, order) => {
+  //     return acc + (order.volume || 0) * (order.productQuantity || 0);
+  //   }, 0);
+  //   setPlusMinusVolume(totalVolume);
+  // }, [pendingOrderData, setPlusMinusVolume]);
 
-  // pendingOrderData가 변경될 때마다 plusMinusWeight 업데이트
-  useEffect(() => {
-    const totalWeight = pendingOrderData.reduce((acc, order) => {
-      return acc + (order.weight || 0) * (order.productQuantity || 0);
-    }, 0);
-    setPlusMinusWeight(totalWeight);
-  }, [pendingOrderData, setPlusMinusWeight]);
+  // // pendingOrderData가 변경될 때마다 plusMinusWeight 업데이트
+  // useEffect(() => {
+  //   const totalWeight = pendingOrderData.reduce((acc, order) => {
+  //     return acc + (order.weight || 0) * (order.productQuantity || 0);
+  //   }, 0);
+  //   setPlusMinusWeight(totalWeight);
+  // }, [pendingOrderData, setPlusMinusWeight]);
 
-  // pendingOrderData가 변경될 때마다 plusMinusWeight 업데이트
-  useEffect(() => {
-    const TotalOrder = pendingOrderData.reduce((acc, order) => {
-      return acc + 1;
-    }, 0);
-    setPlusMinusTotalOrder(TotalOrder);
-  }, [pendingOrderData, setPlusMinusTotalOrder]);
+  // // pendingOrderData가 변경될 때마다 plusMinusWeight 업데이트
+  // useEffect(() => {
+  //   const TotalOrder = pendingOrderData.reduce((acc, order) => {
+  //     return acc + 1;
+  //   }, 0);
+  //   setPlusMinusTotalOrder(TotalOrder);
+  // }, [pendingOrderData, setPlusMinusTotalOrder]);
 
-  // pendingOrderData가 변경될 때마다 EstimatedTime 업데이트
-  useEffect(() => {
-    const EstimatedTime = pendingOrderData.reduce((acc, order) => {
-      return acc + (order.ett || 0);
-    }, 0);
-    setPlusMinusEstimatedTime(EstimatedTime);
-  }, [pendingOrderData, setPlusMinusEstimatedTime]);
+  // // pendingOrderData가 변경될 때마다 EstimatedTime 업데이트
+  // useEffect(() => {
+  //   const EstimatedTime = pendingOrderData.reduce((acc, order) => {
+  //     return acc + (order.ett || 0);
+  //   }, 0);
+  //   setPlusMinusEstimatedTime(EstimatedTime);
+  // }, [pendingOrderData, setPlusMinusEstimatedTime]);
   return (
     <div className="max-h-[344px] min-h-[64px] w-[460px] gap-[16px] rounded-[8px] bg-white p-[20px]">
       <div className="inline-flex h-6 w-[420px] flex-col items-start justify-start gap-4 bg-white">
