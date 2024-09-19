@@ -302,10 +302,7 @@ const DeliveryRoutineDetail = ({
                   </div>
                 </DeliveryStopoverListCard>
               </div>
-              {/* {item.dispatchDetailStatus === "WORK_COMPLETED" &&
-                fetchListItems[index + 1]?.dispatchDetailStatus === "WORK_WAITING" && (
-                  <IAmMoving ett={fetchData.ett ?? 0} />
-                )} */}
+
               {item.dispatchDetailStatus === "RESTING" &&
                 fetchData.breakStartTime &&
                 item.expectationOperationEndTime &&
