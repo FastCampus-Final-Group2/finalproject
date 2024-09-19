@@ -13,18 +13,10 @@ const PendingIcon = ({ index, isSelected }: PendingIconProps) => {
       viewBox="0 0 41 49"
       fill="currentColor"
       xmlns="http://www.w3.org/2000/svg"
-      className={`${isSelected ? PENDING_COLOR.selected : `${PENDING_COLOR.default} ${PENDING_COLOR.hover}`} group`}
+      className={`${isSelected ? PENDING_COLOR.selected : `${PENDING_COLOR.default} ${PENDING_COLOR.hover}`} group hover:z-50`}
     >
-      {/* 배경 모양 */}
       <path d="M40.1172 21.3461C40.1172 32.6002 31.2283 37.648 20.1172 48.9688C9.13691 37.648 0.117188 32.6002 0.117188 21.3461C0.117188 10.092 9.07149 0.96875 20.1172 0.96875C31.1629 0.96875 40.1172 10.092 40.1172 21.3461Z" />
-      {/* 하얀색 동그라미 */}
-      <circle
-        cx="20.5" // 원의 중심 x좌표
-        cy="21" // 원의 중심 y좌표
-        r="14.5" // 원의 반지름
-        fill="white"
-      />
-      {/* 텍스트 추가 */}
+      <circle cx="20.5" cy="21" r="14.5" fill="white" />
       <text
         x="48%"
         y="45%"

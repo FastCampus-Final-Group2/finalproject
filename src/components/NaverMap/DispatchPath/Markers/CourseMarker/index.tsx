@@ -20,22 +20,16 @@ const CourseMarker = ({ map, index }: CourseMarkerProps) => {
     const markers: naver.maps.Marker[] = [];
 
     courseDetailList.forEach((courseDetail, coordinateIndex) => {
-      const type = (() => {
-        if (coordinateIndex === courseDetailList.length - 1) return "end";
-        return "path";
-      })();
-
       const markerOptions = {
         position: new window.naver.maps.LatLng(courseDetail.lat, courseDetail.lon),
         map: map,
         icon: {
           content: ReactDOMServer.renderToString(
-            <MarkerIcon index={index} type={type} coordinateIndex={coordinateIndex + 1} courseDetail={courseDetail} />,
+            <MarkerIcon index={index} type="path" coordinateIndex={coordinateIndex + 1} courseDetail={courseDetail} />,
           ),
           size: new naver.maps.Size(50, 50),
           anchor: new naver.maps.Point(25, 50),
         },
-        title: `Group ${index + 1} - Waypoint ${coordinateIndex + 1}`,
       };
 
       const marker = new window.naver.maps.Marker(markerOptions);

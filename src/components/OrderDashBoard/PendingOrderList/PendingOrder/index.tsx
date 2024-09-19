@@ -1,4 +1,6 @@
+import { isClickPendingOrderListState, selectedPendingState } from "@/atoms/dispatchData";
 import { LocalTime } from "@/models/ApiTypes";
+import { useSetRecoilState } from "recoil";
 
 interface PendingOrderProps extends LocalTime {
   index: number;
@@ -41,13 +43,19 @@ const PendingOrder = ({
 
   const formattedString = formatServiceRequest(serviceRequestDate, serviceRequestTime);
 
-  // const setSelectedPending = useSetRecoilState(selectedPendingState);
+  const setSelectedPending = useSetRecoilState(selectedPendingState);
+  const setIsClickPendingOrderList = useSetRecoilState(isClickPendingOrderListState);
+
+  const handleClickPendingOrder = () => {
+    setSelectedPending(index);
+    setIsClickPendingOrderList(true);
+  };
 
   return (
     <div
       className="inline-flex h-[36px] items-center justify-start self-stretch rounded bg-white py-[2px] pl-[12px]"
       role="button"
-      // onClick={() => setSelectedPending(index)}
+      onClick={handleClickPendingOrder}
     >
       <div className="flex items-center justify-start gap-[12px] py-[6px]">
         <div className="inline-flex h-[24px] w-[24px] flex-col items-center justify-center gap-[12px] rounded-[100px] bg-gray-700">

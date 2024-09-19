@@ -7,6 +7,7 @@ import { userState } from "@/atoms/user";
 import ConfirmModal from "@/components/ConfirmModal";
 import Button from "@/components/core/Button";
 import LoadingModal from "@/components/LoadingModal";
+import useResetDispatchManualAtoms from "@/hooks/useResetDispatchManualAtoms";
 import useResetExcelDataAtoms from "@/hooks/useResetExcelDataAtoms";
 import { formatTransportOrderRequest } from "@/utils/format/transportOrder";
 import { useState } from "react";
@@ -25,6 +26,7 @@ const Buttons = () => {
   const excelData = useRecoilValue(excelDataState);
   const isValidExcelData = useRecoilValue(isValidExcelDataState);
 
+  const resetDispatchManualAtoms = useResetDispatchManualAtoms();
   const setDispatch = useSetRecoilState(dispatchDataState);
 
   const handleClickCancelBtn = () => {
@@ -49,6 +51,7 @@ const Buttons = () => {
     }
 
     setTimeout(() => {
+      resetDispatchManualAtoms();
       setDispatch(data);
       resetExcelDataAtoms();
     }, 1000);

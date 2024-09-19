@@ -20,6 +20,12 @@ export const selectedDriverState = atom<number>({
   effects_UNSTABLE: [persistAtom],
 });
 
+export const isClickPendingOrderListState = atom<boolean>({
+  key: "isClickPendingOrderListState",
+  default: false,
+  effects_UNSTABLE: [persistAtom],
+});
+
 export const selectedPendingState = atom<number>({
   key: "selectedPendingState",
   default: -1,

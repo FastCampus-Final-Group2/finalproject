@@ -14,7 +14,7 @@ const OrderValidationTable = () => {
   return (
     <div className="flex flex-col gap-12">
       <OrderValidationTabList />
-      <ul className="flex w-full flex-col overflow-x-scroll scrollbar-hide">
+      <div className="flex w-full flex-col overflow-x-scroll [&::-webkit-scrollbar-button]:hidden [&::-webkit-scrollbar-thumb]:rounded-4 [&::-webkit-scrollbar-thumb]:bg-gray-100 [&::-webkit-scrollbar-track]:rounded-4 [&::-webkit-scrollbar-track]:bg-white [&::-webkit-scrollbar]:h-2">
         <OrderValidationTableHeader />
         {selectedRowIds.map((rowId, index) => {
           return <OrderValidationTableRow key={rowId} rowId={rowId} isOdd={index % 2 === 0} />;
@@ -23,7 +23,7 @@ const OrderValidationTable = () => {
           Array.from({ length: ORDER_VALIDATION_PER_PAGE - selectedRowIds.length }).map((_, index) => {
             return <EmptyRow key={`Emtpy Row ${index}`} isOdd={index % 2 === 0} />;
           })}
-      </ul>
+      </div>
     </div>
   );
 };
