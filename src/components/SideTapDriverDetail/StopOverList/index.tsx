@@ -22,7 +22,10 @@ interface StopOverListProps {
 
 const StopOverList = ({ bgColor, isExpanded, toggleExpand }: StopOverListProps) => {
   const [errorCount, setErrorCount] = useState(0);
+  const [expanded, setExpanded] = useState(isExpanded);
   const [stopOverList] = useRecoilState(stopOverListSelector);
+
+  // 오류 카운트 설정
   useEffect(() => {
     if (!stopOverList) return;
 
@@ -30,9 +33,21 @@ const StopOverList = ({ bgColor, isExpanded, toggleExpand }: StopOverListProps) 
       (stopOver) => stopOver.restrictedTonCode || stopOver.delayRequestTime || stopOver.overContractNum,
     ).length;
     setErrorCount(count);
-  }, [isExpanded, stopOverList]);
+  }, [stopOverList]);
 
-  if (!stopOverList) return;
+  // errorCount가 0일 때 토글 스위치를 디폴트(닫힘)로 설정
+  useEffect(() => {
+    if (errorCount === 0) {
+      setExpanded(false);
+    }
+  }, [errorCount]);
+
+  // isExpanded prop의 변화 감지하여 expanded 상태 동기화
+  useEffect(() => {
+    setExpanded(isExpanded);
+  }, [isExpanded]);
+
+  if (!stopOverList) return null;
 
   return (
     <div className={`inline-flex h-[656px] items-start justify-start gap-[12px] ${BG_50[bgColor]} px-[32px] pb-[24px]`}>
@@ -49,7 +64,7 @@ const StopOverList = ({ bgColor, isExpanded, toggleExpand }: StopOverListProps) 
               </div>
               <div className="text-center text-gray-900 text-T-16-M">모아보기</div>
               <button onClick={errorCount > 0 ? toggleExpand : undefined} disabled={errorCount === 0}>
-                {!isExpanded ? (
+                {!expanded ? (
                   <Icon id="toggleOn" size={28} className="text-gray-500" />
                 ) : (
                   <Icon id="toggleOff" size={28} className="text-gray-500" />
@@ -70,7 +85,7 @@ const StopOverList = ({ bgColor, isExpanded, toggleExpand }: StopOverListProps) 
                 {...provided.droppableProps}
                 ref={provided.innerRef}
               >
-                {!isExpanded ? (
+                {!expanded ? (
                   <>
                     {<StopOverStartCenter />}
 
@@ -94,7 +109,7 @@ const StopOverList = ({ bgColor, isExpanded, toggleExpand }: StopOverListProps) 
                               expectationOperationEndTime={stopOver.expectationOperationEndTime}
                               ett={stopOver.ett}
                               distance={stopOver.distance}
-                              isExpanded={isExpanded}
+                              isExpanded={expanded}
                               breakStartTime={stopOver.breakStartTime}
                               breakEndTime={stopOver.breakEndTime}
                               deliveryDestinationId={stopOver.deliveryDestinationId}
@@ -137,7 +152,7 @@ const StopOverList = ({ bgColor, isExpanded, toggleExpand }: StopOverListProps) 
                                 expectationOperationEndTime={stopOver.expectationOperationEndTime}
                                 ett={stopOver.ett}
                                 distance={stopOver.distance}
-                                isExpanded={isExpanded}
+                                isExpanded={expanded}
                                 breakStartTime={stopOver.breakStartTime}
                                 breakEndTime={stopOver.breakEndTime}
                                 deliveryDestinationId={stopOver.deliveryDestinationId}
@@ -155,7 +170,6 @@ const StopOverList = ({ bgColor, isExpanded, toggleExpand }: StopOverListProps) 
             )}
           </StrictModeDroppable>
         </div>
-        {/* <pre>{JSON.stringify(requestBodyChangeDispatchData, null, 2)}</pre> */}
       </div>
     </div>
   );
