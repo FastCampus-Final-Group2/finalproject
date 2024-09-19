@@ -81,8 +81,7 @@ const PendingOrderList = ({ pendingOrderData }: PendingOrderDataProps) => {
     setPlusMinusEstimatedTime(EstimatedTime);
   }, [pendingOrderData, setPlusMinusEstimatedTime]);
 
-  // pendingOrderData가 변경될 때마다 plusMinusTotalOrder 업데이트
-  // pendingOrderData가 변경될 때마다 plusMinusTotalErrorOrder 업데이트
+  // TotalErrorOrder 변경될 때마다 plusMinusTotalErrorOrder 업데이트
   useEffect(() => {
     const TotalErrorOrder = pendingOrderData.reduce((acc, order) => {
       const hasError =
