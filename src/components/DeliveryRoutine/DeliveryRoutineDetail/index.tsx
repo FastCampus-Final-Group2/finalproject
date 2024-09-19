@@ -48,7 +48,7 @@ interface DeliveryRoutineDetailProps {
       departureTime: LocalTime;
     };
   };
-  selectedDestinationId: number | null;
+  selectedDispatchDetailId: number | null;
   refreshSideTabData: () => Promise<void>;
 }
 
@@ -56,7 +56,7 @@ const DeliveryRoutineDetail = ({
   selectedOrders,
   setSelectedOrders,
   fetchData,
-  selectedDestinationId,
+  selectedDispatchDetailId,
   refreshSideTabData,
 }: DeliveryRoutineDetailProps) => {
   const [isDeliveryModalOpen, setIsDeliveryModalOpen] = useState(false);
@@ -66,13 +66,13 @@ const DeliveryRoutineDetail = ({
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (selectedDestinationId && scrollContainerRef.current) {
-      const element = document.getElementById(`delivery-item-${selectedDestinationId}`);
+    if (selectedDispatchDetailId && scrollContainerRef.current) {
+      const element = document.getElementById(`delivery-item-${selectedDispatchDetailId}`);
       if (element) {
         element.scrollIntoView({ behavior: "smooth", block: "center" });
       }
     }
-  }, [selectedDestinationId]);
+  }, [selectedDispatchDetailId]);
 
   const handleAddressInfo = (item: DeliveryRoutineDetailStatusItem, event: React.MouseEvent) => {
     event.stopPropagation(); // 이벤트 버블링 방지
@@ -220,24 +220,35 @@ const DeliveryRoutineDetail = ({
             item.dispatchDetailStatus !== "CANCELED" && item.dispatchDetailStatus !== "RESTING";
           const orderNumber = shouldDisplayOrder ? ++orderCounter : undefined;
           const isDisabled = item.destinationId === 0 && item.dispatchDetailStatus !== "CANCELED";
-          const isHighlighted = item.destinationId === selectedDestinationId;
+          const isHighlighted = item.dispatchDetailId === selectedDispatchDetailId;
           return (
             <React.Fragment key={index}>
               {index === 0 && item.dispatchDetailStatus === "WORK_WAITING" && <IAmMoving ett={fetchData.ett ?? 0} />}
-              <div id={`delivery-item-${item.destinationId}`} className="flex w-[430px] justify-between">
+              {index > 0 &&
+                ["WORK_COMPLETED", "RESTING", "CANCELED"].includes(fetchListItems[index - 1].dispatchDetailStatus) &&
+                fetchListItems
+                  .slice(0, index)
+                  .every((item) => ["WORK_COMPLETED", "RESTING", "CANCELED"].includes(item.dispatchDetailStatus)) &&
+                item.dispatchDetailStatus === "WORK_WAITING" && <IAmMoving ett={fetchData.ett ?? 0} />}
+              <div id={`delivery-item-${item.dispatchDetailId}`} className="flex w-[430px] justify-between">
                 <CircleCheckbox
                   status={item.dispatchDetailStatus}
                   order={orderNumber ?? -1}
                   initialState={selectedOrders.some((o) => o === item)}
                   onChange={(e, checked) => handleCheckboxChange(index, checked, item)}
                   delayedTime={item.delayedTime}
+                  destinationComment={item.destinationComment}
                 />
                 <DeliveryStopoverListCard
                   onClick={() => handleOrderInfo(item)}
-                  className={`${item.delayedTime ? "border-red-500 bg-red-30" : ""}`}
                   background={isHighlighted ? "delayed" : item.dispatchDetailStatus === "default" ? "start" : undefined}
                   border={
                     isHighlighted ? "delayed" : item.dispatchDetailStatus === "CANCELED" ? "restOrCancel" : undefined
+                  }
+                  height={
+                    item.dispatchDetailStatus === "DELIVERY_DELAY" && item.delayedTime && item.destinationComment
+                      ? "delayedAndComment"
+                      : "default"
                   }
                 >
                   <div className="flex flex-col gap-[8px]">
@@ -258,35 +269,37 @@ const DeliveryRoutineDetail = ({
                         </p>
                       </li>
                     </ul>
-                    <ul className={`${item.delayedTime ? "h-[20px]" : "hidden"}`}>
+                    <ul className={`${item.delayedTime ? "" : "hidden"}`}>
                       <li
-                        className={`flex h-[20px] items-center gap-[4px] ${item.delayedTime ? "text-red-500 text-B-14-M" : "hidden"} ${item.dispatchDetailStatus === "RESTING" || item.dispatchDetailStatus === "CANCELED" ? "hidden" : ""} `}
+                        className={`flex items-center gap-[4px] ${item.delayedTime ? "text-red-500 text-B-14-M" : "hidden"} ${item.dispatchDetailStatus === "RESTING" || item.dispatchDetailStatus === "CANCELED" ? "hidden" : ""} `}
                       >
                         <Icon id="warning" size={14} className="text-red-500" />
                         <p>시작 예상 시간 {item.delayedTime}분 초과</p>
                       </li>
                     </ul>
-                    <ul className="h-[20px]">
+                    <ul className={`${item.destinationComment ? "" : "hidden"}`}>
                       <li
-                        className={`flex h-[20px] items-center gap-[4px] ${item.destinationComment ? "text-B-14-M" : "hidden"} ${item.dispatchDetailStatus === "RESTING" || item.dispatchDetailStatus === "CANCELED" ? "hidden" : ""} `}
+                        className={`flex items-center gap-[4px] ${item.destinationComment ? "text-B-14-M" : "hidden"} ${item.dispatchDetailStatus === "RESTING" || item.dispatchDetailStatus === "CANCELED" ? "hidden" : ""} `}
                       >
                         <Icon id="circleAlertFill" size={14} />
                         <p>{item.destinationComment}</p>
                       </li>
                     </ul>
                   </div>
-                  <ul
-                    className={`flex flex-col items-end gap-[8px] text-nowrap text-B-14-M ${
+                  <div
+                    className={`flex h-[56px] flex-col justify-center text-nowrap text-B-14-M ${
                       item.dispatchDetailStatus === "CANCELED" ? "hidden" : "text-gray-700"
                     }`}
                   >
-                    <li className="flex items-center justify-between gap-[4px]">
-                      {startTimeLabel} <span>{displayStartTime}</span>
-                    </li>
-                    <li className="flex items-center justify-between gap-[4px]">
-                      {endTimeLabel} <span>{displayEndTime}</span>
-                    </li>
-                  </ul>
+                    <ul className="flex flex-col gap-[8px]">
+                      <li className="flex items-center justify-between gap-[4px]">
+                        {startTimeLabel} <span>{displayStartTime}</span>
+                      </li>
+                      <li className="flex items-center justify-between gap-[4px]">
+                        {endTimeLabel} <span>{displayEndTime}</span>
+                      </li>
+                    </ul>
+                  </div>
                 </DeliveryStopoverListCard>
               </div>
               {item.dispatchDetailStatus === "WORK_COMPLETED" &&

@@ -145,7 +145,7 @@ const ControlPage = () => {
   console.log("onlyClient", onlyClient);
 
   return (
-    <div className="h-[calc(100vh-104px)] overflow-y-auto p-[48px]">
+    <div className="h-[calc(100vh-104px)] min-w-[1600px] overflow-y-auto p-[48px]">
       <h1 className="mb-[24px] text-H-28-B">차량 관제</h1>
       <div className="flex flex-col gap-[28px] pl-[10px]">
         <SearchBars

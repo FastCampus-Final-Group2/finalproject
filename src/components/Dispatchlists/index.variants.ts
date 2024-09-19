@@ -9,7 +9,7 @@ const dispatchListClass = cva("flex items-center gap-[16px] px-[24px] py-[6px] t
     width: {
       default: "w-full",
       extraSmall: "w-[60px]",
-      small: "w-[180px] flex justify-between items-center",
+      small: "w-[180px] flex items-center",
       medium: "w-[200px]",
       large: "w-[260px]",
       extraLarge: "w-[348px]"

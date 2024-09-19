@@ -82,10 +82,12 @@ const StopOverList = ({ bgColor, isExpanded, toggleExpand }: StopOverListProps) 
                               restrictedTonCode={stopOver.restrictedTonCode}
                               delayRequestTime={stopOver.delayRequestTime}
                               overContractNum={stopOver.overContractNum}
+                              overFloorAreaRatio={stopOver.overFloorAreaRatio}
+                              entryRestricted={stopOver.entryRestricted}
                               index={index}
                               totalLength={stopOverList.length}
                               bgColor={bgColor}
-                              roadAddress={stopOver.roadAddress}
+                              lotNumberAddress={stopOver.lotNumberAddress}
                               detailAddress={stopOver.detailAddress}
                               orderType={stopOver.orderType}
                               expectationOperationStartTime={stopOver.expectationOperationStartTime}
@@ -93,9 +95,11 @@ const StopOverList = ({ bgColor, isExpanded, toggleExpand }: StopOverListProps) 
                               ett={stopOver.ett}
                               distance={stopOver.distance}
                               isExpanded={isExpanded}
+                              breakStartTime={stopOver.breakStartTime}
+                              breakEndTime={stopOver.breakEndTime}
+                              deliveryDestinationId={stopOver.deliveryDestinationId}
                               lat={0}
                               lon={0}
-                              entryRestricted={undefined}
                             />
                           </div>
                         )}
@@ -121,10 +125,12 @@ const StopOverList = ({ bgColor, isExpanded, toggleExpand }: StopOverListProps) 
                                 restrictedTonCode={stopOver.restrictedTonCode}
                                 delayRequestTime={stopOver.delayRequestTime}
                                 overContractNum={stopOver.overContractNum}
+                                overFloorAreaRatio={stopOver.overFloorAreaRatio}
+                                entryRestricted={stopOver.entryRestricted}
                                 index={index}
                                 totalLength={stopOverList.length}
                                 bgColor={bgColor}
-                                roadAddress={stopOver.roadAddress}
+                                lotNumberAddress={stopOver.lotNumberAddress}
                                 detailAddress={stopOver.detailAddress}
                                 orderType={stopOver.orderType}
                                 expectationOperationStartTime={stopOver.expectationOperationStartTime}
@@ -137,7 +143,6 @@ const StopOverList = ({ bgColor, isExpanded, toggleExpand }: StopOverListProps) 
                                 deliveryDestinationId={stopOver.deliveryDestinationId}
                                 lat={0}
                                 lon={0}
-                                entryRestricted={undefined}
                               />
                             </div>
                           )}

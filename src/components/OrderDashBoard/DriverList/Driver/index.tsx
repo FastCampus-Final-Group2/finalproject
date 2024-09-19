@@ -83,21 +83,24 @@ const Driver = ({
             <Icon id={checkOrWarningId} size={14} className={checkOrWarningTextColor} />
           </div>
         </div>
-        <div className="flex h-[32px] w-[320px] items-center justify-start gap-2">
+        <div className="flex h-[32px] w-[350px] items-center justify-start gap-2">
           <div className="flex w-[37px] items-center justify-center gap-[9px] py-1.5">
             <div className="leading-tight text-B-14-B">{name}</div>
           </div>
           <div className="h-[20px] w-[0px] border border-gray-100"></div>
-          <div className="flex h-8 w-[140px] items-center justify-center py-1.5 text-B-14-R">
+          <div className="flex h-8 w-[180px] items-center justify-center py-1.5 text-B-14-R">
             <div className="max-w-6 text-right">{orderCount}</div>
             <div className="text-center">건</div>
             <div>・</div>
             <div className="max-w-7 text-right">{kiloMeter?.toFixed(1)}</div>
             <div className="text-center">km</div>
             <div>・</div>
-            <div className="max-w-7 text-right">{hours}</div>
+            <div className="max-w-7 text-right">{hours !== undefined && <>{Math.floor(hours / 60)}</>}</div>
             <div className="text-center">시간</div>
+            <div className="max-w-7 text-right">{hours !== undefined && <>{hours % 60}</>}</div>
+            <div className="text-center">분</div>
           </div>
+
           <div className="h-[20px] w-[0px] border border-gray-100"></div>
           <div className="flex items-center justify-end gap-2">
             <div className="inline-flex w-[42px] flex-col items-center justify-center">

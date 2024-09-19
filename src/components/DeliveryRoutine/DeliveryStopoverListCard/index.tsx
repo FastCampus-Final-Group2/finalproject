@@ -13,13 +13,14 @@ const DeliveryStopoverListCard = ({
   border,
   children,
   className,
+  height,
   onClick,
   ...props
 }: DeliveryStopoverListCardProps) => {
   return (
     <>
       <div
-        className={cn(DeliveryStopoverListCardClass({ background, border }))}
+        className={cn(DeliveryStopoverListCardClass({ background, border, height }))}
         {...props}
         onClick={onClick}
         role="button"

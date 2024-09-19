@@ -1,7 +1,7 @@
 "use client";
 
 import ReactDOMServer from "react-dom/server";
-import { pendingOrderDataState, selectedPendingState } from "@/atoms/dispatchData";
+import { isClickPendingOrderListState, pendingOrderDataState, selectedPendingState } from "@/atoms/dispatchData";
 import { useEffect, useState } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 import PendingMarker from "./PendingMarker";
@@ -16,6 +16,7 @@ interface PendingMarkersProps {
 const PendingMarkers = ({ map }: PendingMarkersProps) => {
   const pendingOrderList = useRecoilValue(pendingOrderDataState);
   const [selectedPending, setSelectedPending] = useRecoilState(selectedPendingState);
+  const [isClickPendingOrderList, setIsClickPendingOrderList] = useRecoilState(isClickPendingOrderListState);
   const [modalInfo, setModalInfo] = useState<TransportOrderResponse>({});
 
   useEffect(() => {
@@ -36,7 +37,6 @@ const PendingMarkers = ({ map }: PendingMarkersProps) => {
           size: new naver.maps.Size(50, 50),
           anchor: new naver.maps.Point(25, 50),
         },
-        title: `Group Pending - Waypoint ${String.fromCharCode(65 + pendingIndex)}`,
       };
 
       const marker = new window.naver.maps.Marker(markerOptions);
@@ -56,6 +56,8 @@ const PendingMarkers = ({ map }: PendingMarkersProps) => {
         ?.addEventListener("click", (event) => {
           event.stopPropagation();
 
+          setIsClickPendingOrderList(false);
+
           if (pendingIndex === selectedPending) {
             setSelectedPending(-1);
           } else {
@@ -66,12 +68,32 @@ const PendingMarkers = ({ map }: PendingMarkersProps) => {
       markers.push(marker);
     });
 
+    if (isClickPendingOrderList && selectedPending !== -1) {
+      map.panTo(
+        new window.naver.maps.LatLng(pendingOrderList[selectedPending].lat, pendingOrderList[selectedPending].lon),
+      );
+      setIsClickPendingOrderList(false);
+    }
+
+    const handleClickOutside = (event: MouseEvent) => {
+      if (selectedPending === -1) return;
+
+      if (!markers[selectedPending].getElement().contains(event.target as Node)) {
+        setSelectedPending(-1);
+        setIsClickPendingOrderList(false);
+      }
+    };
+
+    document.addEventListener("click", handleClickOutside);
+
     return () => {
       markers.forEach((marker) => {
         marker.setMap(null);
       });
+
+      document.removeEventListener("click", handleClickOutside);
     };
-  }, [map, pendingOrderList, selectedPending, setSelectedPending]);
+  }, [isClickPendingOrderList, map, pendingOrderList, selectedPending, setIsClickPendingOrderList, setSelectedPending]);
 
   return (
     <>

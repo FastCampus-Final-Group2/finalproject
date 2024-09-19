@@ -14,6 +14,7 @@ interface DeliveryProgressSideTabProps {
   refreshDashboardData: () => Promise<void>;
   refreshSideTabData: () => Promise<void>;
   selectedDestinationId: number | null;
+  selectedDispatchDetailId: number | null;
 }
 
 interface FetchData extends DispatchDetailResponse {
@@ -47,6 +48,7 @@ const DeliveryProgressSideTab = ({
   dispatchId,
   refreshDashboardData,
   selectedDestinationId,
+  selectedDispatchDetailId,
 }: DeliveryProgressSideTabProps) => {
   const {
     data: fetchData,
@@ -88,7 +90,7 @@ const DeliveryProgressSideTab = ({
               await refetch();
             }}
             refreshDashboardData={refreshDashboardData}
-            selectedDestinationId={selectedDestinationId}
+            selectedDispatchDetailId={selectedDispatchDetailId}
           />
         </div>
       </div>

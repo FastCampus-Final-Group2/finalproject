@@ -18,11 +18,11 @@ export const titleVariants = cva("w-fit text-T-20-B", {
   },
 });
 
-export const thumbnailVariants = cva("shadow-thumbnail h-[360px] w-[560px] overflow-hidden rounded-2xl border", {
+export const thumbnailVariants = cva("h-[360px] w-[560px] overflow-hidden rounded-2xl shadow-thumbnail", {
   variants: {
     disabled: {
-      true: "border-blue-100",
-      false: "",
+      true: "",
+      false: "border",
     },
   },
 });

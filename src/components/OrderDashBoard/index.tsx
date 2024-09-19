@@ -17,6 +17,12 @@ import { DispatchUpdateResponse, LocalTime, DispatchResponse, CourseDetailRespon
 import axios from "@/utils/axios";
 import { requestBodyChangeDispatchDataState } from "@/atoms/requestBodyChangeDispatchData";
 import { useEffect, useState } from "react";
+import {
+  plusMinusEstimatedTimetState,
+  plusMinusTotalOrdertState,
+  plusMinusVolumeState,
+  plusMinusWeightState,
+} from "@/atoms/plusMinus";
 
 interface RequestBodyChangeDispatchData {
   smId: number | null;
@@ -73,14 +79,19 @@ const OrderDashBoard = () => {
   const [apiResponseData, setApiResponseData] = useState(null); // 응답 데이터를 저장할 상태
   const [prevRequestBody, setPrevRequestBody] = useState<RequestBodyChangeDispatchData | null>(null);
 
+  const [plusMinusVolume, setPlusMinusVolume] = useRecoilState(plusMinusVolumeState);
+  const [plusMinusWeight, setPlusMinusWeight] = useRecoilState(plusMinusWeightState);
+  const [plusMinusTotalOrder, setPlusMinusTotalOrder] = useRecoilState(plusMinusTotalOrdertState);
+  const [plusMinusEstimatedTime, setPlusMinusEstimatedTime] = useRecoilState(plusMinusEstimatedTimetState);
+
   // // 객체 변화 후 API 요청을 보낼 상태 값
   const [shouldSendRequest, setShouldSendRequest] = useState(false);
   useEffect(() => {
     const updatedRequestBodyChangeDispatchData: RequestBodyChangeDispatchData = {
       smId: dispatchData?.course?.[selectedDriver]?.smId ?? null,
       smIdList: dispatchData?.course?.map((course) => course.smId ?? null) ?? [],
-      totalVolume: dispatchData?.totalVolume ?? null, // 수정: null로 기본값 설정
-      totalWeight: dispatchData?.totalWeight ?? null, // 수정: null로 기본값 설정
+      totalVolume: dispatchData?.totalVolume ?? 0 - plusMinusVolume ?? null, // 수정: null로 기본값 설정
+      totalWeight: dispatchData?.totalWeight ?? 0 - plusMinusWeight ?? null, // 수정: null로 기본값 설정
       loadingStartTime: dispatchData?.loadingStartTime ?? null,
       orderList: stopOverList
         .filter(
@@ -92,6 +103,7 @@ const OrderDashBoard = () => {
           detailAddress: courseDetail.detailAddress ?? null,
           volume: courseDetail.volume ?? null,
           weight: courseDetail.weight ?? null,
+          productQuantity: courseDetail.productQuantity ?? null,
           lat: courseDetail.lat ?? null,
           lon: courseDetail.lon ?? null,
           expectedServiceDuration: courseDetail.expectedServiceDuration ?? null,
@@ -147,6 +159,7 @@ const OrderDashBoard = () => {
 
     return {
       ...prevData,
+      totalFloorAreaRatio: newData.totalFloorAreaRatio,
       course: prevData.course.map(
         (course, index) =>
           index === selectedDriver // selectedDriver 인덱스가 일치하는 경우만 업데이트
@@ -333,10 +346,17 @@ const OrderDashBoard = () => {
         </div>
       </div>
       {/* 변경된 배열 확인 */}
-      <div>
+      {/* <div>
+        {dispatchData?.totalVolume}/{dispatchData?.totalWeight}
+        <br></br>
+        {plusMinusVolume}/{plusMinusWeight}
+        <br></br>
+        {plusMinusTotalOrder}
+        <br></br>
+        {plusMinusEstimatedTime}
         <h2>StopOverData 배열:</h2>
         <pre>{JSON.stringify(stopOverList, null, 2)}</pre>
-      </div>
+      </div> */}
 
       {/* <div>
         <h2>PendingOrderData 배열:</h2>
@@ -347,13 +367,15 @@ const OrderDashBoard = () => {
         <pre>{JSON.stringify(shouldSendRequest, null, 2)}</pre>
       </div> */}
       {/* <div>
+        <h3>요청 데이터:</h3>
         <pre>{JSON.stringify(requestBodyChangeDispatchData, null, 2)}</pre>
-      </div> */}
-      {/* <div>
+      </div>
+      <div>
         <h2>API 응답 데이터:</h2>
         <pre>{apiResponseData ? JSON.stringify(apiResponseData, null, 2) : "데이터가 없습니다"}</pre>
       </div>
       <div>
+        <h2>원본 데이터:</h2>
         <pre>{JSON.stringify(dispatchData, null, 2)}</pre>
       </div> */}
     </DragDropContext>

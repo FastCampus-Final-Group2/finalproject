@@ -16,6 +16,15 @@ const Lists = ({ results, checkedItems, onCheckBoxChange }: ListsProps) => {
     return calculateWidth;
   };
 
+  const formattedDate = (date: string) => {
+    const year = date.slice(0, 4);
+    const month = date.slice(5, 7);
+    const day = date.slice(8, 10);
+    const hour = date.slice(11, 13);
+    const minute = date.slice(14, 16);
+    return `${year}.${month}.${day}  ${hour}:${minute} 시작`;
+  };
+  console.log(results);
   return (
     <div>
       {results.map((data, index) => {
@@ -42,10 +51,12 @@ const Lists = ({ results, checkedItems, onCheckBoxChange }: ListsProps) => {
               <div className={`relative h-[12px] w-[82px] rounded-full bg-blue-50 ${isEmpty ? "hidden" : ""}`}>
                 <div
                   className="absolute h-[12px] rounded-full bg-blue-500"
-                  style={{ width: `${progressGraph(data.progress || 0)}px` }}
+                  style={{ width: `${progressGraph(data.progress ?? 0)}px` }}
                 ></div>
               </div>
-              <p>{data.progress ? `${data.progress}%` : ""}</p>
+              <p className={`${data.dispatchCode ? "" : "hidden"}`}>
+                {data.progress !== undefined ? `${data.progress}%` : ""}
+              </p>
             </div>
             <p className={cn(dispatchListClass({ width: "extraLarge" }))}>
               <Link href={`/control/detail/${data.dispatchNumberId}`} key={index}>
@@ -53,7 +64,9 @@ const Lists = ({ results, checkedItems, onCheckBoxChange }: ListsProps) => {
               </Link>
               <span className="w-1/2">{data.dispatchName || ""}</span>
             </p>
-            <p className={cn(dispatchListClass({ width: "large" }))}>{data.startDateTime || ""}</p>
+            <p className={cn(dispatchListClass({ width: "large" }))}>
+              {data.startDateTime ? formattedDate(data.startDateTime) : ""}
+            </p>
             <p className={cn(dispatchListClass({ width: "medium" }))}>{data.totalOrder || ""}</p>
             <p className={cn(dispatchListClass({ width: "medium" }))}>{data.smNum || ""}</p>
             <p className={cn(dispatchListClass({ width: "medium" }))}>{data.manager || ""}</p>
