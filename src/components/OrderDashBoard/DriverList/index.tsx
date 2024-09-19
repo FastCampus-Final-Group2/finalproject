@@ -40,7 +40,7 @@ const DriverList = () => {
               index={index}
               checkOrWarning={driver.errorYn}
               name={driver.smName}
-              orderCount={driver.orderNum}
+              orderCount={driver.totalOrderOrDistanceNum}
               kiloMeter={driver.mileage}
               hours={driver.totalTime}
               vehicleType={driver.vehicleType}

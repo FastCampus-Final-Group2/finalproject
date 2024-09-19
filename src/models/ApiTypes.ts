@@ -285,6 +285,7 @@ export interface DispatchDetailResponse {
 }
 
 export interface DispatchUpdateResponse {
+  totalFloorAreaRatio: number | undefined;
   /**
    * 주행거리 (km)
    * @format double
