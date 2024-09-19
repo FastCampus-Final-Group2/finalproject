@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation"; // 페이지 이동을 위해 useRouter 훅 추가
+import { useRouter } from "next/navigation";
 import CopyButton from "@/components/core/CopyButton";
 import Button from "@/components/core/Button";
 import ConfirmModal from "@/components/ConfirmModal";
@@ -9,6 +9,7 @@ import dayjs from "dayjs";
 import axios from "@/utils/axios";
 import { useRecoilState } from "recoil";
 import { dispatchDataState, pendingOrderDataState } from "@/atoms/dispatchData";
+import useResetDispatchManualAtoms from "@/hooks/useResetDispatchManualAtoms";
 
 const DispatchInformationHeader = () => {
   const [recoilDispatchData, setRecoilDispatchData] = useRecoilState(dispatchDataState);
@@ -16,18 +17,26 @@ const DispatchInformationHeader = () => {
 
   const [isCancelModalOpen, setIsCancelModalOpen] = useState(false);
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
-  const router = useRouter(); // useRouter 훅을 사용해 페이지 이동 관리
+  const router = useRouter();
+  const resetDispatchManualAtoms = useResetDispatchManualAtoms();
 
   const formatDate = (dateString?: string) => {
     return dayjs(dateString).format("MM월 DD일 HH:mm");
   };
 
   const handleCancelDispatch = () => {
-    setIsCancelModalOpen(true);
+    setIsCancelModalOpen(false);
+    setIsCancelModalOpen(true); // Open cancel modal
   };
 
   const handleConfirmDispatch = () => {
-    setIsConfirmModalOpen(true);
+    const hasErrors = recoilDispatchData?.course?.some((course) => course.errorYn);
+
+    if (hasErrors) {
+      setIsConfirmModalOpen(true); // Open confirm modal with errors
+    } else {
+      setIsConfirmModalOpen(true); // Open confirm modal without errors
+    }
   };
 
   const handleCloseModal = () => {
@@ -36,16 +45,13 @@ const DispatchInformationHeader = () => {
   };
 
   const handleCancelDispatchConfirm = () => {
-    // 배차 취소 확인 시 동작
     console.log("배차 취소가 확인되었습니다.");
-    setRecoilDispatchData(null);
-    setPendingOrderData([]);
     setIsCancelModalOpen(false);
     router.push("/dispatch");
+    resetDispatchManualAtoms();
   };
 
   const handleConfirmDispatchConfirm = async () => {
-    // 배차 확정 확인 시 서버로 데이터 전송
     const requestBodyDispatchData = {
       dispatchCode: recoilDispatchData?.dispatchCode,
       dispatchName: recoilDispatchData?.dispatchName,
@@ -61,8 +67,8 @@ const DispatchInformationHeader = () => {
           expectationOperationStartTime: detail.expectationOperationStartTime,
           expectationOperationEndTime: detail.expectationOperationEndTime,
           deliveryDestinationId: detail.deliveryDestinationId,
-          phoneNumber: detail.contact, // 기본값 사용
-          orderNumber: detail.clientOrderKey, // 기본값 사용
+          phoneNumber: detail.contact,
+          orderNumber: detail.clientOrderKey,
           orderDate: detail.receivedDate,
           lat: detail.lat,
           lon: detail.lon,
@@ -95,20 +101,21 @@ const DispatchInformationHeader = () => {
     console.log(requestBodyDispatchData);
 
     try {
-      const response = await axios.post("/dispatch", requestBodyDispatchData); // 서버로 데이터 전송
-      console.log("응답 상태 코드:", response.status); // 응답 상태 코드 출력
+      const response = await axios.post("/dispatch", requestBodyDispatchData);
+      console.log("응답 상태 코드:", response.status);
       if (response.status === 200 || response.status === 201) {
         console.log("배차 확정이 성공적으로 처리되었습니다.");
-        router.push("/control"); // 성공 시 /control 페이지로 이동
+        router.push("/control");
       }
     } catch (error) {
       console.error("배차 확정 중 오류가 발생했습니다.", error);
     } finally {
-      setIsConfirmModalOpen(false); // 모달 닫기
-      setRecoilDispatchData(null);
-      setPendingOrderData([]);
+      setIsConfirmModalOpen(false);
+      resetDispatchManualAtoms();
     }
   };
+
+  const hasErrors = recoilDispatchData?.course?.some((course) => course.errorYn);
 
   return (
     <div className="flex h-[92px] items-center justify-between border-b px-[40px] pb-[24px] pt-[28px]">
@@ -118,8 +125,12 @@ const DispatchInformationHeader = () => {
           <CopyButton copyString={recoilDispatchData?.dispatchCode} />
         </div>
         <div className="flex h-[36px] w-[351px] gap-6">
-          <div className="flex h-[36px] w-[174px] items-center justify-center leading-[24px] text-T-18-M">
-            {recoilDispatchData?.dispatchName}
+          <div
+            className={`flex h-[36px] w-[174px] items-center justify-center leading-[24px] ${
+              recoilDispatchData?.dispatchName ? "text-black text-T-18-M" : "text-B-16-M text-gray-500"
+            }`}
+          >
+            {recoilDispatchData?.dispatchName || "배차명을 입력해주세요."}
           </div>
           <div className="flex h-[36px] w-[116px] items-center justify-center rounded-[4px] bg-gray-100 leading-[24px] text-B-14-M">
             {formatDate(recoilDispatchData?.loadingStartTime)}
@@ -144,6 +155,7 @@ const DispatchInformationHeader = () => {
           text={[{ type: "alert", value: "배차취소 시, 상태는 복구되지 않습니다." }]}
           onClickClose={handleCloseModal}
           onConfirm={handleCancelDispatchConfirm}
+          doConfirm={true}
           leftButtonText="돌아가기"
           rightButtonText="배차취소"
         />
@@ -151,11 +163,19 @@ const DispatchInformationHeader = () => {
 
       {isConfirmModalOpen && (
         <ConfirmModal
-          title="배차확정"
-          text={[
-            { type: "sub", value: "배차를 확정하시겠습니까?" },
-            { type: "main", value: "확정시, 기사님에게 운송이 요청됩니다." },
-          ]}
+          title={hasErrors ? "오류 주문" : "배차확정"}
+          text={
+            hasErrors
+              ? [
+                  { type: "alert", value: "배차 진행이 어려운 주문 내용이 있습니다." },
+                  { type: "sub", value: "배차를 확정하시겠습니까?" },
+                  { type: "main", value: "확정시, 주문이 배정된 기사님에게 운송이 요청됩니다." },
+                ]
+              : [
+                  { type: "sub", value: "배차를 확정하시겠습니까?" },
+                  { type: "main", value: "확정시, 기사님에게 운송이 요청됩니다." },
+                ]
+          }
           onClickClose={handleCloseModal}
           onConfirm={handleConfirmDispatchConfirm}
           leftButtonText="취소"

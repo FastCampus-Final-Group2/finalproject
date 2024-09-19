@@ -28,13 +28,14 @@ const SideTapDriverDetail = ({ isExpanded, toggleExpand }: SideTapDriverDetailPr
             <DriverDispatchDetailDashboard
               drivingTime={dispatchData.course[selectedDriver].totalTime}
               mileage={dispatchData.course[selectedDriver].mileage}
-              totalOrder={dispatchData.course[selectedDriver].orderNum}
+              totalOrder={dispatchData.course[selectedDriver].totalOrderOrDistanceNum}
               availabilityOrder={dispatchData.course[selectedDriver].availableNum}
               floorAreaRatio={dispatchData.course[selectedDriver].floorAreaRatio}
               driverName={dispatchData.course[selectedDriver].smName}
               driverPhoneNumber={dispatchData.course[selectedDriver].smPhoneNumber}
               vehicleType={dispatchData.course[selectedDriver].vehicleType}
               vehicleTon={dispatchData.course[selectedDriver].vehicleTon}
+              contractType={dispatchData.contractType}
               bgColor={bgColor}
             />
           )}

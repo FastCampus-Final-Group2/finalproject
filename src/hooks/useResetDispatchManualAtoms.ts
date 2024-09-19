@@ -6,6 +6,12 @@ import {
   selectedDriverState,
   selectedPendingState,
 } from "@/atoms/dispatchData";
+import {
+  plusMinusEstimatedTimetState,
+  plusMinusTotalOrdertState,
+  plusMinusVolumeState,
+  plusMinusWeightState,
+} from "@/atoms/plusMinus";
 import { requestBodyChangeDispatchDataState } from "@/atoms/requestBodyChangeDispatchData";
 import { useResetRecoilState } from "recoil";
 
@@ -18,6 +24,11 @@ const useResetDispatchManualAtoms = () => {
   const resetSelectedPendingState = useResetRecoilState(selectedPendingState);
   const resetIsClickPendingOrderListState = useResetRecoilState(isClickPendingOrderListState);
 
+  const resetPlusMinusVolume = useResetRecoilState(plusMinusVolumeState);
+  const resetPlusMinusWeight = useResetRecoilState(plusMinusWeightState);
+  const resetPlusMinusTotalOrder = useResetRecoilState(plusMinusTotalOrdertState);
+  const resetPlusMinusEstimatedTime = useResetRecoilState(plusMinusEstimatedTimetState);
+
   const resetDispatchManualAtoms = () => {
     resetBgColorState();
     resetRequestBodyChangeDispatchDataState();
@@ -26,6 +37,10 @@ const useResetDispatchManualAtoms = () => {
     resetSelectedDriverState();
     resetSelectedPendingState();
     resetIsClickPendingOrderListState();
+    resetPlusMinusVolume();
+    resetPlusMinusWeight();
+    resetPlusMinusTotalOrder();
+    resetPlusMinusEstimatedTime();
   };
 
   return resetDispatchManualAtoms;

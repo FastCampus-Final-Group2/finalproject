@@ -5,25 +5,27 @@ import { StrictModeDroppable } from "@/components/DragDrop/StrictModeDroppable";
 import Icon from "@/components/core/Icon";
 import PendingOrder from "@/components/OrderDashBoard/PendingOrderList/PendingOrder";
 import ToggleExpandSwitch from "@/components/core/ToggleExpandSwitch";
-import { CourseDetailResponse, LocalTime } from "@/models/ApiTypes";
+import { CourseDetailResponse } from "@/models/ApiTypes";
 import * as XLSX from "xlsx";
+import { useEffect } from "react";
+import {
+  plusMinusVolumeState,
+  plusMinusWeightState,
+  plusMinusTotalOrdertState,
+  plusMinusEstimatedTimetState,
+} from "@/atoms/plusMinus";
+import { useRecoilState } from "recoil";
 
 interface PendingOrderDataProps {
   pendingOrderData: CourseDetailResponse[];
 }
 
-// LocalTime을 string으로 변환하는 유틸리티 함수
-const localTimeToString = (localTime: LocalTime | undefined): string => {
-  if (!localTime) return "";
-
-  const hours = localTime?.hour?.toString().padStart(2, "0");
-  const minutes = localTime?.minute?.toString().padStart(2, "0");
-
-  return `${hours}:${minutes}`;
-};
-
 const PendingOrderList = ({ pendingOrderData }: PendingOrderDataProps) => {
   const { isExpanded, toggleExpand } = ToggleExpandSwitch(false);
+  const [, setPlusMinusVolume] = useRecoilState(plusMinusVolumeState);
+  const [, setPlusMinusWeight] = useRecoilState(plusMinusWeightState);
+  const [, setPlusMinusTotalOrder] = useRecoilState(plusMinusTotalOrdertState);
+  const [, setPlusMinusEstimatedTime] = useRecoilState(plusMinusEstimatedTimetState);
 
   // 보류 주문 데이터를 엑셀로 변환 및 다운로드하는 함수
   const downloadPendingOrders = () => {
@@ -45,6 +47,37 @@ const PendingOrderList = ({ pendingOrderData }: PendingOrderDataProps) => {
     XLSX.writeFile(workbook, "pending_orders.xlsx");
   };
 
+  // pendingOrderData가 변경될 때마다 plusMinusVolume 업데이트
+  useEffect(() => {
+    const totalVolume = pendingOrderData.reduce((acc, order) => {
+      return acc + (order.volume || 0) * (order.productQuantity || 0);
+    }, 0);
+    setPlusMinusVolume(totalVolume);
+  }, [pendingOrderData, setPlusMinusVolume]);
+
+  // pendingOrderData가 변경될 때마다 plusMinusWeight 업데이트
+  useEffect(() => {
+    const totalWeight = pendingOrderData.reduce((acc, order) => {
+      return acc + (order.weight || 0) * (order.productQuantity || 0);
+    }, 0);
+    setPlusMinusWeight(totalWeight);
+  }, [pendingOrderData, setPlusMinusWeight]);
+
+  // pendingOrderData가 변경될 때마다 plusMinusWeight 업데이트
+  useEffect(() => {
+    const TotalOrder = pendingOrderData.reduce((acc, order) => {
+      return acc + 1;
+    }, 0);
+    setPlusMinusTotalOrder(TotalOrder);
+  }, [pendingOrderData, setPlusMinusTotalOrder]);
+
+  // pendingOrderData가 변경될 때마다 EstimatedTime 업데이트
+  useEffect(() => {
+    const EstimatedTime = pendingOrderData.reduce((acc, order) => {
+      return acc + (order.ett || 0);
+    }, 0);
+    setPlusMinusEstimatedTime(EstimatedTime);
+  }, [pendingOrderData, setPlusMinusEstimatedTime]);
   return (
     <div className="max-h-[344px] min-h-[64px] w-[460px] gap-[16px] rounded-[8px] bg-white p-[20px]">
       <div className="inline-flex h-6 w-[420px] flex-col items-start justify-start gap-4 bg-white">
@@ -67,7 +100,6 @@ const PendingOrderList = ({ pendingOrderData }: PendingOrderDataProps) => {
           </button>
         </div>
       </div>
-
       {isExpanded && (
         <StrictModeDroppable droppableId="droppablePendingOrderData">
           {(provided) => (
@@ -86,11 +118,12 @@ const PendingOrderList = ({ pendingOrderData }: PendingOrderDataProps) => {
                     <div ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
                       <PendingOrder
                         index={index}
-                        address={order.roadAddress}
+                        address={order.lotNumberAddress}
                         meter={order.volume}
                         kilogram={order.weight}
                         serviceRequestDate={order.serviceRequestDate}
-                        serviceRequestTime={localTimeToString(order.serviceRequestTime)}
+                        serviceRequestTime={order.serviceRequestTime}
+                        productQuantity={order.productQuantity}
                       />
                     </div>
                   )}
