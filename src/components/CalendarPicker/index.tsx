@@ -8,10 +8,11 @@ import Button from "@/components/core/Button";
 
 interface CalendarPickerProps {
   onSelectDate: (dateTime: string) => void;
+  pastDisabled?: boolean;
   dateType?: "start" | "end";
 }
 
-const CalendarPicker = ({ onSelectDate, dateType }: CalendarPickerProps) => {
+const CalendarPicker = ({ onSelectDate, dateType, pastDisabled = false }: CalendarPickerProps) => {
   const [selectedDate, setSelectedDate] = useState<dayjs.Dayjs | null>(null);
   const [selectedHour, setSelectedHour] = useState<number | null>(null);
   const [selectedMinute, setSelectedMinute] = useState<number | null>(null);
@@ -36,7 +37,7 @@ const CalendarPicker = ({ onSelectDate, dateType }: CalendarPickerProps) => {
   return (
     <div className="flex flex-col items-end rounded-[8px] bg-white p-[10px] shadow-md">
       <div className="relative mb-[10px] flex border-b border-gray-100">
-        <Calendar startDate={selectedDate} onDateClick={handleDateClick} />
+        <Calendar startDate={selectedDate} onDateClick={handleDateClick} pastDisabled={pastDisabled} />
         <div>
           <div className="flex h-[29.5px] justify-center">
             <p className="flex items-center text-B-14-B">
