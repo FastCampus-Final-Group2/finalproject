@@ -102,10 +102,12 @@ const StopOver = ({
     restrictedTonCode: boolean = false,
     delayRequestTime: boolean = false,
     overContractNum: boolean = false,
+    overFloorAreaRatio: boolean = false,
+    entryRestricted: boolean = false,
   ): JSX.Element[] => {
     const errorMessages: JSX.Element[] = [];
 
-    if (restrictedTonCode) {
+    if (restrictedTonCode || entryRestricted) {
       errorMessages.push(
         <div className="inline-flex items-center gap-[4px]">
           <Icon id="warning" size={14} className="text-red-500" />
@@ -137,15 +139,6 @@ const StopOver = ({
         <div className="inline-flex items-center gap-[4px]">
           <Icon id="warning" size={14} className="text-red-500" />
           <div className="text-center text-red-500 text-B-14-M">용적률 100% 초과</div>
-        </div>,
-      );
-    }
-
-    if (entryRestricted) {
-      errorMessages.push(
-        <div className="inline-flex items-center gap-[4px]">
-          <Icon id="warning" size={14} className="text-red-500" />
-          <div className="text-center text-red-500 text-B-14-M">진입불가 차량</div>
         </div>,
       );
     }
@@ -217,9 +210,15 @@ const StopOver = ({
                 )}
               </div>
 
-              {(restrictedTonCode || delayRequestTime || overContractNum) && (
+              {(restrictedTonCode || delayRequestTime || overContractNum || overFloorAreaRatio || entryRestricted) && (
                 <div className="inline-flex flex-col items-start gap-[4px] self-stretch rounded">
-                  {getErrorMessage(restrictedTonCode, delayRequestTime, overContractNum).map((message, index) => (
+                  {getErrorMessage(
+                    restrictedTonCode,
+                    delayRequestTime,
+                    overContractNum,
+                    overFloorAreaRatio,
+                    entryRestricted,
+                  ).map((message, index) => (
                     <div key={index}>{message}</div>
                   ))}
                 </div>

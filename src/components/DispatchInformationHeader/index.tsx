@@ -8,12 +8,11 @@ import ConfirmModal from "@/components/ConfirmModal";
 import dayjs from "dayjs";
 import axios from "@/utils/axios";
 import { useRecoilState } from "recoil";
-import { dispatchDataState, pendingOrderDataState } from "@/atoms/dispatchData";
+import { dispatchDataState } from "@/atoms/dispatchData";
 import useResetDispatchManualAtoms from "@/hooks/useResetDispatchManualAtoms";
 
 const DispatchInformationHeader = () => {
-  const [recoilDispatchData, setRecoilDispatchData] = useRecoilState(dispatchDataState);
-  const [, setPendingOrderData] = useRecoilState(pendingOrderDataState);
+  const [recoilDispatchData] = useRecoilState(dispatchDataState);
 
   const [isCancelModalOpen, setIsCancelModalOpen] = useState(false);
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
@@ -110,8 +109,10 @@ const DispatchInformationHeader = () => {
     } catch (error) {
       console.error("배차 확정 중 오류가 발생했습니다.", error);
     } finally {
-      setIsConfirmModalOpen(false);
-      resetDispatchManualAtoms();
+      setTimeout(() => {
+        setIsConfirmModalOpen(false);
+        resetDispatchManualAtoms();
+      }, 1000);
     }
   };
 

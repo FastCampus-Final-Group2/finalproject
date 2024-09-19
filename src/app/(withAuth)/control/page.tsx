@@ -24,6 +24,7 @@ import {
 } from "@/atoms/control";
 import { useRouter } from "next/navigation";
 import ListSelectionCount from "@/components/ListSelectionCount";
+import { useTabStateContext } from "@/contexts/TabStateContext";
 
 interface DispatchData {
   status?: "IN_TRANSIT" | "WAITING" | "COMPLETED";
@@ -46,6 +47,7 @@ const ControlPage = () => {
   const setLastVisitedControlPage = useSetRecoilState(lastVisitedControlPageState);
   const lastVisitedControlPage = useRecoilValue(lastVisitedControlPageState);
   const router = useRouter();
+  const { addTab } = useTabStateContext();
 
   // const [searchOption] = useRecoilState(controlSearchOptionState);
   // const [searchKeyword] = useRecoilState(searchTextInputState);
@@ -116,6 +118,11 @@ const ControlPage = () => {
         return 0;
     }
   };
+
+  useEffect(() => {
+    addTab("/control", "차량관제");
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     setLastVisitedControlPage((prev) => ({ ...prev, general: "/control" }));
