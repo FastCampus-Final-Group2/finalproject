@@ -6,9 +6,10 @@ interface MonthProps {
   month: dayjs.Dayjs;
   startDate: dayjs.Dayjs | null;
   onDateClick: (date: dayjs.Dayjs) => void;
+  pastDisabled: boolean;
 }
 
-const Month = ({ month, startDate, onDateClick }: MonthProps) => {
+const Month = ({ month, startDate, onDateClick, pastDisabled }: MonthProps) => {
   const renderCells = (month: dayjs.Dayjs) => {
     const monthStart = month.startOf("month");
     const monthEnd = month.endOf("month");
@@ -38,8 +39,9 @@ const Month = ({ month, startDate, onDateClick }: MonthProps) => {
             isToday={isToday}
             isPast={isPast}
             isCurrentMonth={isCurrentMonth}
-            onClick={() => onDateClick(cloneDay)}
+            onClick={() => (!pastDisabled || !isPast ? onDateClick(cloneDay) : undefined)}
             isSunday={isSunday}
+            disabled={pastDisabled && isPast}
           >
             {formattedDate}
           </Cell>,

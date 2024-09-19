@@ -134,8 +134,6 @@ const ControlPage = () => {
       searchKeyword: "",
     });
     setOnlyClient(false);
-    // setSearchOption("");
-    // setSearchKeyword("");
   };
 
   if (isLoading) return <div>Loading...</div>;
