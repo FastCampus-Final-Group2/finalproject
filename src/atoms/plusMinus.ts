@@ -21,3 +21,8 @@ export const plusMinusEstimatedTimetState = atom({
   key: "plusMinusEstimatedTimetState",
   default: 0, // 초기값
 });
+
+export const plusMinusTotalErrorOrdertState = atom({
+  key: "plusMinusTotalErrorOrdertState",
+  default: 0, // 초기값
+});
