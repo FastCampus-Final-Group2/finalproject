@@ -27,12 +27,15 @@ const PendingOrder = ({
   const formatServiceRequest = (dateString: string, timeString: string): string => {
     const date = new Date(dateString);
 
+    const month = (date.getMonth() + 1).toString().padStart(2, "0"); // 월은 0부터 시작하므로 1을 더함
+    const day = date.getDate().toString().padStart(2, "0");
+
+    if (!timeString) return `${month}월 ${day}일`;
+
     // timeString을 LocalTime 형식으로 변환
     const [hours, minutes, seconds] = timeString.split(":").map(Number);
     date.setHours(hours || 0, minutes || 0, seconds || 0);
 
-    const month = (date.getMonth() + 1).toString().padStart(2, "0"); // 월은 0부터 시작하므로 1을 더함
-    const day = date.getDate().toString().padStart(2, "0");
     const hoursFormatted = date.getHours().toString().padStart(2, "0");
     const minutesFormatted = date.getMinutes().toString().padStart(2, "0");
 
