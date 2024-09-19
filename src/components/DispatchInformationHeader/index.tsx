@@ -7,9 +7,10 @@ import Button from "@/components/core/Button";
 import ConfirmModal from "@/components/ConfirmModal";
 import dayjs from "dayjs";
 import axios from "@/utils/axios";
-import { useRecoilState } from "recoil";
+import { useRecoilState, useSetRecoilState } from "recoil";
 import { dispatchDataState } from "@/atoms/dispatchData";
 import useResetDispatchManualAtoms from "@/hooks/useResetDispatchManualAtoms";
+import { dispatchRouterState } from "@/atoms/dispatchRouter";
 
 const DispatchInformationHeader = () => {
   const [recoilDispatchData] = useRecoilState(dispatchDataState);
@@ -18,6 +19,7 @@ const DispatchInformationHeader = () => {
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
   const router = useRouter();
   const resetDispatchManualAtoms = useResetDispatchManualAtoms();
+  const setDispatchRouter = useSetRecoilState(dispatchRouterState);
 
   const formatDate = (dateString?: string) => {
     return dayjs(dateString).format("MM월 DD일 HH:mm");
@@ -104,15 +106,14 @@ const DispatchInformationHeader = () => {
       console.log("응답 상태 코드:", response.status);
       if (response.status === 200 || response.status === 201) {
         console.log("배차 확정이 성공적으로 처리되었습니다.");
-        router.push("/control");
+        setIsConfirmModalOpen(false);
+        setDispatchRouter(true);
+        resetDispatchManualAtoms();
       }
     } catch (error) {
       console.error("배차 확정 중 오류가 발생했습니다.", error);
-    } finally {
-      setTimeout(() => {
-        setIsConfirmModalOpen(false);
-        resetDispatchManualAtoms();
-      }, 1000);
+      setIsConfirmModalOpen(false);
+      resetDispatchManualAtoms();
     }
   };
 

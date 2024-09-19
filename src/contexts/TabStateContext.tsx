@@ -8,7 +8,7 @@ const TabStateKey = "GLT_TAB_STATE";
 type HrefType = SideNavBarLink["href"];
 type NameType = Exclude<SideNavBarLink["name"], "배차관리">;
 
-interface TabInfo {
+export interface TabInfo {
   href: HrefType;
   name: NameType;
 }

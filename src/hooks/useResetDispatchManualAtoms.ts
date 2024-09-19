@@ -6,6 +6,7 @@ import {
   selectedDriverState,
   selectedPendingState,
 } from "@/atoms/dispatchData";
+import { dispatchRouterState } from "@/atoms/dispatchRouter";
 import {
   plusMinusEstimatedTimetState,
   plusMinusTotalErrorOrdertState,
@@ -24,7 +25,7 @@ const useResetDispatchManualAtoms = () => {
   const resetSelectedDriverState = useResetRecoilState(selectedDriverState);
   const resetSelectedPendingState = useResetRecoilState(selectedPendingState);
   const resetIsClickPendingOrderListState = useResetRecoilState(isClickPendingOrderListState);
-
+  const resetDispatchRouterState = useResetRecoilState(dispatchRouterState);
   const resetPlusMinusVolume = useResetRecoilState(plusMinusVolumeState);
   const resetPlusMinusWeight = useResetRecoilState(plusMinusWeightState);
   const resetPlusMinusTotalOrder = useResetRecoilState(plusMinusTotalOrdertState);
@@ -39,6 +40,7 @@ const useResetDispatchManualAtoms = () => {
     resetSelectedDriverState();
     resetSelectedPendingState();
     resetIsClickPendingOrderListState();
+    resetDispatchRouterState();
     resetPlusMinusVolume();
     resetPlusMinusWeight();
     resetPlusMinusTotalOrder();

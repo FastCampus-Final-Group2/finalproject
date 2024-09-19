@@ -24,7 +24,7 @@ import {
 } from "@/atoms/control";
 import { useRouter } from "next/navigation";
 import ListSelectionCount from "@/components/ListSelectionCount";
-import { useTabStateContext } from "@/contexts/TabStateContext";
+import { TabInfo, useTabStateContext } from "@/contexts/TabStateContext";
 
 interface DispatchData {
   status?: "IN_TRANSIT" | "WAITING" | "COMPLETED";
@@ -120,6 +120,10 @@ const ControlPage = () => {
   };
 
   useEffect(() => {
+    const tabStates = JSON.parse(sessionStorage.getItem("GLT_TAB_STATE") || "") as TabInfo[];
+
+    if (tabStates && tabStates.some((tabState) => tabState.href === "/control")) return;
+
     addTab("/control", "차량관제");
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
