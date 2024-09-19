@@ -2044,13 +2044,13 @@ export interface DeliveryDestinationResponse {
    * @format double
    * @example 36.3214
    */
-  latitude: number;
+  latitude?: number;
   /**
    * 경도
    * @format double
    * @example 127.1724
    */
-  longitude: number;
+  longitude?: number;
   /**
    * 윙바디 진입 불가
    * @example "1,2.5,5"
@@ -2136,13 +2136,13 @@ export interface CenterResponse {
    * @format double
    * @example 36.3214
    */
-  latitude: number;
+  latitude?: number;
   /**
    * 경도
    * @format double
    * @example 127.1724
    */
-  longitude: number;
+  longitude?: number;
   /**
    * 윙바디 진입 불가
    * @example "1,2.5,5"

@@ -29,7 +29,7 @@ const DeliveryInfo = ({ info }: DeliveryInfoProps) => {
             <InfoItem
               key={key}
               label={DELIVERY_INFO_LABEL.default[key]}
-              value={`${formatDecimal(info.latitude)} / ${formatDecimal(info.longitude)}`}
+              value={`${info.latitude ? formatDecimal(info.latitude) : ""} / ${info.longitude ? formatDecimal(info.longitude) : ""}`}
               line={line}
             />
           );
