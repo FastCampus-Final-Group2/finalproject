@@ -7,6 +7,7 @@ import CommentInput from "./CommentInput";
 import RestrictedTonCodeInput from "./RestrictedTonCodeInput";
 import { GetCenterData, GetDeliveryDestinationData } from "@/models/ApiTypes";
 import { isCenterData } from "@/types/typeGuard/delivery";
+import { formatDecimal } from "@/utils/format/decimal";
 
 interface DeliveryInfoProps {
   info: GetDeliveryDestinationData | GetCenterData;
@@ -28,7 +29,7 @@ const DeliveryInfo = ({ info }: DeliveryInfoProps) => {
             <InfoItem
               key={key}
               label={DELIVERY_INFO_LABEL.default[key]}
-              value={`${info.latitude} / ${info.longitude}`}
+              value={`${formatDecimal(info.latitude)} / ${formatDecimal(info.longitude)}`}
               line={line}
             />
           );
