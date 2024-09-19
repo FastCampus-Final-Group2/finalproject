@@ -109,8 +109,10 @@ const DispatchInformationHeader = () => {
     } catch (error) {
       console.error("배차 확정 중 오류가 발생했습니다.", error);
     } finally {
-      setIsConfirmModalOpen(false);
-      resetDispatchManualAtoms();
+      setTimeout(() => {
+        setIsConfirmModalOpen(false);
+        resetDispatchManualAtoms();
+      }, 1000);
     }
   };
 
