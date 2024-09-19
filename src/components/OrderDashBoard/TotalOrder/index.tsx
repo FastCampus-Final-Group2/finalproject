@@ -1,7 +1,11 @@
 import Icon from "@/components/core/Icon";
 import CircularProgressBar from "@/components/core/CircularProgressBar";
 import { useRecoilState } from "recoil";
-import { plusMinusEstimatedTimetState, plusMinusTotalOrdertState } from "@/atoms/plusMinus";
+import {
+  plusMinusEstimatedTimetState,
+  plusMinusTotalErrorOrdertState,
+  plusMinusTotalOrdertState,
+} from "@/atoms/plusMinus";
 
 interface TotalOrderProps {
   totalOrders?: number;
@@ -9,9 +13,15 @@ interface TotalOrderProps {
   estimatedTime?: number;
   capacityRate?: number;
 }
-const TotalOrder = ({ totalOrders = 0, errorOrders, estimatedTime, capacityRate }: TotalOrderProps) => {
+const TotalOrder = ({ totalOrders = 0, errorOrders = 0, estimatedTime, capacityRate }: TotalOrderProps) => {
   const [plusMinusTotalOrder] = useRecoilState(plusMinusTotalOrdertState);
-  // const [plusMinusEstimatedTime] = useRecoilState(plusMinusEstimatedTimetState);
+  const [plusMinusErrorOrder] = useRecoilState(plusMinusTotalErrorOrdertState);
+  const [plusMinusEstimatedTime] = useRecoilState(plusMinusEstimatedTimetState);
+
+  // 계산된 예상 시간 (estimatedTime에서 plusMinusEstimatedTime을 뺀 값)
+  const adjustedEstimatedTime = estimatedTime !== undefined ? estimatedTime - plusMinusEstimatedTime : 0;
+  const hours = Math.floor(adjustedEstimatedTime / 60); // 시간 계산
+  const minutes = adjustedEstimatedTime % 60; // 분 계산
 
   return (
     <div className="inline-flex h-[116px] w-[460px] items-center justify-center gap-4 rounded-lg bg-white py-4 pl-6 pr-[23px]">
@@ -38,7 +48,7 @@ const TotalOrder = ({ totalOrders = 0, errorOrders, estimatedTime, capacityRate 
             <div className="h-[20px] w-[52px] text-gray-500 text-B-14-M">오류 주문</div>
           </div>
           <div className="flex h-[44px] w-[68px] items-center justify-end text-right">
-            <div className="text-red-500 text-T-20-B">{errorOrders}</div>
+            <div className="text-red-500 text-T-20-B">{errorOrders - plusMinusErrorOrder}</div>
             <div className="text-gray-700 text-T-16-B">건</div>
           </div>
         </div>
@@ -47,7 +57,7 @@ const TotalOrder = ({ totalOrders = 0, errorOrders, estimatedTime, capacityRate 
         <div className="h-[60px] w-[0px] border border-gray-50"></div>
 
         {/* 예상 시간 */}
-        <div className="flex h-[44px] w-[68px] flex-col items-center justify-between">
+        {/* <div className="flex h-[44px] w-[68px] flex-col items-center justify-between">
           <div className="flex items-center justify-center gap-2">
             <Icon id="clock" size={14} className="text-gray-500" />
             <div className="h-[20px] w-[52px] text-gray-500 text-B-14-M">예상 시간</div>
@@ -60,6 +70,22 @@ const TotalOrder = ({ totalOrders = 0, errorOrders, estimatedTime, capacityRate 
               <div className="text-gray-700 text-T-16-B">시간</div>
             </div>
             <div className="text-blue-500 text-T-20-B">{estimatedTime !== undefined && <>{estimatedTime % 60}</>}</div>
+            <div className="inline-flex flex-col items-center justify-center gap-3 pb-0.5 pt-[3px]">
+              <div className="text-gray-700 text-T-16-B">분</div>
+            </div>
+          </div>
+        </div> */}
+        <div className="flex h-[44px] w-[68px] flex-col items-center justify-between">
+          <div className="flex items-center justify-center gap-2">
+            <Icon id="clock" size={14} className="text-gray-500" />
+            <div className="h-[20px] w-[52px] text-gray-500 text-B-14-M">예상 시간</div>
+          </div>
+          <div className="flex h-[44px] w-[80px] items-center justify-end text-right">
+            <div className="text-blue-500 text-T-20-B">{hours}</div>
+            <div className="inline-flex flex-col items-center justify-center gap-3 pb-0.5 pt-[3px]">
+              <div className="text-gray-700 text-T-16-B">시간</div>
+            </div>
+            <div className="text-blue-500 text-T-20-B">{minutes}</div>
             <div className="inline-flex flex-col items-center justify-center gap-3 pb-0.5 pt-[3px]">
               <div className="text-gray-700 text-T-16-B">분</div>
             </div>

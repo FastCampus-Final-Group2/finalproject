@@ -346,7 +346,7 @@ const OrderDashBoard = () => {
         </div>
       </div>
       {/* 변경된 배열 확인 */}
-      <div>
+      {/* <div>
         {dispatchData?.totalVolume}/{dispatchData?.totalWeight}
         <br></br>
         {plusMinusVolume}/{plusMinusWeight}
@@ -356,7 +356,7 @@ const OrderDashBoard = () => {
         {plusMinusEstimatedTime}
         <h2>StopOverData 배열:</h2>
         <pre>{JSON.stringify(stopOverList, null, 2)}</pre>
-      </div>
+      </div> */}
 
       {/* <div>
         <h2>PendingOrderData 배열:</h2>
@@ -366,7 +366,7 @@ const OrderDashBoard = () => {
         <h3>트루:</h3>
         <pre>{JSON.stringify(shouldSendRequest, null, 2)}</pre>
       </div> */}
-      <div>
+      {/* <div>
         <h3>요청 데이터:</h3>
         <pre>{JSON.stringify(requestBodyChangeDispatchData, null, 2)}</pre>
       </div>
@@ -377,7 +377,7 @@ const OrderDashBoard = () => {
       <div>
         <h2>원본 데이터:</h2>
         <pre>{JSON.stringify(dispatchData, null, 2)}</pre>
-      </div>
+      </div> */}
     </DragDropContext>
   );
 };
