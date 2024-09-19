@@ -92,9 +92,6 @@ const ControlDetailPage = ({ params }: { params: { dispatchCodeId: number } }) =
     }) ?? [];
   // console.log("stopOverListPoint", stopOverListPoint);
 
-  // const handleModalOpen = () => setIsModalOpen(true);
-  // const handleModalClose = () => setIsModalOpen(false);
-
   return (
     <>
       <ControlDispatchHeader fetchedData={fetchedData!} />
