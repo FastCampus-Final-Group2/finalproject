@@ -107,8 +107,8 @@ const DispatchInformationHeader = () => {
       if (response.status === 200 || response.status === 201) {
         console.log("배차 확정이 성공적으로 처리되었습니다.");
         setIsConfirmModalOpen(false);
-        setDispatchRouter(true);
         resetDispatchManualAtoms();
+        setDispatchRouter(true);
       }
     } catch (error) {
       console.error("배차 확정 중 오류가 발생했습니다.", error);

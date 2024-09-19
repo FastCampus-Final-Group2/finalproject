@@ -4,26 +4,31 @@ import DispatchInformationHeader from "@/components/DispatchInformationHeader";
 import OrderDashBoard from "@/components/OrderDashBoard";
 import NaverMap from "@/components/NaverMap";
 import useOnlyClient from "@/hooks/useOnlyClient";
-import { useRecoilState, useRecoilValue } from "recoil";
+import { useRecoilState } from "recoil";
 import { dispatchDataState } from "@/atoms/dispatchData";
 import { useRouter } from "next/navigation";
-import { dispatchRouterState } from "@/atoms/dispatchRouter";
+import { useEffect } from "react";
+import Spinner from "@/components/core/Spinner";
 
 const Page = () => {
   const [dispatchData] = useRecoilState(dispatchDataState);
-  const dispatchRouter = useRecoilValue(dispatchRouterState);
   const router = useRouter();
   const isClient = useOnlyClient();
 
-  if (!isClient) return null;
-
-  if (!dispatchData) {
-    if (!dispatchRouter) {
+  useEffect(() => {
+    if (!dispatchData) {
       router.push("/dispatch");
-    } else {
-      router.push("/control");
     }
+  }, [dispatchData, router]);
+
+  if (!isClient || !dispatchData) {
+    return (
+      <div className="flex h-full w-full items-center justify-center">
+        <Spinner />
+      </div>
+    );
   }
+
   return (
     <div className="w-full">
       <DispatchInformationHeader />

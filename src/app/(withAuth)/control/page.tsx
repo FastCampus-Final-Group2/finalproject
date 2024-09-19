@@ -25,6 +25,7 @@ import {
 import { useRouter } from "next/navigation";
 import ListSelectionCount from "@/components/ListSelectionCount";
 import { TabInfo, useTabStateContext } from "@/contexts/TabStateContext";
+import Spinner from "@/components/core/Spinner";
 
 interface DispatchData {
   status?: "IN_TRANSIT" | "WAITING" | "COMPLETED";
@@ -120,7 +121,8 @@ const ControlPage = () => {
   };
 
   useEffect(() => {
-    const tabStates = JSON.parse(sessionStorage.getItem("GLT_TAB_STATE") || "") as TabInfo[];
+    const json = sessionStorage.getItem("GLT_TAB_STATE");
+    const tabStates = json ? (JSON.parse(json) as TabInfo[]) : null;
 
     if (tabStates && tabStates.some((tabState) => tabState.href === "/control")) return;
 
@@ -147,7 +149,13 @@ const ControlPage = () => {
     setOnlyClient(false);
   };
 
-  if (isLoading) return <div>Loading...</div>;
+  if (isLoading) {
+    return (
+      <div className="flex h-full w-full items-center justify-center">
+        <Spinner />
+      </div>
+    );
+  }
   if (error instanceof Error) return <div>Error: {error.message}</div>;
 
   console.log("searchParams", searchParams);
