@@ -90,8 +90,8 @@ const OrderDashBoard = () => {
     const updatedRequestBodyChangeDispatchData: RequestBodyChangeDispatchData = {
       smId: dispatchData?.course?.[selectedDriver]?.smId ?? null,
       smIdList: dispatchData?.course?.map((course) => course.smId ?? null) ?? [],
-      totalVolume: dispatchData?.totalVolume ?? 0 - plusMinusVolume ?? null, // 수정: null로 기본값 설정
-      totalWeight: dispatchData?.totalWeight ?? 0 - plusMinusWeight ?? null, // 수정: null로 기본값 설정
+      totalVolume: dispatchData ? dispatchData.totalVolume - plusMinusVolume : null, // 수정: null로 기본값 설정
+      totalWeight: dispatchData ? dispatchData.totalWeight - plusMinusWeight : null, // 수정: null로 기본값 설정
       loadingStartTime: dispatchData?.loadingStartTime ?? null,
       orderList: stopOverList
         .filter(
