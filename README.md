@@ -78,9 +78,9 @@
     </a>
   </p>
 
-  - `LocalStorage API`: 간단한 아이디 저장 기능 구현
-  - `React Hook Form`: validation 로직, form handling 최적화
-  - `Recoil - Atom`: 로그인 시 유저 정보를 Atom에 저장함으로써 유저 세션 관리를 통해 페이지 접근 제한
+  - **`LocalStorage API`**: 간단한 아이디 저장 기능 구현
+  - **`React Hook Form`**: validation 로직, form handling 최적화
+  - **`Recoil - Atom`**: 로그인 시 유저 정보를 Atom에 저장함으로써 유저 세션 관리를 통해 페이지 접근 제한
 
 ### 2. 탭 전환
 
@@ -94,8 +94,8 @@
     </a>
   </p>
 
-- `Session Storage API`: 메뉴에서 페이지 이동을 할 때마다 Session Storage에 탭 정보 저장
-- `Recoil` : 페이지 별로 필요한 상태를 전역상태로 관리함으로써 이후 다시 탭을 방문했을때 기존의 작업하던 부분을 다시 랜더링
+- **`Session Storage API`**: 메뉴에서 페이지 이동을 할 때마다 Session Storage에 탭 정보 저장
+- **`Recoil`**: 페이지 별로 필요한 상태를 전역상태로 관리함으로써 이후 다시 탭을 방문했을때 기존의 작업하던 부분을 다시 랜더링
 
 ### 3. Axios 설정
 
@@ -106,7 +106,7 @@
     </a>
   </p>
 
-  - `Axios` : 비동기 요청시 기본적으로 삽입되어야할 설정을 미리 추가하여 반복되는 코드 제거
+  - **`Axios`**: 비동기 요청시 기본적으로 삽입되어야할 설정을 미리 추가하여 반복되는 코드 제거
 
 ### 4. 엑셀 주문 리스트
 
@@ -117,7 +117,7 @@
     </a>
   </p>
 
-  - `Recoil - Atom, Selector, SelectorFamily` : 필요한 컴포넌트만 rerendering 되도록 최적화
+  - **`Recoil - Atom, Selector, SelectorFamily`**: 필요한 컴포넌트만 rerendering 되도록 최적화
 
 - Debounce 코드
   <p float="left">
@@ -126,7 +126,7 @@
     </a>
   </p>
 
-  - `Debounce` : 리액트 생명 주기를 이용해 Debounce를 적용하여 마지막 onChange 이벤트를 기준으로 Validation API 호출하여 과한 API 호출 방지
+  - **`Debounce`**: 리액트 생명 주기를 이용해 Debounce를 적용하여 마지막 onChange 이벤트를 기준으로 Validation API 호출하여 과한 API 호출 방지
 
 ### 5. 팝업
 
@@ -137,7 +137,7 @@
     </a>
   </p>
 
-  - `Context API` : 팝업 내부에서 Context API로 수정 가능한 정보를 관리함으로써 Props Drilling 해소 및 필요한 경우에만 Context 생성
+  - **`Context API`**: 팝업 내부에서 Context API로 수정 가능한 정보를 관리함으로써 Props Drilling 해소 및 필요한 경우에만 Context 생성
     <br/>
 
 - Confirm 팝업
@@ -158,7 +158,7 @@
     </a>
   </p>
 
-  - `Recoil - Atom, Selector, SelectorFamily` : 필요한 경로만 rerendering 되도록 최적화
+  - **`Recoil - Atom, Selector, SelectorFamily`**: 필요한 경로만 rerendering 되도록 최적화
 
   <p float="left">
     <a href="https://github.com/user-attachments/assets/8b39f55f-f137-43dc-9608-e9afd8b080d9" target="_blank">
