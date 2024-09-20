@@ -24,7 +24,6 @@ const useResetDispatchManualAtoms = () => {
   const resetSelectedDriverState = useResetRecoilState(selectedDriverState);
   const resetSelectedPendingState = useResetRecoilState(selectedPendingState);
   const resetIsClickPendingOrderListState = useResetRecoilState(isClickPendingOrderListState);
-
   const resetPlusMinusVolume = useResetRecoilState(plusMinusVolumeState);
   const resetPlusMinusWeight = useResetRecoilState(plusMinusWeightState);
   const resetPlusMinusTotalOrder = useResetRecoilState(plusMinusTotalOrdertState);

@@ -14,6 +14,7 @@ const useResetControlAtoms = () => {
   const resetControlSideTabDataState = useResetRecoilState(controlSideTabDataState);
   const resetControlSideTabState = useResetRecoilState(controlSideTabState);
   const resetSearchParamsState = useResetRecoilState(searchParamsState);
+  const resetLastVisitedControlPageState = useResetRecoilState(lastVisitedControlPageState);
 
   const resetControlAtoms = () => {
     resetSearchDataState();
@@ -28,6 +29,7 @@ const useResetControlAtoms = () => {
     resetControlSideTabDataState();
     resetControlSideTabState();
     resetSearchParamsState();
+    resetLastVisitedControlPageState();
   };
 
   return resetControlAtoms;

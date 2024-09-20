@@ -30,7 +30,12 @@ const StopOverList = ({ bgColor, isExpanded, toggleExpand }: StopOverListProps) 
     if (!stopOverList) return;
 
     const count = Array.from(stopOverList).filter(
-      (stopOver) => stopOver.restrictedTonCode || stopOver.delayRequestTime || stopOver.overContractNum,
+      (stopOver) =>
+        stopOver.restrictedTonCode ||
+        stopOver.delayRequestTime ||
+        stopOver.overContractNum ||
+        stopOver.overFloorAreaRatio ||
+        stopOver.entryRestricted,
     ).length;
     setErrorCount(count);
   }, [stopOverList]);

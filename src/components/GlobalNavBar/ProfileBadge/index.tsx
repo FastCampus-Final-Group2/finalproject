@@ -8,9 +8,10 @@ import useResetExcelDataAtoms from "@/hooks/useResetExcelDataAtoms";
 import useResetControlAtoms from "@/hooks/useResetControlAtoms";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
-import { useRecoilState } from "recoil";
+import { useRecoilState, useResetRecoilState } from "recoil";
 import { useTabStateContext } from "@/contexts/TabStateContext";
 import useResetDispatchManualAtoms from "@/hooks/useResetDispatchManualAtoms";
+import { dispatchRouterState } from "@/atoms/dispatchRouter";
 
 const ProfileBadge = () => {
   const isClient = useOnlyClient();
@@ -20,6 +21,7 @@ const ProfileBadge = () => {
   const resetExcelDataAtoms = useResetExcelDataAtoms();
   const resetControlAtoms = useResetControlAtoms();
   const resetDispatchManualAtoms = useResetDispatchManualAtoms();
+  const resetDispatchRouter = useResetRecoilState(dispatchRouterState);
   const { resetTabState } = useTabStateContext();
 
   useEffect(() => {
@@ -33,6 +35,7 @@ const ProfileBadge = () => {
 
     resetExcelDataAtoms();
     resetDispatchManualAtoms();
+    resetDispatchRouter();
     resetControlAtoms();
     resetTabState();
     setUser(null);

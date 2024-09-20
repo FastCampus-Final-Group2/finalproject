@@ -49,7 +49,7 @@ const DeliveryRoutine = ({
   // 4. dispatchDetailList의 가장 마지막 index의 status가 CANCELED인 경우, 종료 시간은 마지막에서 두번째 데이터의 operationEndTime 또는 expectationOperationEndTime을 사용하여 종료 시간 계산
   // 5. dispatchDetailList의 마지막에서 두 번째 index의 status가 CANCELED인 경우, 종료 시간은 마지막에서 세 번째 데이터의 operationEndTime 또는 expectationOperationEndTime을 사용하여 종료 시간 계산...(반복)
 
-  console.log(fetchData.dispatchDetailList[fetchData.dispatchDetailList.length - 1].expectationOperationEndTime);
+  // console.log(fetchData.dispatchDetailList[fetchData.dispatchDetailList.length - 1].expectationOperationEndTime);
 
   const calculateEndTime = (
     dispatchDetailList: DeliveryRoutineDetailStatusItem[],
