@@ -13,17 +13,11 @@ import {
   selectedDriverState,
   stopOverListSelector,
 } from "@/atoms/dispatchData";
-import { DispatchUpdateResponse, LocalTime, DispatchResponse, CourseDetailResponse } from "@/models/ApiTypes";
+import { DispatchUpdateResponse, LocalTime, DispatchResponse } from "@/models/ApiTypes";
 import axios from "@/utils/axios";
 import { requestBodyChangeDispatchDataState } from "@/atoms/requestBodyChangeDispatchData";
 import { useEffect, useState } from "react";
-import {
-  plusMinusEstimatedTimetState,
-  plusMinusTotalErrorOrdertState,
-  plusMinusTotalOrdertState,
-  plusMinusVolumeState,
-  plusMinusWeightState,
-} from "@/atoms/plusMinus";
+import { plusMinusVolumeState, plusMinusWeightState } from "@/atoms/plusMinus";
 
 interface RequestBodyChangeDispatchData {
   smId: number | null;
@@ -80,11 +74,8 @@ const OrderDashBoard = () => {
   const [apiResponseData, setApiResponseData] = useState(null); // 응답 데이터를 저장할 상태
   const [prevRequestBody, setPrevRequestBody] = useState<RequestBodyChangeDispatchData | null>(null);
 
-  const [plusMinusVolume, setPlusMinusVolume] = useRecoilState(plusMinusVolumeState);
-  const [plusMinusWeight, setPlusMinusWeight] = useRecoilState(plusMinusWeightState);
-  const [plusMinusTotalOrder, setPlusMinusTotalOrder] = useRecoilState(plusMinusTotalOrdertState);
-  const [plusMinusEstimatedTime, setPlusMinusEstimatedTime] = useRecoilState(plusMinusEstimatedTimetState);
-  const [plusMinusTotalErrorOrdert] = useRecoilState(plusMinusTotalErrorOrdertState);
+  const [plusMinusVolume] = useRecoilState(plusMinusVolumeState);
+  const [plusMinusWeight] = useRecoilState(plusMinusWeightState);
 
   // // 객체 변화 후 API 요청을 보낼 상태 값
   const [shouldSendRequest, setShouldSendRequest] = useState(false);
@@ -122,33 +113,6 @@ const OrderDashBoard = () => {
       setShouldSendRequest(true);
     }
   }, [stopOverList, dispatchData, selectedDriver]);
-
-  // useEffect(() => {
-  //   if (!dispatchData || selectedDriver === -1) return;
-
-  //   const restingPosition = dispatchData.course[selectedDriver]?.restingPosition;
-  //   const breakStartTime = dispatchData.course[selectedDriver]?.breakStartTime;
-  //   const breakEndTime = dispatchData.course[selectedDriver]?.breakEndTime;
-
-  //   // 기존에 같은 인덱스에 휴게시간 객체가 있는지 확인하고 제거
-  //   const filteredStopOverList = stopOverList.filter((item) => !(item.breakStartTime && item.breakEndTime));
-
-  //   // 새로운 휴게시간 객체 생성
-  //   const newBreakTimeObject = {
-  //     breakStartTime,
-  //     breakEndTime,
-  //   };
-
-  //   // 휴게시간 객체를 restingPosition 인덱스에 삽입
-  //   const updatedStopOverList = [
-  //     ...filteredStopOverList.slice(0, restingPosition),
-  //     newBreakTimeObject,
-  //     ...filteredStopOverList.slice(restingPosition),
-  //   ];
-
-  //   // stopOverList 배열 업데이트
-  //   setStopOverList(updatedStopOverList as CourseDetailResponse[]);
-  // }, [selectedDriver]); // 감지할 상태 목록
 
   const updateDispatchData = (
     prevData: DispatchResponse | null,
@@ -348,41 +312,6 @@ const OrderDashBoard = () => {
           <SideTapDriverDetail isExpanded={isExpanded} toggleExpand={toggleExpand} />
         </div>
       </div>
-      {/* 변경된 배열 확인 */}
-      {/* <div>
-        {dispatchData?.totalVolume}/{dispatchData?.totalWeight}
-        <br></br>
-        {plusMinusVolume}/{plusMinusWeight}
-        <br></br>
-        {plusMinusTotalOrder}
-        <br></br>
-        {plusMinusEstimatedTime}
-        <br></br>
-        {plusMinusTotalErrorOrdert}
-        <h2>StopOverData 배열:</h2>
-        <pre>{JSON.stringify(stopOverList, null, 2)}</pre>
-      </div> */}
-
-      {/* <div>
-        <h2>PendingOrderData 배열:</h2>
-        <pre>{JSON.stringify(pendingOrderData, null, 2)}</pre>
-      </div> */}
-      {/* <div>
-        <h3>트루:</h3>
-        <pre>{JSON.stringify(shouldSendRequest, null, 2)}</pre>
-      </div> */}
-      {/* <div>
-        <h3>요청 데이터:</h3>
-        <pre>{JSON.stringify(requestBodyChangeDispatchData, null, 2)}</pre>
-      </div>
-      <div>
-        <h2>API 응답 데이터:</h2>
-        <pre>{apiResponseData ? JSON.stringify(apiResponseData, null, 2) : "데이터가 없습니다"}</pre>
-      </div>
-      <div>
-        <h2>원본 데이터:</h2>
-        <pre>{JSON.stringify(dispatchData, null, 2)}</pre>
-      </div> */}
     </DragDropContext>
   );
 };
