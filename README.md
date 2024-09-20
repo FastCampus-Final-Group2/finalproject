@@ -1,7 +1,11 @@
 # GLT 코리아 배차 시스템
 
 <br/>
-<div align="center"><a href="https://gltkorea.site/" target="_blank"> <img src="https://img.shields.io/badge/GLT&nbsp;KOREA-274BD8?style=for-the-badge&&logoColor=white"/></a></div>
+<div align="center">
+  <a href="https://gltkorea.site/" target="_blank">
+    <img src="https://img.shields.io/badge/GLT&nbsp;KOREA-274BD8?style=for-the-badge&&logoColor=white"/>
+  </a>
+</div>
 <br/>
 
 <div align="center">
