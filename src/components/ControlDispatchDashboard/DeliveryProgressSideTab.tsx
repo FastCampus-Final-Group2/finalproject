@@ -67,7 +67,7 @@ const DeliveryProgressSideTab = ({
   if (error) return <div>오류: {(error as Error).message}</div>;
   if (!fetchData) return <div>데이터가 없습니다.</div>;
   const data = fetchData as FetchData;
-  console.log("사이드바 데이터", fetchData);
+  // console.log("사이드바 데이터", fetchData);
   return (
     <div className="transition-width relative z-50 duration-300 ease-in-out">
       <div

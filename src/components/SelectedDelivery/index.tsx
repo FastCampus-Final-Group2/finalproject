@@ -40,7 +40,7 @@ const SelectedDelivery = ({
 
     try {
       const dispatchNumberIds = selectedOrders.map((order) => order.dispatchDetailId);
-      console.log("dispatchNumberIds", dispatchNumberIds);
+      // console.log("dispatchNumberIds", dispatchNumberIds);
       const [error, response] = await DispatchDetailApi.orderCancel(dispatchNumberIds as unknown as DispatchCancel);
 
       if (error) {

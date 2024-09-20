@@ -24,7 +24,7 @@ const Lists = ({ results, checkedItems, onCheckBoxChange }: ListsProps) => {
     const minute = date.slice(14, 16);
     return `${year}.${month}.${day}  ${hour}:${minute} 시작`;
   };
-  console.log(results);
+  // console.log(results);
   return (
     <div>
       {results.map((data, index) => {
