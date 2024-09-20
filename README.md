@@ -255,20 +255,20 @@
 - **`switch-case 적용`**: 다양한 운송 상태(status)를 처리하기 위해 케이스에 따라 다른 텍스트와 색상이 출력될 수 있게 함
 
 <p float="left">
-  <a href="https://github.com/user-attachments/assets/0a4cd981-e9b0-4492-bd7c-7fb4d09a925d" target="_blank">
-    <img src="https://github.com/user-attachments/assets/0a4cd981-e9b0-4492-bd7c-7fb4d09a925d" width="64%" />
+  <a href="https://github.com/user-attachments/assets/25ea3158-e887-456b-b556-dc2e481fdfb4" target="_blank">
+    <img src="https://github.com/user-attachments/assets/25ea3158-e887-456b-b556-dc2e481fdfb4" width="49%" />
   </a>
-  <a href="https://github.com/user-attachments/assets/53779508-61a3-4885-8fcf-bbf69993a8b8" target="_blank">
-    <img src="https://github.com/user-attachments/assets/53779508-61a3-4885-8fcf-bbf69993a8b8" width="35%" />
+    <a href="https://github.com/user-attachments/assets/53779508-61a3-4885-8fcf-bbf69993a8b8" target="_blank">
+    <img src="https://github.com/user-attachments/assets/53779508-61a3-4885-8fcf-bbf69993a8b8" width="49%" />
   </a>
 </p>
 
 - **`React.Fragment`**: 이미 매핑된 운송 목록 사이에 '이동 중', '휴게 중' 컴포넌트를 **끼워넣기 위해** React.Fragment를 이용해 특정 조건에 해당하는 경우에만 원하는 컴포넌트가 보일 수 있게 함.
 
 <p float="left">
-  <a href="https://github.com/user-attachments/assets/25ea3158-e887-456b-b556-dc2e481fdfb4" target="_blank">
-    <img src="https://github.com/user-attachments/assets/25ea3158-e887-456b-b556-dc2e481fdfb4" width="50%" />
+  <a href="https://github.com/user-attachments/assets/0a4cd981-e9b0-4492-bd7c-7fb4d09a925d" target="_blank">
+    <img src="https://github.com/user-attachments/assets/0a4cd981-e9b0-4492-bd7c-7fb4d09a925d" width="80%" />
   </a>
 </p>
 
-- **`2개의 다른 API의 정보를 시각적으로 연결`**: 2개의 다른 API가 지닌 동일한 정보(특정 기사의 운송 ID, 운송 목록의 운송 상세 ID)를 이용해, 대시보드의 이슈 항목을 클릭할 경우 ID 값이 일치하는 컴포넌트가 강조될 수 있게 연동함.
+- **`2개의 다른 API의 정보를 시각적으로 연결`**: 2개의 다른 API가 지닌 동일한 정보(특정 기사의 운송 ID, 운송 목록의 운송 상세 ID)를 이용해, 대시보드의 '이슈상황 모아보기' 항목을 클릭할 경우 ID 값이 일치하는 컴포넌트가 강조될 수 있게 연동함.
