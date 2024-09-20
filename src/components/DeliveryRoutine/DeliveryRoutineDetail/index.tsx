@@ -88,7 +88,7 @@ const DeliveryRoutineDetail = ({
     if (item.transportOrderId && item.transportOrderId > 0) {
       setSelectedTransportOrderId(item.transportOrderId);
       setIsOrderModalOpen(true);
-      console.log("item.transportOrderId", item.transportOrderId);
+      // console.log("item.transportOrderId", item.transportOrderId);
     } else {
       alert("주문 정보 없음");
     }

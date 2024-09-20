@@ -158,8 +158,8 @@ const ControlPage = () => {
   }
   if (error instanceof Error) return <div>Error: {error.message}</div>;
 
-  console.log("searchParams", searchParams);
-  console.log("onlyClient", onlyClient);
+  // console.log("searchParams", searchParams);
+  // console.log("onlyClient", onlyClient);
 
   return (
     <div className="h-[calc(100vh-104px)] min-w-[1600px] overflow-y-auto p-[48px]">

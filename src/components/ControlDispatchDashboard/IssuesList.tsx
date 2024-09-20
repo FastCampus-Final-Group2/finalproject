@@ -88,8 +88,7 @@ const IssuesList = ({
     setSelectedDeliveryDestinationId(issue.deliveryDestinationId || null);
     setIsModalOpen(true);
   };
-  // todo: distinationId는 모달창 열 때 쓰기
-  // todo: dispatchDetailId로 컴포넌트 추적하기
+
   return (
     <>
       <div className="max-h-[344px] min-h-[64px] w-[460px] gap-[16px] rounded-[8px] bg-white p-[20px]">

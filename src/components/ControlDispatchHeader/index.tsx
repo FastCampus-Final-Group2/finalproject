@@ -36,7 +36,7 @@ const ControlDiapstchHeader = ({ fetchedData }: { fetchedData: DispatchListRespo
     throw new Error("Invalid dispatch code format");
   };
   const formattedDate = convertDispatchCodeToDate(fetchedData.dispatchCode ?? "");
-  console.log("헤더 데이터", fetchedData);
+  // console.log("헤더 데이터", fetchedData);
   return (
     <div className="flex h-[92px] items-center justify-between border-b px-[40px] pb-[24px] pt-[28px]">
       <ul className="flex items-center gap-[16px]">
