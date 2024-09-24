@@ -8,13 +8,8 @@ import DispatchLists from "@/components/Dispatchlists";
 import TabForDispatchedList from "@/components/TabForDispatchedList";
 import SearchBars from "@/components/SearchBar";
 import Pagination from "@/components/core/Pagination";
-import { useSetRecoilState, useRecoilValue, useRecoilState } from "recoil";
+import { useRecoilState } from "recoil";
 import {
-  // controlSearchOptionState,
-  // searchTextInputState,
-  // searchStartTimeState,
-  // searchEndTimeState,
-  lastVisitedControlPageState,
   controlOnlyClientState,
   searchDataState,
   searchParamsState,
@@ -22,9 +17,7 @@ import {
   todayDateState,
   sevenDaysLaterState,
 } from "@/atoms/control";
-import { useRouter } from "next/navigation";
 import ListSelectionCount from "@/components/ListSelectionCount";
-import { TabInfo, useTabStateContext } from "@/contexts/TabStateContext";
 import Spinner from "@/components/core/Spinner";
 
 interface DispatchData {
@@ -45,15 +38,6 @@ interface SearchParams {
 }
 
 const ControlPage = () => {
-  const setLastVisitedControlPage = useSetRecoilState(lastVisitedControlPageState);
-  const lastVisitedControlPage = useRecoilValue(lastVisitedControlPageState);
-  const router = useRouter();
-  const { addTab } = useTabStateContext();
-
-  // const [searchOption] = useRecoilState(controlSearchOptionState);
-  // const [searchKeyword] = useRecoilState(searchTextInputState);
-  // const [startDate] = useRecoilState(searchStartTimeState);
-  // const [endDate] = useRecoilState(searchEndTimeState);
   const [page, setPage] = useState(1);
   const [selectedItemsCount, setSelectedItemsCount] = useState(0);
   const [selectedDispatchIds, setSelectedDispatchIds] = useState<number[]>([]);
@@ -119,23 +103,6 @@ const ControlPage = () => {
         return 0;
     }
   };
-
-  useEffect(() => {
-    const json = sessionStorage.getItem("GLT_TAB_STATE");
-    const tabStates = json ? (JSON.parse(json) as TabInfo[]) : null;
-
-    if (tabStates && tabStates.some((tabState) => tabState.href === "/control")) return;
-
-    addTab("/control", "차량관제");
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  useEffect(() => {
-    setLastVisitedControlPage((prev) => ({ ...prev, general: "/control" }));
-    if (lastVisitedControlPage.detail) {
-      router.push(lastVisitedControlPage.detail);
-    }
-  }, [setLastVisitedControlPage, lastVisitedControlPage.detail, router]);
 
   const handleClearSearch = () => {
     setSearchParams({

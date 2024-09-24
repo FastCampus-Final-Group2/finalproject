@@ -2,11 +2,9 @@
 
 import Icon from "@/components/core/Icon";
 import { useSNBStateContext } from "@/contexts/SNBStateContext";
-import { usePathname, useRouter } from "next/navigation";
-import { useTabStateContext } from "@/contexts/TabStateContext";
+import { useRouter } from "next/navigation";
 import type { SideNavBarLink } from "@/components/SideNavBar/index.constants";
 import SideNavBarSubMenu from "@/components/SideNavBar/SideNavBarSubMenu";
-import { DEFAULT_TAB } from "@/components/GlobalNavBar/index.constants";
 import { cn } from "@/utils/cn";
 import {
   snbMenuContainerVariants,
@@ -15,7 +13,8 @@ import {
   snbMenuVariants,
   snbSubMenuContainerVariants,
 } from "./index.variants";
-import { matchPathname } from "@/utils/validation/pathname";
+import { replaceUrl } from "@/utils/nav";
+import useFullUrl from "@/hooks/useFullUrl";
 
 interface SideNavBarMenuProps {
   SideNavBarInfo: SideNavBarLink;
@@ -29,10 +28,9 @@ const SideNavBarMenu = ({
   setCurrentMenu,
 }: SideNavBarMenuProps) => {
   const router = useRouter();
-  const pathname = usePathname();
-  const { addTab } = useTabStateContext();
+  const fullUrl = useFullUrl();
   const { isSNBOpened } = useSNBStateContext();
-  const isPageOpened = matchPathname(pathname, href);
+  const isPageOpened = replaceUrl(fullUrl) === href;
 
   const handleMenuToggleButton = () => {
     if (!isSNBOpened) return;
@@ -46,9 +44,6 @@ const SideNavBarMenu = ({
       setCurrentMenu(name);
     } else {
       if (!href) return;
-      if (name !== DEFAULT_TAB.name) {
-        addTab(href, name);
-      }
 
       router.push(href);
     }

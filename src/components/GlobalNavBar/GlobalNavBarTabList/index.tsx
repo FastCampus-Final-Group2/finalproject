@@ -11,15 +11,19 @@ const GlobalNavBarTabList = () => {
 
   return (
     <div className="flex h-full items-end">
-      <GlobalNavBarTabItem
-        key={DEFAULT_TAB.name}
-        tabName={DEFAULT_TAB.name}
-        href={DEFAULT_TAB.href}
-        isMyMenu={myMenus.includes(DEFAULT_TAB.name)}
-      />
-      {tabStates.map(({ href, name }) => {
-        return <GlobalNavBarTabItem key={name} tabName={name} href={href} isMyMenu={myMenus.includes(name)} />;
-      })}
+      {tabStates && (
+        <>
+          <GlobalNavBarTabItem
+            key={DEFAULT_TAB.name}
+            tabName={DEFAULT_TAB.name}
+            href={DEFAULT_TAB.href}
+            isMyMenu={myMenus.includes(DEFAULT_TAB.name)}
+          />
+          {tabStates.map(({ href, name }) => {
+            return <GlobalNavBarTabItem key={name} tabName={name} href={href} isMyMenu={myMenus.includes(name)} />;
+          })}
+        </>
+      )}
     </div>
   );
 };
