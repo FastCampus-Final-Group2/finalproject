@@ -11,7 +11,6 @@ import { useRecoilState, useSetRecoilState } from "recoil";
 import { dispatchDataState } from "@/atoms/dispatchData";
 import useResetDispatchManualAtoms from "@/hooks/useResetDispatchManualAtoms";
 import { dispatchRouterState } from "@/atoms/dispatchRouter";
-import useResetControlAtoms from "@/hooks/useResetControlAtoms";
 
 const DispatchInformationHeader = () => {
   const [recoilDispatchData] = useRecoilState(dispatchDataState);
@@ -20,7 +19,6 @@ const DispatchInformationHeader = () => {
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
   const router = useRouter();
   const resetDispatchManualAtoms = useResetDispatchManualAtoms();
-  const resetControlAtoms = useResetControlAtoms();
   const setDispatchRouter = useSetRecoilState(dispatchRouterState);
 
   const formatDate = (dateString?: string) => {
@@ -110,7 +108,6 @@ const DispatchInformationHeader = () => {
         console.log("배차 확정이 성공적으로 처리되었습니다.");
         setIsConfirmModalOpen(false);
         resetDispatchManualAtoms();
-        resetControlAtoms();
         setDispatchRouter(true);
       }
     } catch (error) {

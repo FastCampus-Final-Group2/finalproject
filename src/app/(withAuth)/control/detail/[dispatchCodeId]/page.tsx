@@ -6,10 +6,8 @@ import NaverMapForControlDetail from "@/components/NaverMapForControlDetail";
 import { DispatchNumberApi } from "@/apis/dispatches/dispatchNumber";
 import { DispatchListResponse } from "@/models/ApiTypes";
 import { useQuery } from "@tanstack/react-query";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Spinner from "@/components/core/Spinner";
-import { useSetRecoilState } from "recoil";
-import { lastVisitedControlPageState } from "@/atoms/control";
 
 type ColorType = "lime" | "sky" | "violet" | "redwood" | "peanut" | "brown" | "forest" | "yale" | "olive";
 
@@ -39,16 +37,8 @@ const ColorTypes: ColorType[] = ["lime", "sky", "violet", "redwood", "peanut", "
 
 const ControlDetailPage = ({ params }: { params: { dispatchCodeId: number } }) => {
   const { dispatchCodeId } = params;
-  const setLastVisitedControlPage = useSetRecoilState(lastVisitedControlPageState);
   const [selectedDriverIndex, setSelectedDriverIndex] = useState<number | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-
-  useEffect(() => {
-    setLastVisitedControlPage((prev) => ({
-      ...prev,
-      detail: `/control/detail/${params.dispatchCodeId}`,
-    }));
-  }, [params.dispatchCodeId, setLastVisitedControlPage]);
 
   const {
     data: fetchedData,

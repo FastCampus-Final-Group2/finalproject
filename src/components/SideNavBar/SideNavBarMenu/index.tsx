@@ -15,6 +15,7 @@ import {
 } from "./index.variants";
 import { replaceUrl } from "@/utils/nav";
 import useFullUrl from "@/hooks/useFullUrl";
+import { useTabStateContext } from "@/contexts/TabStateContext";
 
 interface SideNavBarMenuProps {
   SideNavBarInfo: SideNavBarLink;
@@ -29,6 +30,7 @@ const SideNavBarMenu = ({
 }: SideNavBarMenuProps) => {
   const router = useRouter();
   const fullUrl = useFullUrl();
+  const { tabStates } = useTabStateContext();
   const { isSNBOpened } = useSNBStateContext();
   const isPageOpened = replaceUrl(fullUrl) === href;
 
@@ -45,7 +47,10 @@ const SideNavBarMenu = ({
     } else {
       if (!href) return;
 
-      router.push(href);
+      const url = tabStates?.find((tabState) => tabState.name === name)?.href;
+
+      if (url) router.push(url);
+      else router.push(href);
     }
   };
 

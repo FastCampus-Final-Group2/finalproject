@@ -16,11 +16,9 @@ import {
   controlTabState,
   todayDateState,
   sevenDaysLaterState,
-  lastVisitedControlPageState,
 } from "@/atoms/control";
 import ListSelectionCount from "@/components/ListSelectionCount";
 import Spinner from "@/components/core/Spinner";
-import { useRouter } from "next/navigation";
 
 interface DispatchData {
   status?: "IN_TRANSIT" | "WAITING" | "COMPLETED";
@@ -40,9 +38,6 @@ interface SearchParams {
 }
 
 const ControlPage = () => {
-  const [lastVisitedControlPage, setLastVisitedControlPage] = useRecoilState(lastVisitedControlPageState);
-  const router = useRouter();
-
   const [page, setPage] = useState(1);
   const [selectedItemsCount, setSelectedItemsCount] = useState(0);
   const [selectedDispatchIds, setSelectedDispatchIds] = useState<number[]>([]);
@@ -121,13 +116,6 @@ const ControlPage = () => {
     setOnlyClient(false);
   };
 
-  useEffect(() => {
-    setLastVisitedControlPage((prev) => ({ ...prev, general: "/control" }));
-    if (lastVisitedControlPage.detail) {
-      router.push(lastVisitedControlPage.detail);
-    }
-  }, [setLastVisitedControlPage, lastVisitedControlPage.detail, router]);
-
   if (isLoading) {
     return (
       <div className="flex h-full w-full items-center justify-center">
@@ -136,9 +124,6 @@ const ControlPage = () => {
     );
   }
   if (error instanceof Error) return <div>Error: {error.message}</div>;
-
-  // console.log("searchParams", searchParams);
-  // console.log("onlyClient", onlyClient);
 
   return (
     <div className="h-[calc(100vh-104px)] min-w-[1600px] overflow-y-auto p-[48px]">
