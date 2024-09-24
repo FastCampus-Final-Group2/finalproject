@@ -11,6 +11,9 @@ export const metadata: Metadata = {
     template: "%s | GLT Korea TMS",
   },
   description: "GLT Korea TMS서비스에 오신 것을 환영합니다.",
+  icons: {
+    icon: "/favicon.ico",
+  },
 };
 
 const RootLayout = ({
