@@ -16,9 +16,11 @@ import {
   controlTabState,
   todayDateState,
   sevenDaysLaterState,
+  lastVisitedControlPageState,
 } from "@/atoms/control";
 import ListSelectionCount from "@/components/ListSelectionCount";
 import Spinner from "@/components/core/Spinner";
+import { useRouter } from "next/navigation";
 
 interface DispatchData {
   status?: "IN_TRANSIT" | "WAITING" | "COMPLETED";
@@ -38,6 +40,9 @@ interface SearchParams {
 }
 
 const ControlPage = () => {
+  const [lastVisitedControlPage, setLastVisitedControlPage] = useRecoilState(lastVisitedControlPageState);
+  const router = useRouter();
+
   const [page, setPage] = useState(1);
   const [selectedItemsCount, setSelectedItemsCount] = useState(0);
   const [selectedDispatchIds, setSelectedDispatchIds] = useState<number[]>([]);
@@ -115,6 +120,13 @@ const ControlPage = () => {
     });
     setOnlyClient(false);
   };
+
+  useEffect(() => {
+    setLastVisitedControlPage((prev) => ({ ...prev, general: "/control" }));
+    if (lastVisitedControlPage.detail) {
+      router.push(lastVisitedControlPage.detail);
+    }
+  }, [setLastVisitedControlPage, lastVisitedControlPage.detail, router]);
 
   if (isLoading) {
     return (
