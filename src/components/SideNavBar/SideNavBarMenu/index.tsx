@@ -2,7 +2,7 @@
 
 import Icon from "@/components/core/Icon";
 import { useSNBStateContext } from "@/contexts/SNBStateContext";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import type { SideNavBarLink } from "@/components/SideNavBar/index.constants";
 import SideNavBarSubMenu from "@/components/SideNavBar/SideNavBarSubMenu";
 import { cn } from "@/utils/cn";
@@ -14,7 +14,6 @@ import {
   snbSubMenuContainerVariants,
 } from "./index.variants";
 import { replaceUrl } from "@/utils/nav";
-import useFullUrl from "@/hooks/useFullUrl";
 import { useTabStateContext } from "@/contexts/TabStateContext";
 
 interface SideNavBarMenuProps {
@@ -29,10 +28,10 @@ const SideNavBarMenu = ({
   setCurrentMenu,
 }: SideNavBarMenuProps) => {
   const router = useRouter();
-  const fullUrl = useFullUrl();
+  const pathname = usePathname();
   const { tabStates } = useTabStateContext();
   const { isSNBOpened } = useSNBStateContext();
-  const isPageOpened = replaceUrl(fullUrl) === href;
+  const isPageOpened = replaceUrl(pathname) === href;
 
   const handleMenuToggleButton = () => {
     if (!isSNBOpened) return;

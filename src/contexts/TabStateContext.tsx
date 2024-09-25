@@ -1,8 +1,8 @@
 "use client";
 
 import { SideNavBarLink } from "@/components/SideNavBar/index.constants";
-import useFullUrl from "@/hooks/useFullUrl";
 import { urlToName } from "@/utils/nav";
+import { usePathname } from "next/navigation";
 import { createContext, useCallback, useContext, useEffect, useState } from "react";
 
 const TabStateKey = "GLT_TAB_STATE";
@@ -25,7 +25,7 @@ const TabStateContext = createContext<TabStateContextProps | null>(null);
 
 export const TabStateContextProvider = ({ children }: { children: React.ReactNode }) => {
   const [tabStates, setTabStates] = useState<TabInfo[] | null>(null);
-  const fullUrl = useFullUrl();
+  const pathname = usePathname();
 
   useEffect(() => {
     if (typeof window !== undefined) {
@@ -112,21 +112,21 @@ export const TabStateContextProvider = ({ children }: { children: React.ReactNod
   }, []);
 
   useEffect(() => {
-    const urlName = urlToName(fullUrl);
+    const urlName = urlToName(pathname);
 
     if (!urlName) return;
     if (!tabStates) return;
-    if (tabStates.some((tabState) => tabState.href === fullUrl)) {
+    if (tabStates.some((tabState) => tabState.href === pathname)) {
       return;
     }
 
     if (tabStates.some((tabState) => tabState.name === urlName)) {
-      updateTab(fullUrl, urlName);
+      updateTab(pathname, urlName);
     } else {
-      addTab(fullUrl, urlName);
+      addTab(pathname, urlName);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [fullUrl]);
+  }, [pathname]);
 
   return (
     <TabStateContext.Provider

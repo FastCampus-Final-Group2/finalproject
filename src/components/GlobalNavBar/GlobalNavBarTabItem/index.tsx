@@ -3,7 +3,7 @@
 import Icon from "@/components/core/Icon";
 import type { SideNavBarLink } from "@/components/SideNavBar/index.constants";
 import { useTabStateContext } from "@/contexts/TabStateContext";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { DEFAULT_TAB } from "@/components/GlobalNavBar/index.constants";
 import { useMyMenus } from "@/hooks/useMyMenus";
 import { useCallback } from "react";
@@ -12,7 +12,6 @@ import { cn } from "@/utils/cn";
 import { gnbTabContentVariants, gnbTabToggleIconVariants, gnbTabVariants } from "./index.variants";
 import useResetControlAtoms from "@/hooks/useResetControlAtoms";
 import { replaceUrl } from "@/utils/nav";
-import useFullUrl from "@/hooks/useFullUrl";
 
 interface GlobalNavBarTabItem {
   tabName: SideNavBarLink["name"];
@@ -24,8 +23,8 @@ const GlobalNavBarTabItem = ({ isMyMenu, href, tabName }: GlobalNavBarTabItem) =
   const { tabStates, removeTab } = useTabStateContext();
   const resetControlAtoms = useResetControlAtoms();
   const router = useRouter();
-  const fullUrl = useFullUrl();
-  const isPageOpened = fullUrl === "/dispatch/manual" ? replaceUrl(fullUrl) === href : fullUrl === href;
+  const pathname = usePathname();
+  const isPageOpened = pathname === "/dispatch/manual" ? replaceUrl(pathname) === href : pathname === href;
   const { addMyMenu, removeMyMenu } = useMyMenus();
 
   const handleToggleMyMenuButton: MouseEventHandler<HTMLButtonElement> = useCallback(
