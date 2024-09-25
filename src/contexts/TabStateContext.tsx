@@ -1,12 +1,14 @@
 "use client";
 
 import { SideNavBarLink } from "@/components/SideNavBar/index.constants";
+import { urlToName } from "@/utils/nav";
+import { usePathname } from "next/navigation";
 import { createContext, useCallback, useContext, useEffect, useState } from "react";
 
 const TabStateKey = "GLT_TAB_STATE";
 
 type HrefType = SideNavBarLink["href"];
-type NameType = Exclude<SideNavBarLink["name"], "배차관리">;
+export type NameType = Exclude<SideNavBarLink["name"], "배차관리">;
 
 export interface TabInfo {
   href: HrefType;
@@ -14,8 +16,7 @@ export interface TabInfo {
 }
 
 interface TabStateContextProps {
-  tabStates: TabInfo[];
-  addTab: (href: HrefType, name: NameType) => void;
+  tabStates: TabInfo[] | null;
   removeTab: (name: NameType) => void;
   resetTabState: () => void;
 }
@@ -23,26 +24,32 @@ interface TabStateContextProps {
 const TabStateContext = createContext<TabStateContextProps | null>(null);
 
 export const TabStateContextProvider = ({ children }: { children: React.ReactNode }) => {
-  const [tabStates, setTabStates] = useState<TabInfo[]>([]);
+  const [tabStates, setTabStates] = useState<TabInfo[] | null>(null);
+  const pathname = usePathname();
 
   useEffect(() => {
     if (typeof window !== undefined) {
       const jsonValue = sessionStorage.getItem(TabStateKey);
+
       if (jsonValue) {
         const value = JSON.parse(jsonValue) as TabInfo[];
         setTabStates(value);
+      } else {
+        sessionStorage.setItem(TabStateKey, JSON.stringify([]));
+        setTabStates([]);
       }
     }
   }, []);
 
   const addTab = useCallback(
     (href: HrefType, name: NameType) => {
+      if (!tabStates) return;
+
       if (tabStates.length >= 4) return;
-      if (tabStates.some((tabState) => tabState.href === href)) return;
 
       try {
         sessionStorage.setItem(TabStateKey, JSON.stringify([...tabStates, { href, name }]));
-        setTabStates((prev) => [...prev, { href, name }]);
+        setTabStates([...tabStates, { href, name }]);
       } catch (error) {
         return;
       }
@@ -52,6 +59,8 @@ export const TabStateContextProvider = ({ children }: { children: React.ReactNod
 
   const removeTab = useCallback(
     (name: NameType) => {
+      if (!tabStates) return;
+
       if (tabStates.length <= 0) return;
       const index = tabStates.findIndex((tabState) => tabState.name === name);
 
@@ -60,7 +69,32 @@ export const TabStateContextProvider = ({ children }: { children: React.ReactNod
           TabStateKey,
           JSON.stringify([...tabStates.slice(0, index), ...tabStates.slice(index + 1, -1)]),
         );
-        setTabStates((prev) => [...prev.slice(0, index), ...prev.slice(index + 1, -1)]);
+        setTabStates([...tabStates.slice(0, index), ...tabStates.slice(index + 1, -1)]);
+      } catch (error) {
+        return;
+      }
+    },
+    [tabStates],
+  );
+
+  const updateTab = useCallback(
+    (href: HrefType, name: NameType) => {
+      if (!tabStates) return;
+
+      if (tabStates.length <= 0) return;
+      const updatedTabStates = tabStates.map((tabState) => {
+        if (tabState.name === name) {
+          return {
+            href,
+            name,
+          };
+        }
+        return tabState;
+      });
+
+      try {
+        sessionStorage.setItem(TabStateKey, JSON.stringify(updatedTabStates));
+        setTabStates(updatedTabStates);
       } catch (error) {
         return;
       }
@@ -70,18 +104,34 @@ export const TabStateContextProvider = ({ children }: { children: React.ReactNod
 
   const resetTabState = useCallback(() => {
     try {
-      sessionStorage.setItem(TabStateKey, JSON.stringify([]));
-      setTabStates([]);
+      sessionStorage.removeItem(TabStateKey);
+      setTabStates(null);
     } catch (error) {
       return;
     }
   }, []);
 
+  useEffect(() => {
+    const urlName = urlToName(pathname);
+
+    if (!urlName) return;
+    if (!tabStates) return;
+    if (tabStates.some((tabState) => tabState.href === pathname)) {
+      return;
+    }
+
+    if (tabStates.some((tabState) => tabState.name === urlName)) {
+      updateTab(pathname, urlName);
+    } else {
+      addTab(pathname, urlName);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pathname]);
+
   return (
     <TabStateContext.Provider
       value={{
         tabStates,
-        addTab,
         removeTab,
         resetTabState,
       }}

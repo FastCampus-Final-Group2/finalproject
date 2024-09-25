@@ -6,10 +6,8 @@ import NaverMapForControlDetail from "@/components/NaverMapForControlDetail";
 import { DispatchNumberApi } from "@/apis/dispatches/dispatchNumber";
 import { DispatchListResponse } from "@/models/ApiTypes";
 import { useQuery } from "@tanstack/react-query";
-import { useSetRecoilState } from "recoil";
-import { lastVisitedControlPageState } from "@/atoms/control";
-import { useEffect } from "react";
 import { useState } from "react";
+import Spinner from "@/components/core/Spinner";
 
 type ColorType = "lime" | "sky" | "violet" | "redwood" | "peanut" | "brown" | "forest" | "yale" | "olive";
 
@@ -39,16 +37,8 @@ const ColorTypes: ColorType[] = ["lime", "sky", "violet", "redwood", "peanut", "
 
 const ControlDetailPage = ({ params }: { params: { dispatchCodeId: number } }) => {
   const { dispatchCodeId } = params;
-  const setLastVisitedControlPage = useSetRecoilState(lastVisitedControlPageState);
   const [selectedDriverIndex, setSelectedDriverIndex] = useState<number | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-
-  useEffect(() => {
-    setLastVisitedControlPage((prev) => ({
-      ...prev,
-      detail: `/control/detail/${params.dispatchCodeId}`,
-    }));
-  }, [params.dispatchCodeId, setLastVisitedControlPage]);
 
   const {
     data: fetchedData,
@@ -61,7 +51,13 @@ const ControlDetailPage = ({ params }: { params: { dispatchCodeId: number } }) =
     retry: 3,
   });
 
-  if (isLoading) return <div>Loading...</div>;
+  if (isLoading) {
+    return (
+      <div className="flex h-full w-full items-center justify-center">
+        <Spinner />
+      </div>
+    );
+  }
   if (error) return <div>Error: {(error as Error).message}</div>;
 
   // console.log("대시보드 데이터", fetchedData);

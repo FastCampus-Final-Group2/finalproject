@@ -7,6 +7,7 @@ import SideNavBarSubMenu from "@/components/SideNavBar/SideNavBarSubMenu";
 import { useMyMenus } from "@/hooks/useMyMenus";
 import { cn } from "@/utils/cn";
 import { snbMyMenuContainerVariants, snbMyMenuVariants, snbMySubMenuContainerVariants } from "./index.variants";
+import { NAV_LINK_MAP } from "@/components/SideNavBar/index.constants";
 
 const SideNavBarMyMenu = () => {
   const [isMyMenuOpened, toggleMyMenu] = useReducer((v) => !v, false);
@@ -32,7 +33,9 @@ const SideNavBarMyMenu = () => {
       {isSNBOpened && (
         <div className={cn(snbMySubMenuContainerVariants({ isMyMenuOpened }))}>
           {myMenus?.map((name) => {
-            return <SideNavBarSubMenu key={name} subMenuName={name} />;
+            return (
+              <SideNavBarSubMenu key={name} subMenuName={name} href={NAV_LINK_MAP[name as keyof typeof NAV_LINK_MAP]} />
+            );
           })}
         </div>
       )}

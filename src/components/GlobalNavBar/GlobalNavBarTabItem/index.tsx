@@ -10,8 +10,8 @@ import { useCallback } from "react";
 import type { MouseEventHandler } from "react";
 import { cn } from "@/utils/cn";
 import { gnbTabContentVariants, gnbTabToggleIconVariants, gnbTabVariants } from "./index.variants";
-import { matchPathname } from "@/utils/validation/pathname";
 import useResetControlAtoms from "@/hooks/useResetControlAtoms";
+import { replaceUrl } from "@/utils/nav";
 
 interface GlobalNavBarTabItem {
   tabName: SideNavBarLink["name"];
@@ -21,9 +21,10 @@ interface GlobalNavBarTabItem {
 
 const GlobalNavBarTabItem = ({ isMyMenu, href, tabName }: GlobalNavBarTabItem) => {
   const { tabStates, removeTab } = useTabStateContext();
+  const resetControlAtoms = useResetControlAtoms();
   const router = useRouter();
   const pathname = usePathname();
-  const isPageOpened = matchPathname(pathname, href);
+  const isPageOpened = pathname === "/dispatch/manual" ? replaceUrl(pathname) === href : pathname === href;
   const { addMyMenu, removeMyMenu } = useMyMenus();
 
   const handleToggleMyMenuButton: MouseEventHandler<HTMLButtonElement> = useCallback(
@@ -35,7 +36,22 @@ const GlobalNavBarTabItem = ({ isMyMenu, href, tabName }: GlobalNavBarTabItem) =
     [addMyMenu, isMyMenu, removeMyMenu, tabName],
   );
 
-  const resetControlAtoms = useResetControlAtoms();
+  const handleClickCloseButton: MouseEventHandler<HTMLButtonElement> = useCallback(
+    (event) => {
+      event.stopPropagation();
+
+      if (!tabStates) return;
+      if (tabName === "배차관리") return;
+
+      removeTab(tabName);
+      if (tabName === "차량관제") resetControlAtoms();
+
+      // TODO
+      if (tabStates.length === 1) router.push("/dispatch");
+    },
+    [removeTab, resetControlAtoms, router, tabName, tabStates],
+  );
+
   return (
     <div
       role="button"
@@ -56,18 +72,7 @@ const GlobalNavBarTabItem = ({ isMyMenu, href, tabName }: GlobalNavBarTabItem) =
         </button>
       </div>
       {tabName !== DEFAULT_TAB.name && (
-        <button
-          type="button"
-          className="py-[1px]"
-          onClick={(event) => {
-            event.stopPropagation();
-            removeTab(tabName);
-            resetControlAtoms();
-
-            // TODO
-            if (tabStates.length === 1) router.push("/dispatch");
-          }}
-        >
+        <button type="button" className="py-[1px]" onClick={handleClickCloseButton}>
           <Icon id="x" size={20} className="text-gray-700" />
         </button>
       )}

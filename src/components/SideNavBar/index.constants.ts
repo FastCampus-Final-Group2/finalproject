@@ -89,3 +89,8 @@ export const SIDE_NAV_BAR_LINKS: SideNavBarLink[] = [
     name: "공지사항",
   },
 ] as const;
+
+export const NAV_LINK_MAP = {
+  배차관리: "/dispatch",
+  차량관제: "/control",
+};

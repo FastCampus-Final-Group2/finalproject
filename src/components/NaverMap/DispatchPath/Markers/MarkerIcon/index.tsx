@@ -62,7 +62,7 @@ const MarkerIcon = ({
               <div className="flex items-center">
                 <div className="flex items-center gap-1 pl-9 text-gray-700 text-B-14-R">
                   <Icon id="place" className="text-gray-400" />
-                  <div className="translate-y-[2px] text-gray-700 text-SB-14-R">{courseDetail.detailAddress}</div>
+                  <div className="translate-y-[1px] text-gray-700 text-SB-14-R">{courseDetail.detailAddress}</div>
                 </div>
               </div>
             )}

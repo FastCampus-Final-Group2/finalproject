@@ -3,6 +3,7 @@
 import { dispatchDataState } from "@/atoms/dispatchData";
 import { dispatchRouterState } from "@/atoms/dispatchRouter";
 import { excelDataState } from "@/atoms/excelData";
+import { userState } from "@/atoms/user";
 import Spinner from "@/components/core/Spinner";
 import DispatchSelector from "@/components/DispatchSelector";
 import OrderValidation from "@/components/OrderValidation";
@@ -17,6 +18,7 @@ const Dispatch = () => {
   const excelData = useRecoilValue(excelDataState);
   const dispatchData = useRecoilValue(dispatchDataState);
 
+  const user = useRecoilValue(userState);
   const [dispatchRouter, setDispatchRouter] = useRecoilState(dispatchRouterState);
   const [loading, setLoading] = useState(false);
   const router = useRouter();
@@ -34,6 +36,12 @@ const Dispatch = () => {
       router.push("/dispatch/manual");
     }
   }, [dispatchData, router]);
+
+  useEffect(() => {
+    if (!user) {
+      router.push("/");
+    }
+  }, [router, user]);
 
   if (!isClient || loading) {
     return (
