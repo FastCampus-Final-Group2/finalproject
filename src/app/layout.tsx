@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import "pretendard/dist/web/variable/pretendardvariable-dynamic-subset.css";
 import "./globals.css";
 import RecoilRootProvider from "@/providers/RecoilRootProvider";
-import { TabStateContextProvider } from "@/contexts/TabStateContext";
 import { QueryProvider } from "@/providers/query";
 
 export const metadata: Metadata = {
@@ -25,9 +24,7 @@ const RootLayout = ({
     <html lang="ko">
       <body className="overflow-hidden">
         <RecoilRootProvider>
-          <QueryProvider>
-            <TabStateContextProvider>{children}</TabStateContextProvider>
-          </QueryProvider>
+          <QueryProvider>{children}</QueryProvider>
         </RecoilRootProvider>
       </body>
     </html>

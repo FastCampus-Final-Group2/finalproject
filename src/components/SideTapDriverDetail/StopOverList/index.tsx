@@ -97,7 +97,7 @@ const StopOverList = ({ bgColor, isExpanded, toggleExpand }: StopOverListProps) 
                     {stopOverList.map((stopOver, index) => (
                       <Draggable key={stopOver.shipmentNumber} draggableId={`${stopOver.shipmentNumber}`} index={index}>
                         {(provided) => (
-                          <div ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
+                          <div ref={provided.innerRef} {...provided.draggableProps}>
                             <StopOver
                               restrictedTonCode={stopOver.restrictedTonCode}
                               delayRequestTime={stopOver.delayRequestTime}
@@ -120,6 +120,7 @@ const StopOverList = ({ bgColor, isExpanded, toggleExpand }: StopOverListProps) 
                               deliveryDestinationId={stopOver.deliveryDestinationId}
                               lat={0}
                               lon={0}
+                              dargHandleProps={provided.dragHandleProps}
                             />
                           </div>
                         )}
@@ -140,7 +141,7 @@ const StopOverList = ({ bgColor, isExpanded, toggleExpand }: StopOverListProps) 
                           index={index}
                         >
                           {(provided) => (
-                            <div ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
+                            <div ref={provided.innerRef} {...provided.draggableProps}>
                               <StopOver
                                 restrictedTonCode={stopOver.restrictedTonCode}
                                 delayRequestTime={stopOver.delayRequestTime}
@@ -163,6 +164,7 @@ const StopOverList = ({ bgColor, isExpanded, toggleExpand }: StopOverListProps) 
                                 deliveryDestinationId={stopOver.deliveryDestinationId}
                                 lat={0}
                                 lon={0}
+                                dargHandleProps={provided.dragHandleProps}
                               />
                             </div>
                           )}
